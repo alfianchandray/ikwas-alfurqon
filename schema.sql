@@ -60,13 +60,6 @@ CREATE TABLE IF NOT EXISTS santri (
     kelas TEXT NOT NULL
 );
 
-INSERT OR IGNORE INTO santri (id, name, wali, kelas) VALUES 
-(1, 'Muhammad Ali', 'Bpk. Hasan', 'A - Ula'),
-(2, 'Aisyah Putri', 'Ibu Fatimah', 'B - Ula'),
-(3, 'Ahmad Rafli', 'Bpk. Ridwan', 'A - Wustho'),
-(4, 'Khadijah Az-Zahra', 'Bpk. Lukman', 'B - Wustho'),
-(5, 'Fatih Nur Rahman', 'Bpk. Nu''man', 'A - Ulya');
-
 -- 6. Transaksi Kas Table
 CREATE TABLE IF NOT EXISTS transaksi (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,13 +70,6 @@ CREATE TABLE IF NOT EXISTS transaksi (
     tipe TEXT NOT NULL CHECK(tipe IN ('in', 'out')),
     receipt_image TEXT
 );
-
-INSERT OR IGNORE INTO transaksi (id, kategori, nominal, keterangan, tanggal, tipe, receipt_image) VALUES 
-(1, 'Iuran Wali', 150000, 'Iuran Bulanan Okt', '2026-10-12', 'in', NULL),
-(2, 'Tabungan', 200000, 'Tabungan Santri', '2026-10-12', 'in', NULL),
-(3, 'Operasional', 1450000, 'Listrik & Air Asrama', '2026-10-11', 'out', NULL),
-(4, 'Hibah', 500000, 'Zakat Mal', '2026-10-10', 'in', NULL),
-(5, 'Pendidikan', 300000, 'Beli Kitab Kuning', '2026-10-10', 'out', NULL);
 
 -- 7. Kategori Transaksi Table
 CREATE TABLE IF NOT EXISTS categories (
@@ -109,11 +95,6 @@ CREATE TABLE IF NOT EXISTS kegiatan (
     sumber TEXT NOT NULL,
     tenggat TEXT NOT NULL
 );
-
-
-INSERT OR IGNORE INTO kegiatan (id, name, target, terkumpul, sumber, tenggat) VALUES 
-(1, 'Rihlah Akbar & Studi Banding Santri', 15000000, 12000000, '70% Tabungan Santri, 30% Kas Umum', 'Desember 2026'),
-(2, 'Pembangunan Perpustakaan Al-Furqon', 10000000, 3350000, '100% Infaq Sukarela', 'Maret 2027');
 
 -- 9. Roles Table
 CREATE TABLE IF NOT EXISTS roles (
