@@ -378,7 +378,7 @@ export default function PublicDashboard() {
 
         {/* Cek Saldo Tabungan Mandiri Wali Santri */}
         <div className="glass-card rounded-3xl p-6 md:p-8 shadow-sm border border-white/20 mb-10 text-left">
-          <div className="max-w-xl">
+          <div className="w-full mb-6 text-left">
             <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">Fitur Transparansi Wali</span>
             <h2 className="text-xl md:text-2xl font-extrabold text-on-surface tracking-tight mb-2">Cek Saldo Tabungan Santri</h2>
             <p className="text-xs text-on-surface-variant font-medium leading-relaxed mb-6">
