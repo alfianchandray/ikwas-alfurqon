@@ -20,6 +20,7 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
   const [isLoading, setIsLoading] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [siteName, setSiteName] = useState('IKWAS Al-Furqon');
+  const [authChecked, setAuthChecked] = useState(false);
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([
     { name: 'Beranda', path: '/dashboard', icon: 'dashboard' },
@@ -30,6 +31,19 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
     { name: 'Laporan Keuangan', path: '/dashboard/laporan', icon: 'description' },
     { name: 'Pengguna', path: '/dashboard/pengguna', icon: 'manage_accounts' },
   ]);
+
+  // Auth guard — replaces proxy.ts edge middleware
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => {
+        if (!res.ok) {
+          router.replace('/login');
+        } else {
+          setAuthChecked(true);
+        }
+      })
+      .catch(() => router.replace('/login'));
+  }, [router]);
 
   useEffect(() => {
     // Dynamic Brand
@@ -65,6 +79,15 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row relative">
+      {/* Auth loading screen */}
+      {!authChecked && (
+        <div className="fixed inset-0 bg-background z-[9999] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <Icon name="sync" className="animate-spin text-4xl text-primary" />
+            <span className="text-xs font-bold tracking-widest text-on-surface-variant">Memverifikasi sesi...</span>
+          </div>
+        </div>
+      )}
       {/* Custom loading indicator overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center text-white select-none">
