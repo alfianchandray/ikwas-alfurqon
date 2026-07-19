@@ -6,7 +6,7 @@
  * Storage format: "<salt_hex>:<hash_hex>" as a single TEXT column.
  */
 
-const ITERATIONS = 10_000; // Cloudflare Workers max limit for PBKDF2
+const ITERATIONS = 10_000; // Cloudflare Workers limit is 10,000 for PBKDF2
 const HASH_ALG = "SHA-256";
 const KEY_LENGTH = 256; // bits
 

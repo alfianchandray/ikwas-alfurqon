@@ -11,7 +11,7 @@
 
 import { execSync } from 'child_process';
 
-const ITERATIONS = 100_000;
+const ITERATIONS = 10_000;
 const HASH_ALG = "SHA-256";
 const KEY_LENGTH = 256;
 
