@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Data Santri &amp; Wali - IKWAS Financial</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#3d4947",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "primary": "#00685f",
+                    "surface-dim": "#cbdbf5",
+                    "surface-container-low": "#eff4ff",
+                    "secondary-fixed-dim": "#bcc9c6",
+                    "outline": "#6d7a77",
+                    "inverse-on-surface": "#eaf1ff",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#6bd8cb",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#008378",
+                    "background": "#f8f9ff",
+                    "tertiary": "#735c00",
+                    "surface-container": "#e5eeff",
+                    "tertiary-fixed": "#ffe088",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#4e3d00",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface": "#f8f9ff",
+                    "on-primary-container": "#f4fffc",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#0b1c30",
+                    "secondary-fixed": "#d8e5e2",
+                    "on-tertiary-fixed": "#241a00",
+                    "primary-fixed": "#89f5e7",
+                    "inverse-surface": "#213145",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-container": "#cca72f",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#5b6765",
+                    "surface-variant": "#d3e4fe",
+                    "secondary-container": "#d8e5e2",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-primary-fixed-variant": "#005049",
+                    "surface-tint": "#006a61",
+                    "outline-variant": "#bcc9c6",
+                    "on-background": "#0b1c30",
+                    "on-secondary-fixed": "#121e1c",
+                    "on-primary-fixed": "#00201d",
+                    "on-secondary-fixed-variant": "#3d4947",
+                    "secondary": "#55615f",
+                    "inverse-primary": "#6bd8cb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "container-max": "1280px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "md": "16px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f8f9ff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0D9488 0%, #0B7A70 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .bg-sage-pattern {
+            background-color: #F0FDFA;
+            background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M200 0l15.45 142.7L342.7 15.45 200 200l142.7 184.55-127.25-15.45L200 400l-15.45-142.7L57.3 384.55 200 200 57.3 15.45 184.55 30.9z' fill='%230D9488' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-sage-pattern text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest/70 backdrop-blur-xl border-r border-white/20 shadow-lg shadow-primary/5 flex flex-col gap-2 p-md z-40">
+<div class="mb-xl px-2">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">IKWAS Financial</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant/70">Manajemen Keuangan</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<!-- Beranda -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Beranda</span>
+</a>
+<!-- Pemasukan -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body-md text-body-md">Pemasukan</span>
+</a>
+<!-- Pengeluaran -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md text-body-md">Pengeluaran</span>
+</a>
+<!-- Data Santri (Active) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-xl active:scale-95 transition-transform shadow-md shadow-primary/20" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Data Santri</span>
+</a>
+<!-- Laporan -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md text-body-md">Laporan</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/20 pt-4">
+<button class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 w-full rounded-xl transition-all active:scale-95">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 z-30 flex justify-between items-center w-full px-lg py-md bg-surface-container-lowest/70 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-primary/5">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Data Santri</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a friendly Indonesian male administrator in business casual attire, set against a blurred modern office background with soft teal accents. The lighting is bright and natural, reflecting a clean and trustworthy persona for a financial application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2YA_-5PQcKv9pcsZIuPvPTvEUluRjIkh-CXWXUrNVJQFougChhAUB_Of-LsRq0TnqnH5pmnXsHSwIrPl8wPU5P3c9VCmHdyijEqV07b6J5aGcrNd2Q5ppAsfqfGgOwSEsQo6Q-bA83SPuU6BeyMeQl9LzoOpb1Ey6KkeCHZHQLyOaoKL0h3db9-J_P9N92WASQ4z0sHXUOf4jYm6_uvD_sWVv_A-z_hGIAdVpOc1DMtUcsOuz5Yc4Nb5Q7tSh4kZz75odOQ_Qdy0"/>
+</div>
+</div>
+</header>
+<section class="p-xl max-w-container-max mx-auto">
+<!-- Action Header: Search & Add -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-md mb-lg">
+<div class="relative w-full md:w-96">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3 rounded-xl border-none bg-white shadow-sm focus:ring-2 focus:ring-primary/20 font-body-md transition-all" placeholder="Cari nama santri atau wali..." type="text"/>
+</div>
+<button class="btn-primary flex items-center justify-center gap-2 px-6 py-3 text-on-primary rounded-xl font-label-md transition-all hover:scale-[1.02] active:scale-95" onclick="toggleModal('santriModal', true)">
+<span class="material-symbols-outlined">add</span>
+                    Tambah Santri Baru
+                </button>
+</div>
+<!-- Bento Layout Stats (Atmospheric Addition) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg mb-xl">
+<div class="glass-card p-lg rounded-2xl flex items-center gap-4">
+<div class="h-14 w-14 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">groups</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm">Total Santri</p>
+<h3 class="text-headline-md font-bold text-primary">1,284</h3>
+</div>
+</div>
+<div class="glass-card p-lg rounded-2xl flex items-center gap-4">
+<div class="h-14 w-14 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">verified_user</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm">Status Aktif</p>
+<h3 class="text-headline-md font-bold text-tertiary">98%</h3>
+</div>
+</div>
+<div class="glass-card p-lg rounded-2xl flex items-center gap-4">
+<div class="h-14 w-14 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">school</span>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-sm">Angkatan Baru</p>
+<h3 class="text-headline-md font-bold text-secondary">42</h3>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="glass-card rounded-2xl overflow-hidden shadow-sm shadow-primary/5">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-primary/5">
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider w-20">No</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Nama Santri</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider">Nama Wali</th>
+<th class="px-6 py-4 font-label-md text-primary uppercase tracking-wider text-center">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/20">
+<!-- Row 1 -->
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="px-6 py-4 font-body-md text-on-surface-variant">01</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-primary-fixed-dim text-primary flex items-center justify-center font-bold text-sm">AZ</div>
+<span class="font-body-md text-on-surface font-semibold">Ahmad Zaki</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">H. Abdullah Saleh</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-2">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-lg transition-all" title="Hapus">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="px-6 py-4 font-body-md text-on-surface-variant">02</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-tertiary-fixed-dim text-tertiary flex items-center justify-center font-bold text-sm">FH</div>
+<span class="font-body-md text-on-surface font-semibold">Fatimah Husein</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Siti Aminah</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-2">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-lg transition-all" title="Hapus">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="px-6 py-4 font-body-md text-on-surface-variant">03</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-secondary-fixed-dim text-secondary flex items-center justify-center font-bold text-sm">MA</div>
+<span class="font-body-md text-on-surface font-semibold">Muhammad Ali</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Umar bin Khattab</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-2">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-lg transition-all" title="Hapus">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/40 transition-colors group">
+<td class="px-6 py-4 font-body-md text-on-surface-variant">04</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-primary-fixed text-primary-fixed-variant flex items-center justify-center font-bold text-sm">NS</div>
+<span class="font-body-md text-on-surface font-semibold">Nurul Safira</span>
+</div>
+</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Budi Santoso</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-2">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all" title="Edit">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-lg transition-all" title="Hapus">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-surface-container-lowest/50 border-t border-white/10 flex justify-between items-center">
+<p class="font-label-sm text-outline">Menampilkan 4 dari 1,284 santri</p>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg border border-outline/20 hover:bg-white transition-all"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-2 rounded-lg border border-outline/20 bg-primary text-on-primary shadow-sm px-4 font-label-md">1</button>
+<button class="p-2 rounded-lg border border-outline/20 hover:bg-white transition-all px-4 font-label-md">2</button>
+<button class="p-2 rounded-lg border border-outline/20 hover:bg-white transition-all px-4 font-label-md">3</button>
+<button class="p-2 rounded-lg border border-outline/20 hover:bg-white transition-all"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Modal: Tambah Santri Baru -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-md opacity-0 pointer-events-none transition-all duration-300" id="santriModal">
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm" onclick="toggleModal('santriModal', false)"></div>
+<div class="relative w-full max-w-lg glass-card bg-white/90 rounded-2xl shadow-2xl p-xl scale-95 transition-transform duration-300 transform" id="modalContent">
+<div class="flex justify-between items-center mb-lg">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Tambah Santri Baru</h3>
+<p class="text-on-surface-variant font-body-md">Lengkapi data pendaftaran santri.</p>
+</div>
+<button class="p-2 hover:bg-secondary-container rounded-full text-on-surface-variant" onclick="toggleModal('santriModal', false)">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="space-y-lg">
+<div class="space-y-sm">
+<label class="block font-label-md text-on-surface-variant">Nama Lengkap Santri</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/50">person</span>
+<input class="w-full pl-12 pr-4 py-3 rounded-xl border border-outline/20 bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent font-body-md transition-all" placeholder="Masukkan nama santri..." type="text"/>
+</div>
+</div>
+<div class="space-y-sm">
+<label class="block font-label-md text-on-surface-variant">Nama Wali / Orang Tua</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/50">family_restroom</span>
+<input class="w-full pl-12 pr-4 py-3 rounded-xl border border-outline/20 bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent font-body-md transition-all" placeholder="Masukkan nama wali..." type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="space-y-sm">
+<label class="block font-label-md text-on-surface-variant">ID Santri (Auto)</label>
+<input class="w-full px-4 py-3 rounded-xl border border-outline/20 bg-secondary-container/30 text-on-surface-variant font-label-md cursor-not-allowed" readonly="" type="text" value="IKW-2023-001"/>
+</div>
+<div class="space-y-sm">
+<label class="block font-label-md text-on-surface-variant">Kelas</label>
+<select class="w-full px-4 py-3 rounded-xl border border-outline/20 bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-transparent font-body-md">
+<option>Ula 1</option>
+<option>Ula 2</option>
+<option>Wustho 1</option>
+<option>Wustho 2</option>
+</select>
+</div>
+</div>
+<div class="pt-md flex flex-col md:flex-row gap-4">
+<button class="flex-1 px-6 py-3 rounded-xl border border-outline/20 font-label-md text-on-surface-variant hover:bg-secondary-container transition-all" onclick="toggleModal('santriModal', false)" type="button">
+                        Batalkan
+                    </button>
+<button class="flex-1 btn-primary text-on-primary px-6 py-3 rounded-xl font-label-md shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all" type="submit">
+                        Simpan Data
+                    </button>
+</div>
+</form>
+</div>
+</div>
+<script>
+        function toggleModal(modalId, show) {
+            const modal = document.getElementById(modalId);
+            const content = document.getElementById('modalContent');
+            if (show) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.classList.add('opacity-100');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.classList.remove('opacity-100');
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+            }
+        }
+
+        // Add some micro-interactions for the cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

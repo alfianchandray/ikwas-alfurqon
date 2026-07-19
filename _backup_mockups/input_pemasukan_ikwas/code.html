@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IKWAS Financial - Form Pemasukan Pintar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        body {
+            background-color: #F0FDFA;
+            background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3 %3Cpath d='M200 0L215.3 147.4L341.4 58.6L252.6 184.7L400 200L252.6 215.3L341.4 341.4L215.3 252.6L200 400L184.7 252.6L58.6 341.4L147.4 215.3L0 200L147.4 184.7L58.6 58.6L184.7 147.4L200 0Z' fill='%230D9488' fill-opacity='0.02'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-position: center;
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #0D9488 0%, #0B7A70 100%);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#3d4947",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "primary": "#00685f",
+                        "surface-dim": "#cbdbf5",
+                        "surface-container-low": "#eff4ff",
+                        "secondary-fixed-dim": "#bcc9c6",
+                        "outline": "#6d7a77",
+                        "inverse-on-surface": "#eaf1ff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#6bd8cb",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#008378",
+                        "background": "#f8f9ff",
+                        "tertiary": "#735c00",
+                        "surface-container": "#e5eeff",
+                        "tertiary-fixed": "#ffe088",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "surface": "#f8f9ff",
+                        "on-primary-container": "#f4fffc",
+                        "surface-bright": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#0b1c30",
+                        "secondary-fixed": "#d8e5e2",
+                        "on-tertiary-fixed": "#241a00",
+                        "primary-fixed": "#89f5e7",
+                        "inverse-surface": "#213145",
+                        "surface-container-high": "#dce9ff",
+                        "tertiary-container": "#cca72f",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#5b6765",
+                        "surface-variant": "#d3e4fe",
+                        "secondary-container": "#d8e5e2",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-primary-fixed-variant": "#005049",
+                        "surface-tint": "#006a61",
+                        "outline-variant": "#bcc9c6",
+                        "on-background": "#0b1c30",
+                        "on-secondary-fixed": "#121e1c",
+                        "on-primary-fixed": "#00201d",
+                        "on-secondary-fixed-variant": "#3d4947",
+                        "secondary": "#55615f",
+                        "inverse-primary": "#6bd8cb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "container-max": "1280px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "gutter": "24px",
+                        "md": "16px",
+                        "xl": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-body-md text-on-surface antialiased overflow-x-hidden">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest/70 backdrop-blur-xl border-r border-white/20 shadow-lg shadow-primary/5 z-50 flex flex-col gap-2 p-md">
+<div class="mb-xl px-2">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">IKWAS Financial</h1>
+<p class="text-on-surface-variant font-label-md">Manajemen Keuangan</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md">Beranda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-xl transition-all active:scale-95 shadow-md shadow-primary/20" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md">Pemasukan</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md">Pengeluaran</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md">Data Santri</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md">Laporan</span>
+</a>
+</nav>
+<div class="mt-auto pt-md border-t border-outline-variant/30 px-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">JD</div>
+<div class="flex-1 min-w-0">
+<p class="text-label-md truncate">Admin Keuangan</p>
+<p class="text-label-sm text-on-surface-variant">Online</p>
+</div>
+<button class="text-error hover:bg-error-container/20 p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+</button>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-lg py-md ml-64 max-w-[calc(100%-16rem)] fixed top-0 bg-surface-container-lowest/70 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-primary/5 z-40">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Pemasukan Baru</h2>
+<div class="flex items-center gap-lg">
+<div class="flex gap-md">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-transform active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-transform active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<button class="primary-gradient text-on-primary px-lg py-sm rounded-xl font-label-md shadow-md active:scale-95 transition-all">
+                Logout
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-xl pb-xl min-h-screen">
+<div class="max-w-4xl mx-auto">
+<!-- Form Header Section -->
+<div class="mb-xl flex items-end justify-between">
+<div>
+<span class="text-primary font-label-md tracking-wider uppercase">Transaksi Digital</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface mt-base">Pemasukan Pintar</h3>
+<p class="text-on-surface-variant font-body-md mt-sm">Catat setiap iuran dan sumbangan dengan sistem verifikasi data santri otomatis.</p>
+</div>
+<div class="hidden md:flex gap-md">
+<div class="glass-card px-md py-sm rounded-xl flex items-center gap-md">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">event</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Tanggal Hari Ini</p>
+<p class="text-label-md font-bold" id="current-date">24 Mei 2024</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Form Card -->
+<div class="glass-card p-xl rounded-[32px] shadow-2xl shadow-primary/5 relative overflow-hidden">
+<!-- Atmospheric Background Detail -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-tertiary/5 rounded-full blur-3xl"></div>
+<form class="relative z-10 space-y-lg" id="pemasukan-form">
+<!-- Grid Row 1 -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-sm">
+<label class="font-label-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">category</span>
+                                Kategori Pemasukan
+                            </label>
+<select class="w-full bg-[#F8FAFC] border-none rounded-xl px-md py-4 text-body-md focus:ring-2 focus:ring-primary focus:bg-white transition-all appearance-none cursor-pointer" id="kategori-pemasukan">
+<option disabled="" selected="" value="">Pilih Kategori...</option>
+<option value="Iuran Wali">Iuran Wali Santri</option>
+<option value="Tabungan">Tabungan Santri</option>
+<option value="Hibah">Hibah</option>
+<option value="Waqaf">Waqaf / Sedekah Umum</option>
+<option value="Lainnya">Lain-lain</option>
+</select>
+</div>
+<div class="space-y-sm">
+<label class="font-label-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">payments</span>
+                                Jumlah Nominal (Rp)
+                            </label>
+<input class="w-full bg-[#F8FAFC] border-none rounded-xl px-md py-4 text-body-md font-bold text-primary focus:ring-2 focus:ring-primary focus:bg-white transition-all" id="nominal-input" placeholder="0" type="text"/>
+</div>
+</div>
+<!-- Conditional Section: Santri Search -->
+<div class="hidden space-y-sm animate-in fade-in duration-500" id="santri-section">
+<label class="font-label-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">person_search</span>
+                            Cari Nama Santri
+                        </label>
+<div class="relative group">
+<input class="w-full bg-[#F8FAFC] border-none rounded-xl px-md py-4 pl-12 text-body-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" id="santri-search" placeholder="Masukkan nama santri..." type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<!-- Search Results Dropdown -->
+<div class="hidden absolute top-full left-0 w-full mt-sm glass-card border border-primary/20 rounded-xl overflow-hidden z-20 shadow-xl max-h-48 overflow-y-auto" id="search-results">
+<div class="px-md py-3 hover:bg-primary/5 cursor-pointer flex justify-between items-center transition-colors border-b border-outline-variant/10">
+<div>
+<p class="font-label-md text-on-surface">Ahmad Zulfikar</p>
+<p class="text-label-sm text-on-surface-variant">Wali: H. Muhammad Ali</p>
+</div>
+<span class="text-primary text-label-sm font-bold bg-primary/10 px-2 py-1 rounded">Kelas 5A</span>
+</div>
+<div class="px-md py-3 hover:bg-primary/5 cursor-pointer flex justify-between items-center transition-colors border-b border-outline-variant/10">
+<div>
+<p class="font-label-md text-on-surface">Siti Aminah</p>
+<p class="text-label-sm text-on-surface-variant">Wali: Supardi</p>
+</div>
+<span class="text-primary text-label-sm font-bold bg-primary/10 px-2 py-1 rounded">Kelas 3C</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Conditional Section: Manual Origin -->
+<div class="hidden space-y-sm animate-in fade-in duration-500" id="manual-section">
+<label class="font-label-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">person</span>
+                            Asal Dana (Donatur)
+                        </label>
+<input class="w-full bg-[#F8FAFC] border-none rounded-xl px-md py-4 text-body-md focus:ring-2 focus:ring-primary focus:bg-white transition-all" placeholder="Contoh: Hamba Allah / Yayasan ABC" type="text"/>
+</div>
+<!-- Description/Notes -->
+<div class="space-y-sm">
+<label class="font-label-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">notes</span>
+                            Keterangan Tambahan
+                        </label>
+<textarea class="w-full bg-[#F8FAFC] border-none rounded-xl px-md py-4 text-body-md focus:ring-2 focus:ring-primary focus:bg-white transition-all resize-none" placeholder="Tambahkan catatan jika diperlukan..." rows="3"></textarea>
+</div>
+<!-- Action Buttons -->
+<div class="pt-lg flex items-center gap-md">
+<button class="flex-1 primary-gradient text-on-primary py-4 rounded-xl font-bold flex items-center justify-center gap-md shadow-xl hover:shadow-primary/20 active:scale-[0.98] transition-all" type="submit">
+<span class="material-symbols-outlined">save</span>
+                            Simpan Pemasukan
+                        </button>
+<button class="px-xl py-4 rounded-xl border-1.5 border-primary/20 text-primary font-bold hover:bg-primary/5 transition-all" type="reset">
+                            Batal
+                        </button>
+</div>
+</form>
+</div>
+<!-- Recent Summary Preview -->
+<div class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-lg">
+<div class="glass-card p-lg rounded-2xl">
+<p class="text-label-sm text-on-surface-variant mb-xs">Total Hari Ini</p>
+<h4 class="text-headline-md font-bold text-primary">Rp 12.450.000</h4>
+</div>
+<div class="glass-card p-lg rounded-2xl">
+<p class="text-label-sm text-on-surface-variant mb-xs">Jumlah Transaksi</p>
+<h4 class="text-headline-md font-bold text-on-surface">42 Record</h4>
+</div>
+<div class="glass-card p-lg rounded-2xl bg-tertiary-fixed/10">
+<p class="text-label-sm text-on-surface-variant mb-xs">Status Server</p>
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<h4 class="text-label-md font-bold text-primary">Tersinkronisasi</h4>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Set Current Date
+        const dateEl = document.getElementById('current-date');
+        const now = new Date();
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        dateEl.textContent = now.toLocaleDateString('id-ID', options);
+
+        // Smart Currency Formatting
+        const nominalInput = document.getElementById('nominal-input');
+        nominalInput.addEventListener('keyup', function(e) {
+            let value = this.value.replace(/[^,\d]/g, '').toString();
+            let split = value.split(',');
+            let sisa = split[0].length % 3;
+            let rupiah = split[0].substr(0, sisa);
+            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            this.value = rupiah;
+        });
+
+        // Conditional UX Logic
+        const kategoriSelect = document.getElementById('kategori-pemasukan');
+        const santriSection = document.getElementById('santri-section');
+        const manualSection = document.getElementById('manual-section');
+        const santriSearch = document.getElementById('santri-search');
+        const searchResults = document.getElementById('search-results');
+
+        kategoriSelect.addEventListener('change', function() {
+            const val = this.value;
+            if (val === 'Iuran Wali' || val === 'Tabungan') {
+                santriSection.classList.remove('hidden');
+                manualSection.classList.add('hidden');
+            } else if (val === 'Hibah' || val === 'Waqaf' || val === 'Lainnya') {
+                manualSection.classList.remove('hidden');
+                santriSection.classList.add('hidden');
+            } else {
+                santriSection.classList.add('hidden');
+                manualSection.classList.add('hidden');
+            }
+        });
+
+        // Simple Search Result Simulation
+        santriSearch.addEventListener('focus', () => {
+            if (santriSearch.value.length > 0) searchResults.classList.remove('hidden');
+        });
+
+        santriSearch.addEventListener('input', (e) => {
+            if (e.target.value.length > 0) {
+                searchResults.classList.remove('hidden');
+            } else {
+                searchResults.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!santriSearch.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.add('hidden');
+            }
+        });
+
+        // Handle Search Item Click
+        searchResults.querySelectorAll('div').forEach(item => {
+            item.addEventListener('click', function() {
+                const name = this.querySelector('p.font-label-md').innerText;
+                santriSearch.value = name;
+                searchResults.classList.add('hidden');
+            });
+        });
+
+        // Form Submit Feedback
+        document.getElementById('pemasukan-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Memproses...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Tersimpan!';
+                btn.classList.replace('primary-gradient', 'bg-primary');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.replace('bg-primary', 'primary-gradient');
+                    btn.disabled = false;
+                    e.target.reset();
+                    santriSection.classList.add('hidden');
+                    manualSection.classList.add('hidden');
+                }, 2000);
+            }, 1500);
+        });
+    </script>
+</body></html>

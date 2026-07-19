@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login - IKWAS Financial</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#3d4947",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "primary": "#00685f",
+                    "surface-dim": "#cbdbf5",
+                    "surface-container-low": "#eff4ff",
+                    "secondary-fixed-dim": "#bcc9c6",
+                    "outline": "#6d7a77",
+                    "inverse-on-surface": "#eaf1ff",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#6bd8cb",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#008378",
+                    "background": "#f8f9ff",
+                    "tertiary": "#735c00",
+                    "surface-container": "#e5eeff",
+                    "tertiary-fixed": "#ffe088",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#4e3d00",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface": "#f8f9ff",
+                    "on-primary-container": "#f4fffc",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#0b1c30",
+                    "secondary-fixed": "#d8e5e2",
+                    "on-tertiary-fixed": "#241a00",
+                    "primary-fixed": "#89f5e7",
+                    "inverse-surface": "#213145",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-container": "#cca72f",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#5b6765",
+                    "surface-variant": "#d3e4fe",
+                    "secondary-container": "#d8e5e2",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-primary-fixed-variant": "#005049",
+                    "surface-tint": "#006a61",
+                    "outline-variant": "#bcc9c6",
+                    "on-background": "#0b1c30",
+                    "on-secondary-fixed": "#121e1c",
+                    "on-primary-fixed": "#00201d",
+                    "on-secondary-fixed-variant": "#3d4947",
+                    "secondary": "#55615f",
+                    "inverse-primary": "#6bd8cb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "container-max": "1280px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "md": "16px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F0FDFA;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(13, 148, 136, 0.08);
+        }
+
+        .islamic-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z' fill='%230D9488' fill-opacity='0.03'/%3E%3C/svg%3E");
+            background-size: 400px 400px;
+            z-index: -1;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #0D9488 0%, #0B7A70 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-md">
+<!-- Background Layer -->
+<div class="fixed inset-0 islamic-pattern"></div>
+<div class="fixed inset-0 bg-gradient-to-tr from-primary/5 to-transparent"></div>
+<!-- Main Login Canvas -->
+<main class="w-full max-w-[440px] z-10 animate-fade-in-up">
+<!-- Brand Identity -->
+<div class="text-center mb-xl">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary mb-md shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-on-primary text-4xl" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary mb-xs">IKWAS Financial</h1>
+<p class="font-body-md text-body-md text-on-surface-variant opacity-80">Manajemen Keuangan Santri &amp; Lembaga</p>
+</div>
+<!-- Login Card -->
+<div class="glass-card rounded-[32px] p-xl">
+<div class="mb-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface">Selamat Datang</h2>
+<p class="font-label-md text-label-md text-on-surface-variant">Silakan masuk dengan akun Anda</p>
+</div>
+<form class="space-y-lg" id="loginForm" onsubmit="return false">
+<!-- Username Input -->
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="username">Username atau Email</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">person</span>
+<input class="w-full pl-12 pr-4 py-4 bg-[#F8FAFC] border-none rounded-2xl focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:bg-white transition-all font-body-md text-body-md text-on-surface" id="username" name="username" placeholder="Masukkan username" type="text"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="password">Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full pl-12 pr-14 py-4 bg-[#F8FAFC] border-none rounded-2xl focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:bg-white transition-all font-body-md text-body-md text-on-surface" id="password" name="password" placeholder="••••••••" type="password"/>
+<button aria-label="Toggle password visibility" class="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-outline hover:text-primary transition-colors flex items-center justify-center" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined text-2xl" id="eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Action Items -->
+<div class="flex items-center justify-between pt-sm">
+<label class="flex items-center gap-3 cursor-pointer group">
+<div class="relative flex items-center">
+<input class="peer hidden" type="checkbox"/>
+<div class="w-5 h-5 rounded-md border-2 border-outline group-hover:border-primary peer-checked:bg-primary peer-checked:border-primary transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[14px] opacity-0 peer-checked:opacity-100 transition-opacity" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Ingat saya</span>
+</label>
+<a class="font-label-md text-label-md text-primary hover:underline transition-all" href="#">Lupa password?</a>
+</div>
+<!-- Login Button -->
+<button class="btn-gradient w-full py-4 px-lg rounded-2xl text-on-primary font-label-md text-label-md tracking-wide active:scale-[0.98] transition-transform flex items-center justify-center gap-3 shadow-lg shadow-primary/20 mt-4" type="submit">
+                    Masuk
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- Footer Decoration -->
+<div class="mt-xl text-center space-y-md">
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-widest">Aman • Transparan • Berkah</p>
+<div class="flex justify-center items-center gap-8 opacity-40">
+<div class="w-24 h-[1px] bg-outline"></div>
+<div class="flex gap-4">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+</div>
+<div class="w-24 h-[1px] bg-outline"></div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerText = 'visibility_off';
+                eyeIcon.style.fontVariationSettings = "'FILL' 1";
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerText = 'visibility';
+                eyeIcon.style.fontVariationSettings = "'FILL' 0";
+            }
+        }
+
+        // Simple enter animation trigger
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('main');
+            form.style.opacity = '0';
+            form.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                form.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                form.style.opacity = '1';
+                form.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // Form feedback simulation
+        const loginBtn = document.querySelector('button[type="submit"]');
+        loginBtn.addEventListener('click', () => {
+            loginBtn.innerHTML = '<span class="animate-spin material-symbols-outlined text-xl">progress_activity</span> Memproses...';
+            loginBtn.style.pointerEvents = 'none';
+            loginBtn.style.opacity = '0.8';
+            
+            setTimeout(() => {
+                loginBtn.innerHTML = 'Masuk <span class="material-symbols-outlined text-xl">arrow_forward</span>';
+                loginBtn.style.pointerEvents = 'auto';
+                loginBtn.style.opacity = '1';
+            }, 2000);
+        });
+    </script>
+</body></html>

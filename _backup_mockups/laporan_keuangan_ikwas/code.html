@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Laporan Detail &amp; Tutup Buku - IKWAS Financial</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#3d4947",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "primary": "#00685f",
+                    "surface-dim": "#cbdbf5",
+                    "surface-container-low": "#eff4ff",
+                    "secondary-fixed-dim": "#bcc9c6",
+                    "outline": "#6d7a77",
+                    "inverse-on-surface": "#eaf1ff",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#6bd8cb",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#008378",
+                    "background": "#f8f9ff",
+                    "tertiary": "#735c00",
+                    "surface-container": "#e5eeff",
+                    "tertiary-fixed": "#ffe088",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#4e3d00",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface": "#f8f9ff",
+                    "on-primary-container": "#f4fffc",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#0b1c30",
+                    "secondary-fixed": "#d8e5e2",
+                    "on-tertiary-fixed": "#241a00",
+                    "primary-fixed": "#89f5e7",
+                    "inverse-surface": "#213145",
+                    "surface-container-high": "#dce9ff",
+                    "tertiary-container": "#cca72f",
+                    "on-primary": "#ffffff",
+                    "on-secondary-container": "#5b6765",
+                    "surface-variant": "#d3e4fe",
+                    "secondary-container": "#d8e5e2",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-primary-fixed-variant": "#005049",
+                    "surface-tint": "#006a61",
+                    "outline-variant": "#bcc9c6",
+                    "on-background": "#0b1c30",
+                    "on-secondary-fixed": "#121e1c",
+                    "on-primary-fixed": "#00201d",
+                    "on-secondary-fixed-variant": "#3d4947",
+                    "secondary": "#55615f",
+                    "inverse-primary": "#6bd8cb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "container-max": "1280px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "md": "16px",
+                    "xl": "40px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F0FDFA; /* Soft Sage from Brand Anchor */
+            background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M200 10L215 150L350 165L215 180L200 320L185 180L50 165L185 150Z' fill='%230D9488' fill-opacity='0.02'/%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #0D9488 0%, #0B7A70 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-on-surface">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest/70 backdrop-blur-xl border-r border-white/20 shadow-lg shadow-primary/5 flex flex-col gap-2 p-md z-40">
+<div class="mb-xl px-4">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">IKWAS Financial</h1>
+<p class="text-label-sm text-on-surface-variant">Manajemen Keuangan</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Beranda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body-md">Pemasukan</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md">Pengeluaran</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Data Santri</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-xl active:scale-95 transition-transform shadow-md shadow-primary/20" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md">Laporan</span>
+</a>
+</nav>
+<button class="mt-auto flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 rounded-xl transition-all font-label-md">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</button>
+</aside>
+<!-- TopNavBar Anchor -->
+<header class="fixed top-0 right-0 bg-surface-container-lowest/70 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-primary/5 flex justify-between items-center w-full px-lg py-md ml-64 max-w-[calc(100%-16rem)] z-30">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Laporan Keuangan Detail</h2>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md">
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-primary/5 rounded-full transition-all active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-md">
+<div class="text-right">
+<p class="font-label-md text-on-surface">Admin IKWAS</p>
+<p class="text-label-sm text-on-surface-variant">Bendahara Pusat</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a friendly young administrator in a clean minimalist setting with soft teal accent lighting, conveying transparency and professionalism for a financial platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABC06zf8t_ylNJ9HJSAVCjG093gdng7MI04-x6rHoSu77b_Eg921A_b7KUFHDixnmV6w-MHG2RUrll_gqUpxnyCVMcBe8-8NM2Hi2lCqh2lzo2y-DtrREyNQq5K8ZeaeyLP3Lm1_o8GjTY4tt70Wonc1wrAw_PqPM5K6eoPreGYtt7KcULx1xhKOIqnz3YMa826MJtVzc8isatxRpAFILKsIl525b9N_W83nT2KPgz-ycdMO21TBhZBFud7ukqj19b4vW34PnKOSY"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 p-lg">
+<div class="max-w-container-max mx-auto space-y-lg">
+<!-- Summary Widgets (Bento) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="glass-card p-lg rounded-xl flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_balance</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Saldo Akhir</p>
+<p class="font-headline-md text-headline-md text-primary">Rp 45.280.000</p>
+</div>
+</div>
+<div class="glass-card p-lg rounded-xl flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Total Masuk (Bulan Ini)</p>
+<p class="font-headline-md text-headline-md text-tertiary">Rp 12.450.000</p>
+</div>
+</div>
+<div class="glass-card p-lg rounded-xl flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-error-container/20 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">trending_down</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Total Keluar (Bulan Ini)</p>
+<p class="font-headline-md text-headline-md text-error">Rp 8.120.000</p>
+</div>
+</div>
+<div class="glass-card p-lg rounded-xl flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div>
+<p class="text-label-sm text-on-surface-variant">Periode Aktif</p>
+<p class="font-headline-md text-headline-md text-on-surface">Okt 2023</p>
+</div>
+</div>
+</div>
+<!-- Table Actions & Datatable -->
+<div class="glass-card rounded-xl overflow-hidden shadow-sm">
+<!-- Filters & Search -->
+<div class="p-lg border-b border-white/20 flex flex-wrap items-center justify-between gap-md">
+<div class="flex flex-wrap items-center gap-md">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-body-md focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Cari transaksi..." type="text"/>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-low px-3 py-2 rounded-lg border-none">
+<span class="material-symbols-outlined text-outline text-sm">date_range</span>
+<input class="bg-transparent border-none text-label-md p-0 focus:ring-0" type="date"/>
+<span class="text-outline text-label-sm">s/d</span>
+<input class="bg-transparent border-none text-label-md p-0 focus:ring-0" type="date"/>
+</div>
+<select class="bg-surface-container-low border-none rounded-lg text-label-md py-2 px-4 focus:ring-2 focus:ring-primary">
+<option>Semua Kategori</option>
+<option>Syahriah</option>
+<option>Uang Saku</option>
+<option>Donasi</option>
+</select>
+</div>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-2 px-4 py-2 bg-[#25D366] text-white rounded-lg font-label-md hover:opacity-90 transition-all active:scale-95" onclick="copyReportLink()">
+<span class="material-symbols-outlined">share</span>
+                            Salin Tautan Laporan
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 primary-gradient text-white rounded-lg font-label-md shadow-lg shadow-primary/20 hover:opacity-90 transition-all active:scale-95" onclick="openCloseBookModal()">
+<span class="material-symbols-outlined">lock</span>
+                            Tutup Buku
+                        </button>
+</div>
+</div>
+<!-- Datatable Pro -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-primary/5 text-on-surface-variant border-b border-white/20">
+<th class="px-lg py-md font-label-md cursor-pointer hover:text-primary transition-colors">
+<div class="flex items-center gap-1">Tanggal <span class="material-symbols-outlined text-sm">unfold_more</span></div>
+</th>
+<th class="px-lg py-md font-label-md">Kategori</th>
+<th class="px-lg py-md font-label-md">Jenis</th>
+<th class="px-lg py-md font-label-md">Santri/Wali</th>
+<th class="px-lg py-md font-label-md">Keterangan</th>
+<th class="px-lg py-md font-label-md text-right">Nominal</th>
+<th class="px-lg py-md font-label-md">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/10">
+<!-- Row 1 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-lg py-md text-body-md">12 Okt 2023</td>
+<td class="px-lg py-md">
+<span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-label-sm">Syahriah</span>
+</td>
+<td class="px-lg py-md">
+<span class="flex items-center gap-1 text-tertiary text-label-md">
+<span class="material-symbols-outlined text-sm">arrow_downward</span> Masuk
+                                    </span>
+</td>
+<td class="px-lg py-md text-body-md font-medium">Ahmad Fauzi</td>
+<td class="px-lg py-md text-body-md text-on-surface-variant italic">Pembayaran Syahriah Okt</td>
+<td class="px-lg py-md text-body-md text-right font-bold text-tertiary">Rp 500.000</td>
+<td class="px-lg py-md">
+<button class="p-1 opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-lg py-md text-body-md">11 Okt 2023</td>
+<td class="px-lg py-md">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container rounded-full text-label-sm">Operasional</span>
+</td>
+<td class="px-lg py-md">
+<span class="flex items-center gap-1 text-error text-label-md">
+<span class="material-symbols-outlined text-sm">arrow_upward</span> Keluar
+                                    </span>
+</td>
+<td class="px-lg py-md text-body-md font-medium">Toko Listrik Sejahtera</td>
+<td class="px-lg py-md text-body-md text-on-surface-variant italic">Beli Lampu Kamar Santri</td>
+<td class="px-lg py-md text-body-md text-right font-bold text-error">Rp 120.000</td>
+<td class="px-lg py-md">
+<button class="p-1 opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-lg py-md text-body-md">10 Okt 2023</td>
+<td class="px-lg py-md">
+<span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-label-sm">Uang Saku</span>
+</td>
+<td class="px-lg py-md">
+<span class="flex items-center gap-1 text-tertiary text-label-md">
+<span class="material-symbols-outlined text-sm">arrow_downward</span> Masuk
+                                    </span>
+</td>
+<td class="px-lg py-md text-body-md font-medium">Siti Aminah (Wali)</td>
+<td class="px-lg py-md text-body-md text-on-surface-variant italic">Titipan Uang Saku Zaid</td>
+<td class="px-lg py-md text-body-md text-right font-bold text-tertiary">Rp 200.000</td>
+<td class="px-lg py-md">
+<button class="p-1 opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-lg py-md text-body-md">09 Okt 2023</td>
+<td class="px-lg py-md">
+<span class="px-2 py-1 bg-tertiary-container/20 text-tertiary rounded-full text-label-sm">Donasi</span>
+</td>
+<td class="px-lg py-md">
+<span class="flex items-center gap-1 text-tertiary text-label-md">
+<span class="material-symbols-outlined text-sm">arrow_downward</span> Masuk
+                                    </span>
+</td>
+<td class="px-lg py-md text-body-md font-medium">Hamba Allah</td>
+<td class="px-lg py-md text-body-md text-on-surface-variant italic">Sedekah Jumat</td>
+<td class="px-lg py-md text-body-md text-right font-bold text-tertiary">Rp 1.000.000</td>
+<td class="px-lg py-md">
+<button class="p-1 opacity-0 group-hover:opacity-100 hover:text-primary transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-lg py-md border-t border-white/20 flex items-center justify-between">
+<p class="text-label-sm text-on-surface-variant">Menampilkan 1-10 dari 150 data</p>
+<div class="flex items-center gap-sm">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-primary/5 text-on-surface-variant active:scale-90 transition-all">
+<span class="material-symbols-outlined text-md">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center bg-primary text-on-primary font-label-md shadow-sm">1</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-primary/5 text-on-surface-variant font-label-md">2</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-primary/5 text-on-surface-variant font-label-md">3</button>
+<span class="px-2 text-outline">...</span>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-primary/5 text-on-surface-variant font-label-md">15</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-primary/5 text-on-surface-variant active:scale-90 transition-all">
+<span class="material-symbols-outlined text-md">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Success Toast (Hidden by default) -->
+<div class="fixed bottom-10 left-1/2 -translate-x-1/2 glass-card px-6 py-4 rounded-full shadow-xl flex items-center gap-3 transform translate-y-32 transition-transform duration-300 z-50 pointer-events-none" id="toast">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="font-label-md text-on-surface" id="toast-message">Tautan disalin ke clipboard!</span>
+</div>
+<!-- Tutup Buku Confirmation Modal (Hidden by default) -->
+<div class="fixed inset-0 z-50 hidden" id="closeBookModal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm"></div>
+<!-- Modal Content -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
+<div class="glass-card rounded-2xl p-xl shadow-2xl space-y-lg border-2 border-primary/10">
+<div class="w-16 h-16 rounded-full bg-error-container/20 flex items-center justify-center mx-auto text-error">
+<span class="material-symbols-outlined text-4xl">warning</span>
+</div>
+<div class="text-center space-y-md">
+<h3 class="font-headline-md text-headline-md text-on-surface">Konfirmasi Tutup Buku</h3>
+<p class="text-body-md text-on-surface-variant px-4">
+                        Tindakan ini akan mengunci semua transaksi pada periode <span class="font-bold">Oktober 2023</span>. Data yang sudah ditutup tidak dapat diubah kembali.
+                    </p>
+</div>
+<div class="flex flex-col gap-md">
+<button class="w-full py-3 primary-gradient text-white rounded-xl font-headline-md shadow-lg shadow-primary/20 active:scale-95 transition-all" onclick="confirmCloseBook()">
+                        Ya, Tutup Buku Periode Ini
+                    </button>
+<button class="w-full py-3 bg-surface-container-low text-on-surface-variant rounded-xl font-label-md hover:bg-surface-container-high transition-all" onclick="closeModal()">
+                        Batalkan
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+        function copyReportLink() {
+            // Logic simulated
+            showToast("Tautan laporan WhatsApp telah disalin!");
+        }
+
+        function openCloseBookModal() {
+            const modal = document.getElementById('closeBookModal');
+            modal.classList.remove('hidden');
+            modal.querySelector('div:nth-child(2)').classList.add('animate-in', 'fade-in', 'zoom-in', 'duration-300');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('closeBookModal');
+            modal.classList.add('hidden');
+        }
+
+        function confirmCloseBook() {
+            closeModal();
+            showToast("Berhasil! Buku periode Oktober 2023 telah ditutup.");
+            // In real app, this would refresh or redirect
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = message;
+            
+            toast.classList.remove('translate-y-32');
+            toast.classList.add('translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-32');
+                toast.classList.remove('translate-y-0');
+            }, 3000);
+        }
+
+        // Micro-interactions for table rows
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', () => {
+                // Example feedback
+            });
+        });
+    </script>
+</body></html>

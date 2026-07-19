@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+<title>Pengaturan Super Admin | IKWAS Financial</title>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .sage-bg {
+            background-color: #F0FDFA;
+            background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M200 0L210 190L400 200L210 210L200 400L190 210L0 200L190 190Z' fill='%230D9488' fill-opacity='0.03'/%3E%3C/svg%3E");
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #0D948844;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#3d4947",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#e9c349",
+                      "primary": "#00685f",
+                      "surface-dim": "#cbdbf5",
+                      "surface-container-low": "#eff4ff",
+                      "secondary-fixed-dim": "#bcc9c6",
+                      "outline": "#6d7a77",
+                      "inverse-on-surface": "#eaf1ff",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#6bd8cb",
+                      "on-secondary": "#ffffff",
+                      "primary-container": "#008378",
+                      "background": "#f8f9ff",
+                      "tertiary": "#735c00",
+                      "surface-container": "#e5eeff",
+                      "tertiary-fixed": "#ffe088",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-container": "#4e3d00",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "surface": "#f8f9ff",
+                      "on-primary-container": "#f4fffc",
+                      "surface-bright": "#f8f9ff",
+                      "on-error-container": "#93000a",
+                      "on-surface": "#0b1c30",
+                      "secondary-fixed": "#d8e5e2",
+                      "on-tertiary-fixed": "#241a00",
+                      "primary-fixed": "#89f5e7",
+                      "inverse-surface": "#213145",
+                      "surface-container-high": "#dce9ff",
+                      "tertiary-container": "#cca72f",
+                      "on-primary": "#ffffff",
+                      "on-secondary-container": "#5b6765",
+                      "surface-variant": "#d3e4fe",
+                      "secondary-container": "#d8e5e2",
+                      "surface-container-highest": "#d3e4fe",
+                      "on-primary-fixed-variant": "#005049",
+                      "surface-tint": "#006a61",
+                      "outline-variant": "#bcc9c6",
+                      "on-background": "#0b1c30",
+                      "on-secondary-fixed": "#121e1c",
+                      "on-primary-fixed": "#00201d",
+                      "on-secondary-fixed-variant": "#3d4947",
+                      "secondary": "#55615f",
+                      "inverse-primary": "#6bd8cb"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "container-max": "1280px",
+                      "base": "4px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "gutter": "24px",
+                      "md": "16px",
+                      "xl": "40px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Plus Jakarta Sans"],
+                      "headline-lg": ["Plus Jakarta Sans"],
+                      "headline-xl": ["Plus Jakarta Sans"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans"],
+                      "body-lg": ["Plus Jakarta Sans"],
+                      "label-sm": ["Plus Jakarta Sans"],
+                      "body-md": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="sage-bg text-on-surface font-body-md overflow-x-hidden">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest/70 backdrop-blur-xl border-r border-white/20 shadow-lg shadow-primary/5 flex flex-col gap-2 p-md z-40">
+<div class="mb-xl px-2">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">IKWAS Financial</h1>
+<p class="text-on-surface-variant font-label-md">Manajemen Keuangan</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Beranda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body-md">Pemasukan</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md">Pengeluaran</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Data Santri</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/50 rounded-xl transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md">Laporan</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-on-primary rounded-xl transition-all active:scale-95 mt-auto mb-4" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Pengaturan</span>
+</a>
+</nav>
+<button class="flex items-center justify-center gap-2 px-4 py-3 text-error font-label-md border border-error/20 rounded-xl hover:bg-error/5 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+            Logout
+        </button>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Anchor -->
+<header class="flex justify-between items-center w-full px-lg py-md bg-surface-container-lowest/70 backdrop-blur-xl border-b border-white/20 shadow-sm shadow-primary/5 sticky top-0 z-30">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-md text-headline-md text-primary">Pengaturan Sistem</h2>
+<div class="h-6 w-px bg-outline-variant"></div>
+<span class="text-on-surface-variant font-label-md">Super Admin Panel</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-primary/5 rounded-full transition-transform active:scale-95">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+<div class="flex items-center gap-3 bg-secondary-container/30 px-3 py-1.5 rounded-full">
+<img class="w-8 h-8 rounded-full border border-primary/20 object-cover" data-alt="A professional studio portrait of a sophisticated person with a warm and trustworthy expression, set against a soft blurred office background with teal and gold lighting. The image maintains a high-end corporate aesthetic with a modern, glassmorphic feel that aligns with a clean financial dashboard design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrs97GjdzCwn9rMh7Pb2zwD6DbvGrXf8jv0KfiNp__0e0cZY_OKfqcK0JpBSIRBjhWV0_PxUfci8RVfWzGiTooWpUzLP_x5SvDZ2KiwH38aUrw216gx9ei7jKApbs7YJC9DogGGzAcfipfeLmUII6o_0CEIBkcjkd0h8pq5NMMYutU3PphqHJuue5Yrz_ImDURYGSjAHkA7X-Sg7JX2Veqxq6gaeSt5KU3IBV0y8zsTjL3J9UXZbonByjqE1SY1pAwXX0gq9px-gY"/>
+<span class="font-label-md text-primary">Super Admin</span>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-lg max-w-7xl mx-auto space-y-lg">
+<!-- Section Tabs Navigation -->
+<div class="flex gap-8 border-b border-outline-variant/30 mb-md overflow-x-auto no-scrollbar">
+<button class="pb-4 text-primary font-bold border-b-2 border-primary transition-all active:scale-95 whitespace-nowrap" id="tab-manajemen-pengurus" onclick="switchTab('manajemen-pengurus')">
+                    Manajemen Pengurus
+                </button>
+<button class="pb-4 text-on-surface-variant hover:text-primary transition-all active:scale-95 whitespace-nowrap" id="tab-hak-akses" onclick="switchTab('hak-akses')">
+                    Hak Akses & Permission
+                </button>
+<button class="pb-4 text-on-surface-variant hover:text-primary transition-all active:scale-95 whitespace-nowrap" id="tab-kategori" onclick="switchTab('kategori')">
+                    Manajemen Kategori
+                </button>
+</div>
+<!-- Tab 1: Manajemen Pengurus -->
+<section class="tab-content animate-in fade-in duration-300" id="manajemen-pengurus">
+<div class="glass-card rounded-xl p-lg shadow-sm">
+<div class="flex justify-between items-center mb-lg">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Daftar Pengurus</h3>
+<p class="text-on-surface-variant text-label-md">Kelola akun administrator dan staf keuangan</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-xl font-label-md flex items-center gap-2 hover:opacity-90 transition-all shadow-md shadow-primary/20">
+<span class="material-symbols-outlined">person_add</span>
+                            Tambah Pengurus
+                        </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-secondary-container/30 text-on-secondary-fixed-variant">
+<tr>
+<th class="px-4 py-4 font-label-md rounded-l-xl">Nama Pengurus</th>
+<th class="px-4 py-4 font-label-md">Email</th>
+<th class="px-4 py-4 font-label-md">Role</th>
+<th class="px-4 py-4 font-label-md">Status</th>
+<th class="px-4 py-4 font-label-md rounded-r-xl text-center">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-4 py-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">AH</div>
+<div>
+<div class="font-label-md">Ahmad Hidayat</div>
+<div class="text-xs text-on-surface-variant">Last login: 2 jam lalu</div>
+</div>
+</td>
+<td class="px-4 py-4 text-on-surface-variant">ahmad.h@ikwas.org</td>
+<td class="px-4 py-4">
+<span class="px-3 py-1 bg-tertiary-container text-on-tertiary-container rounded-full text-[10px] font-bold uppercase tracking-wider">Bendahara Utama</span>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1.5 text-primary">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-xs font-semibold">Aktif</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex justify-center gap-2">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Reset Password">
+<span class="material-symbols-outlined text-[20px]">lock_reset</span>
+</button>
+<button class="p-2 text-outline hover:bg-outline/10 rounded-lg transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-lg transition-colors" title="Nonaktifkan">
+<span class="material-symbols-outlined text-[20px]">person_off</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-4 py-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold">SR</div>
+<div>
+<div class="font-label-md">Siti Rahma</div>
+<div class="text-xs text-on-surface-variant">Last login: Kemarin</div>
+</div>
+</td>
+<td class="px-4 py-4 text-on-surface-variant">siti.r@ikwas.org</td>
+<td class="px-4 py-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[10px] font-bold uppercase tracking-wider">Staf Input</span>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-1.5 text-primary">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-xs font-semibold">Aktif</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex justify-center gap-2">
+<button class="p-2 text-primary hover:bg-primary/10 rounded-lg transition-colors" title="Reset Password">
+<span class="material-symbols-outlined text-[20px]">lock_reset</span>
+</button>
+<button class="p-2 text-outline hover:bg-outline/10 rounded-lg transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 text-error hover:bg-error/10 rounded-lg transition-colors" title="Nonaktifkan">
+<span class="material-symbols-outlined text-[20px]">person_off</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Tab 2: Hak Akses -->
+<section class="tab-content hidden animate-in fade-in duration-300" id="hak-akses">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-gutter">
+<!-- Roles Sidebar -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-2">
+<h4 class="font-label-md text-primary mb-2 px-2 uppercase tracking-widest text-[10px]">Pilih Role</h4>
+<button class="w-full text-left px-4 py-3 bg-primary text-on-primary rounded-xl font-label-md">Bendahara Utama</button>
+<button class="w-full text-left px-4 py-3 hover:bg-secondary-container/50 text-on-surface-variant rounded-xl font-label-md transition-colors">Bendahara Cabang</button>
+<button class="w-full text-left px-4 py-3 hover:bg-secondary-container/50 text-on-surface-variant rounded-xl font-label-md transition-colors">Staf Administrasi</button>
+<button class="w-full text-left px-4 py-3 hover:bg-secondary-container/50 text-on-surface-variant rounded-xl font-label-md transition-colors">Viewer / Auditor</button>
+</div>
+<!-- Permission Matrix -->
+<div class="lg:col-span-3 glass-card rounded-xl p-lg space-y-lg">
+<div class="flex justify-between items-center">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Konfigurasi Hak Akses</h3>
+<p class="text-on-surface-variant text-label-md">Role: <span class="font-bold text-on-surface">Bendahara Utama</span></p>
+</div>
+<button class="bg-primary text-on-primary px-8 py-2.5 rounded-xl font-label-md hover:opacity-90 transition-all">Simpan Perubahan</button>
+</div>
+<div class="space-y-6">
+<!-- Permission Group -->
+<div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+<div class="bg-secondary-container/20 px-4 py-3 font-label-md text-primary flex items-center justify-between">
+<span>Modul Keuangan</span>
+<span class="text-[10px] text-on-surface-variant/60 italic">CRUD Permissions</span>
+</div>
+<div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+<!-- Permission Item -->
+<div class="flex items-center justify-between group">
+<span class="text-body-md text-on-surface-variant">Mencatat Pemasukan</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between group">
+<span class="text-body-md text-on-surface-variant">Mencatat Pengeluaran</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between group">
+<span class="text-body-md text-on-surface-variant">Edit/Hapus Transaksi</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between group">
+<span class="text-body-md text-on-surface-variant">Akses Laporan Keuangan</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Permission Group 2 -->
+<div class="border border-outline-variant/30 rounded-xl overflow-hidden">
+<div class="bg-secondary-container/20 px-4 py-3 font-label-md text-primary flex items-center justify-between">
+<span>Manajemen Data</span>
+<span class="text-[10px] text-on-surface-variant/60 italic">Global Data Access</span>
+</div>
+<div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+<div class="flex items-center justify-between group">
+<span class="text-body-md text-on-surface-variant">Kelola Data Santri</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between group">
+<span class="text-body-md text-on-surface-variant">Import/Export Excel</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-outline-variant/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Tab 3: Manajemen Kategori -->
+<section class="tab-content hidden animate-in fade-in duration-300" id="kategori">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Pemasukan Categories -->
+<div class="glass-card rounded-xl p-lg flex flex-col h-[600px]">
+<div class="flex justify-between items-center mb-md">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Kategori Pemasukan</h3>
+<p class="text-on-surface-variant text-label-md">Kelola sumber dana masuk</p>
+</div>
+<button class="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all active:scale-90">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
+<div class="flex items-center justify-between p-4 bg-white/50 border border-white/40 rounded-xl hover:shadow-md transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">volunteer_activism</span>
+</div>
+<div>
+<div class="font-label-md">Infaq & Sedekah</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Kode: PK-001</div>
+</div>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-outline hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 text-outline hover:text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/50 border border-white/40 rounded-xl hover:shadow-md transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div>
+<div class="font-label-md">SPP Santri</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Kode: PK-002</div>
+</div>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-outline hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 text-outline hover:text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/50 border border-white/40 rounded-xl hover:shadow-md transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">business</span>
+</div>
+<div>
+<div class="font-label-md">Donasi Instansi</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Kode: PK-003</div>
+</div>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-outline hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 text-outline hover:text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pengeluaran Categories -->
+<div class="glass-card rounded-xl p-lg flex flex-col h-[600px]">
+<div class="flex justify-between items-center mb-md">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Kategori Pengeluaran</h3>
+<p class="text-on-surface-variant text-label-md">Kelola alokasi operasional</p>
+</div>
+<button class="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all active:scale-90">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
+<div class="flex items-center justify-between p-4 bg-white/50 border border-white/40 rounded-xl hover:shadow-md transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-error/5 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<div class="font-label-md">Konsumsi & Dapur</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Kode: PL-001</div>
+</div>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-outline hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 text-outline hover:text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/50 border border-white/40 rounded-xl hover:shadow-md transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-error/5 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<div class="font-label-md">Listrik & Air</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Kode: PL-002</div>
+</div>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-outline hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 text-outline hover:text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-white/50 border border-white/40 rounded-xl hover:shadow-md transition-all group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-error/5 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<div class="font-label-md">Gaji Pengajar</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Kode: PL-003</div>
+</div>
+</div>
+<div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-outline hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1.5 text-outline hover:text-error"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FAB Anchor (Only relevant for core actions, hidden here as it's a settings page) -->
+<script>
+        function switchTab(tabId) {
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show target content
+            document.getElementById(tabId).classList.remove('hidden');
+            
+            // Update button styles
+            const buttons = {
+                'manajemen-pengurus': 'tab-manajemen-pengurus',
+                'hak-akses': 'tab-hak-akses',
+                'kategori': 'tab-kategori'
+            };
+            
+            Object.values(buttons).forEach(id => {
+                const btn = document.getElementById(id);
+                btn.classList.remove('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+                btn.classList.add('text-on-surface-variant');
+            });
+            
+            const activeBtn = document.getElementById(buttons[tabId]);
+            activeBtn.classList.add('text-primary', 'font-bold', 'border-b-2', 'border-primary');
+            activeBtn.classList.remove('text-on-surface-variant');
+        }
+
+        // Add some basic glassmorphism parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.glass-card');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            cards.forEach(card => {
+                const shiftX = (x - 0.5) * 5;
+                const shiftY = (y - 0.5) * 5;
+                card.style.transform = `translate(${shiftX}px, ${shiftY}px)`;
+            });
+        });
+    </script>
+</body></html>

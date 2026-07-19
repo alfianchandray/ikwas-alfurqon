@@ -1,0 +1,24 @@
+# PRD: Aplikasi Pencatatan Keuangan IKWAS (Ikatan Wali Santri) - MVP V3
+
+## 1. Tema Visual & Pendekatan
+- **Nuansa Islami Ringan:** Bersih, transparan, modern.
+- **Aset:** Ilustrasi SVG kustom (pola geometris islami tipis, siluet kubah abstrak).
+- **Bahasa:** 100% Bahasa Indonesia.
+- **Metode:** Atomic Design System.
+
+## 2. Arsitektur & Komponen Kustom
+- **Layout:** Desktop-first (sesuai permintaan user).
+- **UI Kustom:** Dropdown, Toast/Alert, Modal Konfirmasi, Smart Currency Input (Rp), Password Toggle.
+- **Akses (RBAC):** Publik (Dashboard saja) vs Internal (Login).
+
+## 3. Daftar Halaman (7 Halaman)
+1. **Dashboard Publik:** Ringkasan saldo, grafik tren, buku besar ter-masking, CTA login.
+2. **Halaman Login:** Minimalis card, password toggle.
+3. **Form Pemasukan Pintar:** UX kondisional (pencarian santri vs input manual).
+4. **Form Pengeluaran:** Dropdown kategori, smart currency, upload kuitansi.
+5. **Data Santri & Wali:** Manajemen basis data pasangan santri-wali.
+6. **Laporan & Tutup Buku:** Datatable Pro (sort, filter, search, pagination), Tutup Buku modal.
+7. **Pengaturan (Super Admin):** Manajemen user, hak akses (matrix checkbox), manajemen kategori dinamis.
+
+## 4. Navigasi Internal
+- **Menu:** Beranda, Pemasukan, Pengeluaran, Data Santri, Laporan.
