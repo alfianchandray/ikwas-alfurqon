@@ -4,7 +4,7 @@
 import { execSync } from 'child_process';
 import { writeFileSync, unlinkSync } from 'fs';
 
-const ITERATIONS = 310_000;
+const ITERATIONS = 100_000;
 const HASH_ALG = "SHA-256";
 const KEY_LENGTH = 256;
 
