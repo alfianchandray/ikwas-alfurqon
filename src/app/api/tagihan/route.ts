@@ -92,8 +92,9 @@ export async function POST(req: NextRequest) {
       tagihan_id?: number;
       nominal?: number;
       keterangan?: string;
+      tanggal?: string; // Format: YYYY-MM-DD
     };
-    const { tagihan_id, nominal, keterangan } = body;
+    const { tagihan_id, nominal, keterangan, tanggal } = body;
 
     if (!tagihan_id || !nominal) {
       return NextResponse.json({ error: "tagihan_id dan nominal wajib diisi." }, { status: 400 });
@@ -122,13 +123,14 @@ export async function POST(req: NextRequest) {
     // 2. Insert transaction entry into transaksi table (Pemasukan Kas)
     const ip = getClientIp(req);
     const cleanKeterangan = keterangan || `Pelunasan ${bill.category_name} - ${bill.santri_name} (Wali: ${bill.wali}) Periode ${bill.periode}`;
+    const txTanggal = tanggal ? `${tanggal} 12:00:00` : null;
 
     const txResult = await db
       .prepare(
         `INSERT INTO transaksi (tanggal, nama, keterangan, kategori, nominal, tipe, user_id)
-         VALUES (datetime('now', 'localtime'), ?, ?, ?, ?, 'in', ?)`
+         VALUES (COALESCE(?, datetime('now', 'localtime')), ?, ?, ?, ?, 'in', ?)`
       )
-      .bind(bill.santri_name, cleanKeterangan, bill.category_name, nominal, session.user_id)
+      .bind(txTanggal, bill.santri_name, cleanKeterangan, bill.category_name, nominal, session.user_id)
       .run();
 
     // D1 changes: lastRowId contains inserted ID
@@ -140,11 +142,11 @@ export async function POST(req: NextRequest) {
         `UPDATE tagihan_santri 
          SET status = 'lunas', 
              nominal = ?, 
-             tanggal_bayar = datetime('now', 'localtime'), 
+             tanggal_bayar = COALESCE(?, datetime('now', 'localtime')), 
              transaksi_id = ? 
          WHERE id = ?`
       )
-      .bind(nominal, insertedTxId, tagihan_id)
+      .bind(nominal, txTanggal, insertedTxId, tagihan_id)
       .run();
 
     // 4. Audit Log

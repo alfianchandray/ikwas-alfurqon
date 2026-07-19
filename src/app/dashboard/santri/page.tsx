@@ -69,7 +69,9 @@ export default function SantriPage() {
   const [targetBill, setTargetBill] = useState<TagihanRow | null>(null);
   const [paymentNominal, setPaymentNominal] = useState(150000);
   const [paymentKeterangan, setPaymentKeterangan] = useState('');
+  const [paymentTanggal, setPaymentTanggal] = useState('');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [searchPlaceholder, setSearchPlaceholder] = useState('Ketik nama santri...');
 
   // Global Toast
   const [isLoading, setIsLoading] = useState(false);
@@ -149,6 +151,16 @@ export default function SantriPage() {
     fetchSantri();
     fetchClasses();
     fetchCategories();
+
+    // Load custom placeholder from settings
+    const saved = localStorage.getItem('ikwas_sidebar_menu');
+    if (saved) {
+      const menu = JSON.parse(saved);
+      const current = menu.find((item: any) => item.path === '/dashboard/santri');
+      if (current && current.placeholder) {
+        setSearchPlaceholder(current.placeholder);
+      }
+    }
   }, []);
 
   // Fetch billing when variables change
@@ -221,6 +233,14 @@ export default function SantriPage() {
     // Find category name
     const catName = kategoriList.find((c) => c.value === selectedKategori)?.label || 'Iuran';
     setPaymentKeterangan(`Pelunasan ${catName} - ${bill.santri_name} Periode ${selectedPeriode}`);
+    
+    // Set default payment date to today in YYYY-MM-DD
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const yyyy = today.getFullYear();
+    setPaymentTanggal(`${yyyy}-${mm}-${dd}`);
+    
     setShowPaymentModal(true);
   };
 
@@ -236,6 +256,7 @@ export default function SantriPage() {
         tagihan_id: targetBill.tagihan_id,
         nominal: paymentNominal,
         keterangan: paymentKeterangan,
+        tanggal: paymentTanggal,
       }),
     })
       .then((res) => res.json())
@@ -407,6 +428,15 @@ export default function SantriPage() {
                 />
               </FormField>
 
+              <FormField label="Tanggal Pelunasan">
+                <Input
+                  type="date"
+                  required
+                  value={paymentTanggal}
+                  onChange={(e) => setPaymentTanggal(e.target.value)}
+                />
+              </FormField>
+
               <div className="pt-2 flex justify-end gap-3">
                 <Button
                   type="button"
@@ -537,11 +567,10 @@ export default function SantriPage() {
               />
             </FormField>
 
-            <FormField label="Periode (Bulan/Program)">
+            <FormField label="Periode Tagihan (Bulan)">
               <Input
-                type="text"
+                type="month"
                 required
-                placeholder="Contoh: 2026-10 atau Uang Kitab Ganjil"
                 value={selectedPeriode}
                 onChange={(e) => setSelectedPeriode(e.target.value)}
               />
@@ -565,7 +594,7 @@ export default function SantriPage() {
                 <input
                   type="text"
                   className="bg-transparent border-none outline-none text-xs w-full placeholder:text-on-surface-variant/40 text-on-surface font-semibold"
-                  placeholder="Ketik nama santri..."
+                  placeholder={searchPlaceholder}
                   value={billingSearchTerm}
                   onChange={(e) => setBillingSearchTerm(e.target.value)}
                 />

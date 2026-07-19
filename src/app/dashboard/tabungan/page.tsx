@@ -71,8 +71,18 @@ export default function TabunganPage() {
       .finally(() => setIsLoading(false));
   };
 
+  const [searchPlaceholder, setSearchPlaceholder] = useState('Cari nama santri, wali...');
+
   useEffect(() => {
     fetchTabungan();
+    const saved = localStorage.getItem('ikwas_sidebar_menu');
+    if (saved) {
+      const menu = JSON.parse(saved);
+      const current = menu.find((item: any) => item.path === '/dashboard/tabungan');
+      if (current && current.placeholder) {
+        setSearchPlaceholder(current.placeholder);
+      }
+    }
   }, []);
 
   const handleOpenDetail = (row: TabunganRow) => {
@@ -279,7 +289,7 @@ export default function TabunganPage() {
             <input
               type="text"
               className="bg-transparent border-none outline-none text-xs w-full placeholder:text-on-surface-variant/40 text-on-surface font-semibold"
-              placeholder="Cari nama santri, wali..."
+              placeholder={searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

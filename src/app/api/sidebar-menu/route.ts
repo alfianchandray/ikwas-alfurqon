@@ -44,28 +44,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Hak akses ditolak." }, { status: 403 });
     }
 
-    const body = await req.json() as { menuItems: { id: number; sort_order: number }[] };
+    const body = await req.json() as { menuItems: { id: number; name?: string; placeholder?: string; sort_order: number }[] };
     const { menuItems } = body;
 
     if (!Array.isArray(menuItems)) {
       return NextResponse.json({ error: "Format menuItems tidak valid." }, { status: 400 });
     }
 
-    // Update sort_order for each item
+    // Update name, placeholder, and sort_order for each item
     for (const item of menuItems) {
-      await db
-        .prepare("UPDATE sidebar_menu SET sort_order = ? WHERE id = ?")
-        .bind(item.sort_order, item.id)
-        .run();
+      if (item.name !== undefined && item.placeholder !== undefined) {
+        await db
+          .prepare("UPDATE sidebar_menu SET name = ?, placeholder = ?, sort_order = ? WHERE id = ?")
+          .bind(item.name, item.placeholder, item.sort_order, item.id)
+          .run();
+      } else {
+        await db
+          .prepare("UPDATE sidebar_menu SET sort_order = ? WHERE id = ?")
+          .bind(item.sort_order, item.id)
+          .run();
+      }
     }
 
     // Log Activity
     const ip = getClientIp(req);
     await db.prepare(
-      "INSERT INTO activity_log (user_id, username, action, target_type, target_id, detail, ip_address, status) VALUES (?, ?, 'REORDER_SIDEBAR', 'sidebar_menu', 'bulk', 'Menata ulang urutan menu navigasi sidebar', ?, 'success')"
+      "INSERT INTO activity_log (user_id, username, action, target_type, target_id, detail, ip_address, status) VALUES (?, ?, 'REORDER_SIDEBAR', 'sidebar_menu', 'bulk', 'Menata ulang urutan menu navigasi sidebar dan kustomisasi menu', ?, 'success')"
     ).bind(session.user_id, session.username, ip).run();
 
-    return NextResponse.json({ success: true, message: "Urutan navigasi sidebar berhasil disimpan." });
+    return NextResponse.json({ success: true, message: "Konfigurasi navigasi sidebar berhasil disimpan." });
   } catch (error: any) {
     console.error("POST sidebar-menu error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

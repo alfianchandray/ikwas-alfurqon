@@ -61,7 +61,25 @@ export default function PengaturanPage() {
   const [classes, setClasses] = useState<Kelas[]>([]);
   const [navLinks, setNavLinks] = useState<NavLink[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [sidebarMenuItems, setSidebarMenuItems] = useState<{ id: number; name: string; icon: string; sort_order: number }[]>([]);
+  const [sidebarMenuItems, setSidebarMenuItems] = useState<{ id: number; name: string; icon: string; sort_order: number; placeholder: string }[]>([]);
+
+  const moveSidebarItem = (index: number, direction: 'up' | 'down') => {
+    const newItems = [...sidebarMenuItems];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= newItems.length) return;
+
+    // Swap items
+    const temp = newItems[index];
+    newItems[index] = newItems[targetIndex];
+    newItems[targetIndex] = temp;
+
+    // Recalculate sort_order sequentially
+    const updated = newItems.map((item, idx) => ({
+      ...item,
+      sort_order: idx + 1,
+    }));
+    setSidebarMenuItems(updated);
+  };
 
   // Add inputs state
   const [newKelasName, setNewKelasName] = useState('');
@@ -736,35 +754,77 @@ export default function PengaturanPage() {
           {/* Kolom Kanan: Prioritas Sidebar */}
           <div className="space-y-6 text-left">
             <div className="glass-card rounded-3xl p-6 shadow-sm border border-white/20 space-y-4">
-              <h3 className="font-bold text-sm text-on-surface">Urutan Navigasi Sidebar (Dashboard)</h3>
+              <h3 className="font-bold text-sm text-on-surface">Kustomisasi & Urutan Sidebar</h3>
               <p className="text-[10px] text-on-surface-variant font-semibold leading-relaxed">
-                Tentukan urutan menu sidebar di dashboard. Masukkan angka prioritas (1 = teratas, 2 = di bawahnya, dsb). Klik Simpan untuk menerapkan.
+                Tentukan urutan menu sidebar di dashboard dengan tombol panah naik/turun (bebas nomor ganda). Anda juga dapat mengubah Nama Tampilan Menu dan Placeholder Pencarian Utama halaman terkait.
               </p>
               <form onSubmit={handleSaveSidebarOrder} className="space-y-3">
-                <div className="space-y-2 max-h-96 overflow-y-auto no-scrollbar">
+                <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1 no-scrollbar">
                   {sidebarMenuItems.map((item, idx) => (
-                    <div key={item.id} className="flex justify-between items-center p-2.5 rounded-2xl bg-white border border-primary/10 gap-3">
-                      <div className="flex items-center gap-2">
-                        <Icon name={item.icon} className="text-primary text-xs" />
-                        <span className="text-xs font-bold text-on-surface">{item.name}</span>
+                    <div key={item.id} className="p-3 rounded-2xl bg-white border border-primary/10 space-y-2">
+                      <div className="flex justify-between items-center gap-2">
+                        {/* Nama Menu & Ikon */}
+                        <div className="flex items-center gap-2">
+                          <Icon name={item.icon} className="text-primary text-xs" />
+                          <span className="text-xs font-extrabold text-on-surface-variant">Menu #{idx + 1}</span>
+                        </div>
+                        {/* Aksi Swap Naik/Turun */}
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => moveSidebarItem(idx, 'up')}
+                            className="p-1 rounded bg-primary/5 hover:bg-primary/10 text-primary disabled:opacity-30 disabled:hover:bg-primary/5 transition-all cursor-pointer flex items-center justify-center"
+                            title="Naikkan"
+                          >
+                            <Icon name="arrow_upward" className="text-xs font-bold" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={idx === sidebarMenuItems.length - 1}
+                            onClick={() => moveSidebarItem(idx, 'down')}
+                            className="p-1 rounded bg-primary/5 hover:bg-primary/10 text-primary disabled:opacity-30 disabled:hover:bg-primary/5 transition-all cursor-pointer flex items-center justify-center"
+                            title="Turunkan"
+                          >
+                            <Icon name="arrow_downward" className="text-xs font-bold" />
+                          </button>
+                        </div>
                       </div>
-                      <input
-                        type="number"
-                        min="1"
-                        required
-                        className="w-14 px-2 py-1.5 bg-surface-container-low border border-outline/10 rounded-xl text-center text-xs font-extrabold text-primary"
-                        value={item.sort_order}
-                        onChange={(e) => {
-                          const updated = [...sidebarMenuItems];
-                          updated[idx].sort_order = parseInt(e.target.value) || 0;
-                          setSidebarMenuItems(updated);
-                        }}
-                      />
+
+                      {/* Input Sunting Nama Menu */}
+                      <FormField label="Nama Tampilan Menu" className="!mb-0">
+                        <input
+                          type="text"
+                          required
+                          className="w-full px-3 py-1.5 bg-surface-container-low border border-outline/10 rounded-xl text-[11px] font-bold text-on-surface focus:outline-none focus:ring-1 focus:ring-primary/20"
+                          value={item.name}
+                          onChange={(e) => {
+                            const updated = [...sidebarMenuItems];
+                            updated[idx] = { ...updated[idx], name: e.target.value };
+                            setSidebarMenuItems(updated);
+                          }}
+                        />
+                      </FormField>
+
+                      {/* Input Sunting Placeholder Pencarian */}
+                      <FormField label="Placeholder Pencarian Utama" className="!mb-0">
+                        <input
+                          type="text"
+                          required
+                          className="w-full px-3 py-1.5 bg-surface-container-low border border-outline/10 rounded-xl text-[11px] font-semibold text-on-surface-variant focus:outline-none focus:ring-1 focus:ring-primary/20"
+                          value={item.placeholder || ''}
+                          onChange={(e) => {
+                            const updated = [...sidebarMenuItems];
+                            updated[idx] = { ...updated[idx], placeholder: e.target.value };
+                            setSidebarMenuItems(updated);
+                          }}
+                        />
+                      </FormField>
                     </div>
                   ))}
                 </div>
                 <Button type="submit" variant="primary" className="w-full py-2.5 cursor-pointer" leftIcon="save">
-                  Simpan Urutan Sidebar
+                  Simpan Konfigurasi Sidebar
                 </Button>
               </form>
             </div>

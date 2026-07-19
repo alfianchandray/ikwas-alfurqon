@@ -234,17 +234,18 @@ CREATE TABLE IF NOT EXISTS sidebar_menu (
     name        TEXT NOT NULL,
     path        TEXT NOT NULL UNIQUE,
     icon        TEXT NOT NULL,
-    sort_order  INTEGER NOT NULL DEFAULT 0
+    sort_order  INTEGER NOT NULL DEFAULT 0,
+    placeholder TEXT DEFAULT 'Cari data...'
 );
 
-INSERT OR IGNORE INTO sidebar_menu (name, path, icon, sort_order) VALUES
-('Beranda', '/dashboard', 'dashboard', 1),
-('Pemasukan', '/dashboard/pemasukan', 'arrow_circle_down', 2),
-('Pengeluaran', '/dashboard/pengeluaran', 'arrow_circle_up', 3),
-('Iuran & Tagihan', '/dashboard/santri', 'group', 4), -- Kita arahkan Data Santri & Tagihan di sini
-('Buku Tabungan', '/dashboard/tabungan', 'account_balance_wallet', 5),
-('Laporan Keuangan', '/dashboard/laporan', 'description', 6),
-('Pengguna', '/dashboard/pengguna', 'manage_accounts', 7);
+INSERT OR IGNORE INTO sidebar_menu (name, path, icon, sort_order, placeholder) VALUES
+('Beranda', '/dashboard', 'dashboard', 1, 'Cari aktivitas...'),
+('Pemasukan', '/dashboard/pemasukan', 'arrow_circle_down', 2, 'Cari pemasukan...'),
+('Pengeluaran', '/dashboard/pengeluaran', 'arrow_circle_up', 3, 'Cari pengeluaran...'),
+('Iuran & Tagihan', '/dashboard/santri', 'group', 4, 'Cari nama santri, wali...'),
+('Buku Tabungan', '/dashboard/tabungan', 'account_balance_wallet', 5, 'Cari nama santri, rekening...'),
+('Laporan Keuangan', '/dashboard/laporan', 'description', 6, 'Cari transaksi, keterangan...'),
+('Pengguna', '/dashboard/pengguna', 'manage_accounts', 7, 'Cari pengurus...');
 
 -- 17. Tagihan Dinamis Santri (Berelasi ke Kategori)
 CREATE TABLE IF NOT EXISTS tagihan_santri (

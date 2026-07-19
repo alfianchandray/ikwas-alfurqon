@@ -59,6 +59,7 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
       .then((data: any) => {
         if (Array.isArray(data) && data.length > 0) {
           setMenuItems(data);
+          localStorage.setItem('ikwas_sidebar_menu', JSON.stringify(data));
         }
       })
       .catch(() => {});

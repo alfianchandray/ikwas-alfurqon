@@ -22,6 +22,7 @@ interface Transaksi {
 export default function LaporanPage() {
   const [dataTransaksi, setDataTransaksi] = useState<Transaksi[]>([]);
   const [categoryFilterOptions, setCategoryFilterOptions] = useState<{ value: string; label: string }[]>([]);
+  const [searchPlaceholder, setSearchPlaceholder] = useState('Cari transaksi, keterangan...');
 
   // Toast & Modals state
   const [showToast, setShowToast] = useState(false);
@@ -30,6 +31,17 @@ export default function LaporanPage() {
 
   const [showTutupBukuModal, setShowTutupBukuModal] = useState(false);
   const [isTutupBukuLoading, setIsTutupBukuLoading] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('ikwas_sidebar_menu');
+    if (saved) {
+      const menu = JSON.parse(saved);
+      const current = menu.find((item: any) => item.path === '/dashboard/laporan');
+      if (current && current.placeholder) {
+        setSearchPlaceholder(current.placeholder);
+      }
+    }
+  }, []);
 
   const fetchTransactions = () => {
     fetch('/api/transaksi')
@@ -272,7 +284,7 @@ export default function LaporanPage() {
         <DatatablePro
           data={dataTransaksi}
           columns={columns}
-          searchPlaceholder="Cari nama wali, rincian keterangan..."
+          searchPlaceholder={searchPlaceholder}
           searchKeys={['nama', 'keterangan']}
           categories={categoryFilterOptions}
           categoryKey="kategori"
