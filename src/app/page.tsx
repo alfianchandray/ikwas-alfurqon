@@ -123,7 +123,7 @@ export default function PublicDashboard() {
     fetch('/api/transaksi')
       .then(res => res.json())
       .then((data: any) => {
-        if (Array.isArray(data) && data.length > 0) {
+        if (Array.isArray(data)) {
           const formatted = data.map((t: any) => {
             // Mask wali/donator name for public privacy
             let maskedWali = '-';
@@ -144,18 +144,11 @@ export default function PublicDashboard() {
           });
           setTransactions(formatted);
         } else {
-          throw new Error("No data");
+          setTransactions([]);
         }
       })
       .catch(() => {
-        // Fallback
-        setTransactions([
-          { tgl: '12 Okt 2023', wali: 'Ah*** Ra***', ket: 'Infaq Bulanan', kat: 'Pemasukan', nom: '+Rp 150.000', tipe: 'in' },
-          { tgl: '11 Okt 2023', wali: 'Fa*** Nu***', ket: 'Sumbangan Pembangunan', kat: 'Pemasukan', nom: '+Rp 2.000.000', tipe: 'in' },
-          { tgl: '10 Okt 2023', wali: '-', ket: 'Listrik & Air Asrama', kat: 'Operasional', nom: '-Rp 1.450.000', tipe: 'out' },
-          { tgl: '09 Okt 2023', wali: 'Mu*** Az***', ket: 'Zakat Mal', kat: 'Pemasukan', nom: '+Rp 500.000', tipe: 'in' },
-          { tgl: '08 Okt 2023', wali: 'Si*** Ma***', ket: 'Infaq Sukarela', kat: 'Pemasukan', nom: '+Rp 75.000', tipe: 'in' }
-        ]);
+        setTransactions([]);
       });
   }, []);
 
@@ -248,7 +241,7 @@ export default function PublicDashboard() {
             </div>
             <p className="mt-4 text-xs text-on-surface-variant flex items-center gap-1">
               <Icon name="verified_user" className="text-sm text-primary" />
-              Realtime dari pembukuan pesantren
+              Realtime dari pembukuan
             </p>
           </div>
 

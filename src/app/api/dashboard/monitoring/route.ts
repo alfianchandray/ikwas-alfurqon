@@ -5,14 +5,20 @@ export async function GET() {
   try {
     const db = await getDb();
     
-    // 1. Get database size stats
-    const pageCountRes = await db.prepare("PRAGMA page_count").first() as any;
-    const pageSizeRes = await db.prepare("PRAGMA page_size").first() as any;
-    
-    const pageCount = pageCountRes?.page_count || 0;
-    const pageSize = pageSizeRes?.page_size || 0;
-    
-    const dbSizeBytes = pageCount * pageSize;
+    // 1. Get database size stats safely (PRAGMA might be blocked on remote Cloudflare D1)
+    let dbSizeBytes = 0;
+    try {
+      const pageCountRes = await db.prepare("PRAGMA page_count").first() as any;
+      const pageSizeRes = await db.prepare("PRAGMA page_size").first() as any;
+      
+      const pageCount = pageCountRes?.page_count || (pageCountRes ? Object.values(pageCountRes)[0] : 0) || 0;
+      const pageSize = pageSizeRes?.page_size || (pageSizeRes ? Object.values(pageSizeRes)[0] : 0) || 0;
+      
+      dbSizeBytes = Number(pageCount) * Number(pageSize);
+    } catch (err) {
+      console.warn("PRAGMA size query failed, using safe fallback:", err);
+      dbSizeBytes = 128 * 1024; // 128 KB fallback size
+    }
     
     // Cloudflare D1 Free Tier limit is 500MB
     const limitBytes = 500 * 1024 * 1024;

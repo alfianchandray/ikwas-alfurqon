@@ -560,26 +560,34 @@ export default function InternalDashboard() {
                     <p className="text-primary bg-primary/5 p-3 rounded-xl border border-primary/10">
                       ✓ <strong className="text-primary">Selamat!</strong> Akumulasi dana seluruh kegiatan program Al-Furqon telah terpenuhi sepenuhnya. Rencana kegiatan siap dieksekusi.
                     </p>
+                  ) : kegiatanList.length === 0 ? (
+                    <p className="text-on-surface-variant bg-surface-container-high/40 p-3 rounded-xl border border-primary/5 text-center">
+                      Belum ada data program kegiatan untuk dianalisis oleh Asisten BI. Silakan tambahkan rencana kegiatan baru.
+                    </p>
                   ) : (
                     <>
-                      <div className="p-3 bg-white rounded-xl border border-primary/10 space-y-1">
-                        <p className="text-on-surface font-bold flex items-center gap-1">
-                          <Icon name="schedule" className="text-xs text-primary font-bold" /> Proyeksi Rihlah Akbar
-                        </p>
-                        <p>
-                          Berdasarkan tren iuran bulanan, Rihlah Akbar diperkirakan akan <strong className="text-on-surface">terpenuhi 100% dalam 24 hari</strong> (Sangat Aman).
-                        </p>
-                      </div>
+                      {kegiatanList.length > 0 && (
+                        <div className="p-3 bg-white rounded-xl border border-primary/10 space-y-1">
+                          <p className="text-on-surface font-bold flex items-center gap-1">
+                            <Icon name="schedule" className="text-xs text-primary font-bold" /> Proyeksi {kegiatanList[0].name}
+                          </p>
+                          <p>
+                            Berdasarkan simulasi alokasi kas, program <strong className="text-on-surface">{kegiatanList[0].name}</strong> diperkirakan akan berjalan lancar dengan pemantauan realtime.
+                          </p>
+                        </div>
+                      )}
 
-                      <div className="p-3 bg-white rounded-xl border border-primary/10 space-y-1">
-                        <p className="text-on-surface font-bold flex items-center gap-1">
-                          <Icon name="warning" className="text-xs text-error font-bold" /> Deviasi Dana Perpustakaan
-                        </p>
-                        <p>
-                          Pembangunan Perpustakaan mengalami defisit {((10000000 - kegiatanList[1].terkumpul)/10000000*100).toFixed(0)}%.
-                          <strong className="text-primary">Rekomendasi BI</strong>: Salurkan surplus Kas Utama sebesar Rp 3.000.000 untuk menaikan pencapaian menjadi {((kegiatanList[1].terkumpul + 3000000)/10000000*100).toFixed(0)}%.
-                        </p>
-                      </div>
+                      {kegiatanList.length > 1 && (
+                        <div className="p-3 bg-white rounded-xl border border-primary/10 space-y-1">
+                          <p className="text-on-surface font-bold flex items-center gap-1">
+                            <Icon name="warning" className="text-xs text-error font-bold" /> Deviasi Dana {kegiatanList[1].name}
+                          </p>
+                          <p>
+                            Program {kegiatanList[1].name} mengalami defisit {(((kegiatanList[1].target - kegiatanList[1].terkumpul) / kegiatanList[1].target) * 100).toFixed(0)}%.
+                            <strong className="text-primary"> Rekomendasi BI</strong>: Alokasikan surplus kas utama ke program ini untuk mempercepat penyelesaian target.
+                          </p>
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
