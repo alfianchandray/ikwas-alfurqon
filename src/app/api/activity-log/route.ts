@@ -25,7 +25,7 @@ async function validateSuperAdmin(req: NextRequest, db: any) {
 // GET: Fetch activity log (last 90 days, Super Admin only)
 export async function GET(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const admin = await validateSuperAdmin(req, db);
 
     if (!admin) {
@@ -93,7 +93,7 @@ export async function GET(req: NextRequest) {
 // DELETE: Cleanup logs older than 90 days (Super Admin only)
 export async function DELETE(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const admin = await validateSuperAdmin(req, db);
 
     if (!admin) {

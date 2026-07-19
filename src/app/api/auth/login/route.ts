@@ -5,7 +5,7 @@ import { getClientIp } from "@/lib/ip";
 
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as { username?: string; password?: string; rememberMe?: boolean };
     const { username, password, rememberMe = false } = body;
 

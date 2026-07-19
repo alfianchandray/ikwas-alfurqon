@@ -10,7 +10,7 @@ interface PengurusBody {
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { results } = await db.prepare("SELECT * FROM pengurus ORDER BY id ASC").all();
     
     // Parse permissions JSON string
@@ -28,7 +28,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as PengurusBody;
     const { name, role, permissions } = body;
 
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as PengurusBody;
     const { id, permissions } = body;
 
@@ -78,7 +78,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 

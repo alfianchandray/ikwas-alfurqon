@@ -8,7 +8,7 @@ interface KegiatanBody {
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { results } = await db.prepare("SELECT * FROM kegiatan ORDER BY id ASC").all();
     return NextResponse.json(results);
   } catch (error: any) {
@@ -20,7 +20,7 @@ export async function GET() {
 // Simulate penambahan dana kegiatan
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as KegiatanBody;
     const { id, amount } = body;
 
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 // Reset simulasi ke data awal
 export async function PATCH() {
   try {
-    const db = getDb();
+    const db = await getDb();
     
     // Clear and restore seed values
     await db.prepare("DELETE FROM kegiatan").run();

@@ -9,7 +9,7 @@ interface RoleBody {
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { results } = await db.prepare("SELECT * FROM roles ORDER BY id ASC").all();
 
     const parsedResults = (results as any[]).map((r) => ({
@@ -26,7 +26,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as RoleBody;
     const { name, defaultPermissions } = body;
 
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as RoleBody;
     const { id, name, defaultPermissions } = body;
 
@@ -82,7 +82,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 

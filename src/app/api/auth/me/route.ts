@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 
 export async function GET(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const token = req.cookies.get("ikwas_session")?.value;
 
     if (!token) {

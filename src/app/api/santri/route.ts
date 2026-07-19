@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { results } = await db.prepare("SELECT * FROM santri ORDER BY id DESC").all();
     return NextResponse.json(results);
   } catch (error: any) {
@@ -14,7 +14,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as { name?: string; wali?: string; kelas?: string };
     const { name, wali, kelas } = body;
 
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 

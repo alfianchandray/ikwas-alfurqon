@@ -23,7 +23,7 @@ async function validateSession(req: NextRequest, db: any) {
 
 export async function GET(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { searchParams } = new URL(req.url);
     const kategoriId = searchParams.get("kategori_id");
     const periode = searchParams.get("periode"); // Format: "2026-10" or custom string
@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const session = await validateSession(req, db);
     if (!session) {
       return NextResponse.json({ error: "Tidak terautentikasi." }, { status: 401 });

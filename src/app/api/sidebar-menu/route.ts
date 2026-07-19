@@ -23,7 +23,7 @@ async function validateSession(req: NextRequest, db: any) {
 
 export async function GET(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const { results } = await db.prepare("SELECT * FROM sidebar_menu ORDER BY sort_order ASC").all();
     return NextResponse.json(results);
   } catch (error: any) {
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const session = await validateSession(req, db);
     if (!session) {
       return NextResponse.json({ error: "Tidak terautentikasi." }, { status: 401 });

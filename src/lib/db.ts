@@ -1,16 +1,20 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 
-export function getDb() {
+/**
+ * Returns the Cloudflare D1 database binding.
+ * In @opennextjs/cloudflare v1+, getCloudflareContext() must be awaited.
+ */
+export async function getDb() {
   try {
-    const context = getCloudflareContext();
+    const context = await getCloudflareContext({ async: true });
     if (context && context.env && context.env.DB) {
       return context.env.DB;
     }
   } catch (e) {
-    console.warn("getCloudflareContext failed, falling back to process.env.DB wrapper (local dev):", e);
+    console.warn("getCloudflareContext failed:", e);
   }
 
-  // Fallback to process.env for other environments
+  // Fallback for local dev using wrangler --local
   const db = (process.env as any).DB;
   if (!db) {
     throw new Error("Cloudflare D1 Database binding 'DB' was not found in environment.");

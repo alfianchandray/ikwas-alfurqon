@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 
 export async function GET() {
   try {
-    const db = getDb();
+    const db = await getDb();
     const config = await db
       .prepare("SELECT * FROM site_config WHERE id = 1")
       .first();
@@ -30,7 +30,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const db = getDb();
+    const db = await getDb();
     const body = await req.json() as { siteName?: string; siteDesc?: string; themeColor?: string; logoType?: string; faviconUrl?: string; logoUrl?: string };
     const { siteName, siteDesc, themeColor, logoType, faviconUrl, logoUrl } = body;
 
