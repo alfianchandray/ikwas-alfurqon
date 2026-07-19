@@ -19,6 +19,14 @@ export default function PublicDashboard() {
     totalIn: 0,
     totalOut: 0,
   });
+  const [monthlyTrend, setMonthlyTrend] = useState<any[]>([]);
+  const [santriStats, setSantriStats] = useState<any>({
+    total: 0,
+    terbayarCount: 0,
+    belumBayarCount: 0,
+    terbayarPercentage: 0,
+    belumBayarPercentage: 0
+  });
 
   const [searchSantriName, setSearchSantriName] = useState('');
   const [searchWaliName, setSearchWaliName] = useState('');
@@ -64,6 +72,8 @@ export default function PublicDashboard() {
             totalIn: data.totalIn || 0,
             totalOut: data.totalOut || 0,
           });
+          if (data.monthlyTrend) setMonthlyTrend(data.monthlyTrend);
+          if (data.santriStats) setSantriStats(data.santriStats);
         }
       })
       .catch(() => {});
@@ -300,39 +310,38 @@ export default function PublicDashboard() {
                 <button className="px-4 py-2 bg-primary text-white rounded-xl text-xs font-bold">1 Tahun</button>
               </div>
             </div>
-            <div className="h-80 relative flex items-end gap-4 px-2 pt-10">
-              {/* Fake Chart Visualization */}
-              <div className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                <div className="w-full bg-primary/20 rounded-t-xl transition-all duration-300 group-hover:bg-primary/40 h-[40%]"></div>
-                <span className="text-xs text-on-surface-variant font-semibold">Jan</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                <div className="w-full bg-primary/20 rounded-t-xl transition-all duration-300 group-hover:bg-primary/40 h-[55%]"></div>
-                <span className="text-xs text-on-surface-variant font-semibold">Feb</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                <div className="w-full bg-primary/20 rounded-t-xl transition-all duration-300 group-hover:bg-primary/40 h-[45%]"></div>
-                <span className="text-xs text-on-surface-variant font-semibold">Mar</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                <div className="w-full bg-primary/20 rounded-t-xl transition-all duration-300 group-hover:bg-primary/40 h-[70%]"></div>
-                <span className="text-xs text-on-surface-variant font-semibold">Apr</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                <div className="w-full bg-primary/20 rounded-t-xl transition-all duration-300 group-hover:bg-primary/40 h-[85%]"></div>
-                <span className="text-xs text-on-surface-variant font-semibold">Mei</span>
-              </div>
-              <div className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
-                <div className="w-full bg-primary/20 rounded-t-xl transition-all duration-300 group-hover:bg-primary/40 h-[65%]"></div>
-                <span className="text-xs text-on-surface-variant font-semibold">Jun</span>
-              </div>
-              {/* Line Overlay Simulation */}
-              <svg className="absolute bottom-10 left-0 w-full h-[80%] pointer-events-none" viewBox="0 0 600 200" preserveAspectRatio="none">
-                <path d="M0,150 Q100,120 200,140 T400,60 T600,80" fill="none" stroke="#0D9488" strokeWidth="4" strokeLinecap="round"></path>
-                <circle cx="200" cy="140" fill="#0D9488" r="6"></circle>
-                <circle cx="400" cy="60" fill="#0D9488" r="6"></circle>
-                <circle cx="600" cy="80" fill="#0D9488" r="6"></circle>
-              </svg>
+            <div className="h-80 relative flex items-end gap-3 md:gap-4 px-2 pt-10">
+              {/* Dynamic Chart Visualization */}
+              {monthlyTrend.length > 0 ? (
+                monthlyTrend.map((m, idx) => {
+                  const maxVal = Math.max(...monthlyTrend.map(x => Math.max(x.pemasukan, x.pengeluaran)), 100000);
+                  const hIn = `${Math.max(4, Math.round((m.pemasukan / maxVal) * 80))}%`;
+                  const hOut = `${Math.max(4, Math.round((m.pengeluaran / maxVal) * 80))}%`;
+                  return (
+                    <div key={idx} className="flex-1 flex flex-col items-center gap-2 group h-full justify-end">
+                      <div className="w-full flex gap-1.5 items-end justify-center h-[80%]">
+                        {/* Pemasukan Bar (Teal) */}
+                        <div 
+                          className="w-2 md:w-3 bg-primary rounded-t-full transition-all duration-300 group-hover:scale-y-105 cursor-pointer" 
+                          style={{ height: hIn }}
+                          title={`Pemasukan: Rp ${new Intl.NumberFormat('id-ID').format(m.pemasukan)}`}
+                        ></div>
+                        {/* Pengeluaran Bar (Red/Pink) */}
+                        <div 
+                          className="w-2 md:w-3 bg-error rounded-t-full transition-all duration-300 group-hover:scale-y-105 cursor-pointer" 
+                          style={{ height: hOut }}
+                          title={`Pengeluaran: Rp ${new Intl.NumberFormat('id-ID').format(m.pengeluaran)}`}
+                        ></div>
+                      </div>
+                      <span className="text-[10px] md:text-xs text-on-surface-variant font-bold">{m.label}</span>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-on-surface-variant">
+                  Tidak ada data transaksi bulanan.
+                </div>
+              )}
             </div>
           </div>
           <div className="glass-card p-6 rounded-3xl flex flex-col justify-between shadow-sm">
@@ -343,25 +352,25 @@ export default function PublicDashboard() {
             <div className="relative w-48 h-48 mx-auto my-6">
               <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
                 <path className="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="100, 100" strokeWidth="3.5"></path>
-                <path className="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray="65, 100" strokeLinecap="round" strokeWidth="3.5"></path>
+                <path className="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeDasharray={`${santriStats.terbayarPercentage || 0}, 100`} strokeLinecap="round" strokeWidth="3.5"></path>
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-4xl font-extrabold text-on-surface">842</span>
+                <span className="text-4xl font-extrabold text-on-surface">{santriStats.total}</span>
                 <span className="text-xs text-on-surface-variant font-semibold">Santri Aktif</span>
               </div>
             </div>
             <div className="space-y-2 text-left">
               <div className="flex justify-between items-center text-xs">
                 <span className="flex items-center gap-2 font-semibold text-on-surface-variant">
-                  <span className="w-2.5 h-2.5 bg-primary rounded-full"></span> Terbayar (65%)
+                  <span className="w-2.5 h-2.5 bg-primary rounded-full"></span> Terbayar ({santriStats.terbayarPercentage || 0}%)
                 </span>
-                <span className="font-bold text-on-surface">547 Santri</span>
+                <span className="font-bold text-on-surface">{santriStats.terbayarCount} Santri</span>
               </div>
               <div className="flex justify-between items-center text-xs">
                 <span className="flex items-center gap-2 font-semibold text-on-surface-variant">
-                  <span className="w-2.5 h-2.5 bg-surface-container-high rounded-full"></span> Belum Bayar (35%)
+                  <span className="w-2.5 h-2.5 bg-surface-container-high rounded-full"></span> Belum Bayar ({santriStats.belumBayarPercentage || 0}%)
                 </span>
-                <span className="font-bold text-on-surface">295 Santri</span>
+                <span className="font-bold text-on-surface">{santriStats.belumBayarCount} Santri</span>
               </div>
             </div>
           </div>

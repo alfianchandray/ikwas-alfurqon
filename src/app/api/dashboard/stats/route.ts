@@ -33,7 +33,7 @@ export async function GET() {
     const santriCount = await db.prepare("SELECT COUNT(*) as count FROM santri").first() as any;
     const totalSantri = santriCount?.count || 0;
 
-    // 5. Hitung santri dengan iuran lunas periode ini (opsional)
+    // 5. Hitung santri dengan iuran lunas periode ini
     const today = new Date();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const yyyy = today.getFullYear();
@@ -45,6 +45,49 @@ export async function GET() {
     const totalBills = bills?.count || 0;
     const billsLunas = bills?.lunas || 0;
 
+    // Hitung santriStats dengan fallback dinamis
+    const terbayarCount = billsLunas;
+    const belumBayarCount = Math.max(0, totalSantri - billsLunas);
+    const terbayarPercentage = totalSantri > 0 ? Math.round((terbayarCount / totalSantri) * 100) : 0;
+    const belumBayarPercentage = totalSantri > 0 ? (100 - terbayarPercentage) : 0;
+
+    // 6. Tren kas bulanan (6 bulan terakhir)
+    const monthlyTrend: any[] = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date();
+      // Set to 1st of month to avoid overflow issues (e.g. Feb 31st)
+      d.setDate(1);
+      d.setMonth(d.getMonth() - i);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const label = d.toLocaleDateString('id-ID', { month: 'short' });
+      monthlyTrend.push({
+        bulan: key,
+        label: label,
+        pemasukan: 0,
+        pengeluaran: 0
+      });
+    }
+
+    const trendRows = await db.prepare(`
+      SELECT 
+        strftime('%Y-%m', tanggal) as bulan, 
+        tipe, 
+        SUM(nominal) as total 
+      FROM transaksi 
+      WHERE tanggal >= date('now', '-5 month', 'start of month') 
+      GROUP BY strftime('%Y-%m', tanggal), tipe
+    `).all();
+
+    if (trendRows.results) {
+      trendRows.results.forEach((row: any) => {
+        const monthItem = monthlyTrend.find(m => m.bulan === row.bulan);
+        if (monthItem) {
+          if (row.tipe === 'in') monthItem.pemasukan = row.total || 0;
+          if (row.tipe === 'out') monthItem.pengeluaran = row.total || 0;
+        }
+      });
+    }
+
     return NextResponse.json({
       saldoUtama,
       pemasukanHariIni,
@@ -54,7 +97,15 @@ export async function GET() {
       totalSantri,
       totalBills,
       billsLunas,
-      currentPeriode
+      currentPeriode,
+      santriStats: {
+        total: totalSantri,
+        terbayarCount,
+        belumBayarCount,
+        terbayarPercentage,
+        belumBayarPercentage
+      },
+      monthlyTrend
     });
   } catch (error: any) {
     console.error("GET dashboard stats error:", error);
