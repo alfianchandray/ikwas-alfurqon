@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * IKWAS Al-Furqon — Route Protection Middleware
- * 
- * Protects all /dashboard/* routes by validating the ikwas_session cookie
- * against the D1 database. Unauthenticated requests are redirected to /login.
- * 
- * Note: Middleware in Next.js + Cloudflare Workers runs at the edge.
- * We do a lightweight cookie check here; full DB validation is done in each API route.
+ * IKWAS Al-Furqon — Route Protection Proxy
+ *
+ * Protects all /dashboard/* routes by validating the ikwas_session cookie.
+ * Unauthenticated requests are redirected to /login.
+ *
+ * Next.js 16+ uses the "proxy" file convention (replaces "middleware").
+ * Runs at the Cloudflare Edge — no Node.js APIs used.
  */
 export default function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
