@@ -98,11 +98,34 @@ export default function InternalDashboard() {
 
   const [userName, setUserName] = useState('Ustadz Ahmad');
   const [timeGreeting, setTimeGreeting] = useState('Selamat bekerja');
+  const [stats, setStats] = useState({
+    saldoUtama: 0,
+    pemasukanHariIni: 0,
+    pengeluaranHariIni: 0,
+    totalSantri: 0,
+  });
+
+  const fetchStats = () => {
+    fetch('/api/dashboard/stats')
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data && !data.error) {
+          setStats({
+            saldoUtama: data.saldoUtama || 0,
+            pemasukanHariIni: data.pemasukanHariIni || 0,
+            pengeluaranHariIni: data.pengeluaranHariIni || 0,
+            totalSantri: data.totalSantri || 0,
+          });
+        }
+      })
+      .catch(() => {});
+  };
 
   // Load configuration
   useEffect(() => {
     fetchConfig();
     fetchKegiatan();
+    fetchStats();
 
     // Load dynamic username
     const stored = typeof window !== 'undefined' ? sessionStorage.getItem('ikwas_user') : null;
@@ -222,8 +245,8 @@ export default function InternalDashboard() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-left">
         <div>
           <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2 inline-block">Portal Pengurus</span>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">Assalamu'alaikum, {userName}</h1>
-          <p className="text-xs md:text-sm text-on-surface-variant font-semibold">{timeGreeting} di {siteName}. Semoga segala pencatatan bernilai ibadah.</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">{timeGreeting}, {userName}</h1>
+          <p className="text-xs md:text-sm text-on-surface-variant font-semibold">Assalamu'alaikum. Selamat datang di portal {siteName}. Semoga segala pencatatan bernilai ibadah.</p>
         </div>
         <div className="flex gap-3">
           <Link href="/dashboard/pemasukan" className="primary-gradient text-white px-5 py-3 rounded-2xl text-xs font-bold shadow-md shadow-primary/10 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">
@@ -270,10 +293,12 @@ export default function InternalDashboard() {
               </div>
               <div className="flex items-baseline gap-0.5">
                 <span className="text-sm font-bold text-primary">Rp</span>
-                <span className="text-xl font-extrabold text-on-surface tracking-tight">142.850.000</span>
+                <span className="text-xl font-extrabold text-on-surface tracking-tight">
+                  {new Intl.NumberFormat('id-ID').format(stats.saldoUtama)}
+                </span>
               </div>
               <div className="mt-2 text-[10px] text-primary font-bold flex items-center gap-1">
-                <Icon name="trending_up" className="text-xs font-bold" /> +12% dari bulan lalu
+                <Icon name="verified_user" className="text-xs font-bold" /> Realtime dari database D1
               </div>
             </div>
 
@@ -284,9 +309,11 @@ export default function InternalDashboard() {
               </div>
               <div className="flex items-baseline gap-0.5">
                 <span className="text-sm font-bold text-primary">Rp</span>
-                <span className="text-xl font-extrabold text-on-surface tracking-tight">3.250.000</span>
+                <span className="text-xl font-extrabold text-on-surface tracking-tight">
+                  {new Intl.NumberFormat('id-ID').format(stats.pemasukanHariIni)}
+                </span>
               </div>
-              <div className="mt-2 text-[10px] text-on-surface-variant font-semibold">Dari 12 santri / wali</div>
+              <div className="mt-2 text-[10px] text-on-surface-variant font-semibold">Tercatat per hari ini</div>
             </div>
 
             <div className="glass-card p-4 rounded-2xl shadow-sm border border-white/20">
@@ -296,9 +323,11 @@ export default function InternalDashboard() {
               </div>
               <div className="flex items-baseline gap-0.5">
                 <span className="text-sm font-bold text-error">Rp</span>
-                <span className="text-xl font-extrabold text-on-surface tracking-tight">750.000</span>
+                <span className="text-xl font-extrabold text-on-surface tracking-tight">
+                  {new Intl.NumberFormat('id-ID').format(stats.pengeluaranHariIni)}
+                </span>
               </div>
-              <div className="mt-2 text-[10px] text-on-surface-variant font-semibold">Beli ATK &amp; Logistik</div>
+              <div className="mt-2 text-[10px] text-on-surface-variant font-semibold">Tercatat per hari ini</div>
             </div>
 
             <div className="glass-card p-4 rounded-2xl shadow-sm border border-white/20">
@@ -307,10 +336,12 @@ export default function InternalDashboard() {
                 <Icon name="group" className="text-primary text-lg" />
               </div>
               <div className="flex items-baseline gap-0.5">
-                <span className="text-xl font-extrabold text-on-surface tracking-tight">842</span>
+                <span className="text-xl font-extrabold text-on-surface tracking-tight">
+                  {stats.totalSantri}
+                </span>
                 <span className="text-xs text-on-surface-variant font-bold ml-1">Anak</span>
               </div>
-              <div className="mt-2 text-[10px] text-on-surface-variant font-semibold">100% berelasi wali</div>
+              <div className="mt-2 text-[10px] text-on-surface-variant font-semibold">100% terdata aktif</div>
             </div>
           </div>
 

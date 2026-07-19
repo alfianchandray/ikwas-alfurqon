@@ -72,6 +72,18 @@ export default function SantriPage() {
   const [paymentTanggal, setPaymentTanggal] = useState('');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [searchPlaceholder, setSearchPlaceholder] = useState('Ketik nama santri...');
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [santriToEdit, setSantriToEdit] = useState<Santri | null>(null);
+
+  const triggerEdit = (s: Santri) => {
+    setSantriToEdit(s);
+    setNewName(s.name);
+    setNewWali(s.wali);
+    const foundClass = classList.find((c) => c.label === s.kelas);
+    setNewKelas(foundClass ? foundClass.value : (classList[0]?.value || ''));
+    setIsEditMode(true);
+    setShowAddModal(true);
+  };
 
   // Global Toast
   const [isLoading, setIsLoading] = useState(false);
@@ -174,10 +186,16 @@ export default function SantriPage() {
     if (!newName || !newWali) return;
     setIsLoading(true);
 
-    fetch('/api/santri', {
-      method: 'POST',
+    const url = '/api/santri';
+    const method = isEditMode ? 'PUT' : 'POST';
+    const payload = isEditMode
+      ? { id: santriToEdit?.id, name: newName, wali: newWali, kelas_id: newKelas }
+      : { name: newName, wali: newWali, kelas_id: newKelas };
+
+    fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: newName, wali: newWali, kelas_id: newKelas }),
+      body: JSON.stringify(payload),
     })
       .then((res) => res.json())
       .then((data: any) => {
@@ -186,7 +204,9 @@ export default function SantriPage() {
           setShowAddModal(false);
           setNewName('');
           setNewWali('');
-          showNotification('Data santri baru berhasil ditambahkan.', 'success');
+          setIsEditMode(false);
+          setSantriToEdit(null);
+          showNotification(isEditMode ? 'Data santri berhasil diperbarui.' : 'Data santri baru berhasil ditambahkan.', 'success');
           fetchSantri();
         } else {
           throw new Error(data.error);
@@ -320,9 +340,15 @@ export default function SantriPage() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
             <div className="p-6 bg-primary text-white flex justify-between items-center">
-              <h3 className="font-bold text-sm">Registrasi Santri Baru</h3>
+              <h3 className="font-bold text-sm">{isEditMode ? 'Ubah Data Santri' : 'Registrasi Santri Baru'}</h3>
               <button
-                onClick={() => setShowAddModal(false)}
+                onClick={() => {
+                  setShowAddModal(false);
+                  setIsEditMode(false);
+                  setNewName('');
+                  setNewWali('');
+                  setSantriToEdit(null);
+                }}
                 className="text-white/80 hover:text-white flex items-center justify-center p-1 rounded-full hover:bg-white/10 cursor-pointer"
               >
                 <Icon name="close" className="text-base" />
@@ -358,7 +384,13 @@ export default function SantriPage() {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setIsEditMode(false);
+                    setNewName('');
+                    setNewWali('');
+                    setSantriToEdit(null);
+                  }}
                 >
                   Batalkan
                 </Button>
@@ -497,7 +529,7 @@ export default function SantriPage() {
               <input
                 type="text"
                 className="bg-transparent border-none outline-none text-xs w-full placeholder:text-on-surface-variant/40 text-on-surface font-semibold"
-                placeholder="Cari nama santri, wali, kelas..."
+                placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -530,10 +562,20 @@ export default function SantriPage() {
                         <td className="p-4 px-6 font-bold">{s.name}</td>
                         <td className="p-4 px-6">{s.wali}</td>
                         <td className="p-4 px-6">{s.kelas}</td>
-                        <td className="p-4 px-6 text-center no-print">
+                        <td className="p-4 px-6 text-center no-print flex items-center justify-center gap-1.5">
                           <button
+                            type="button"
+                            onClick={() => triggerEdit(s)}
+                            className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-colors cursor-pointer flex items-center justify-center"
+                            title="Ubah Data"
+                          >
+                            <Icon name="edit" className="text-base font-bold" />
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => triggerDelete(s)}
-                            className="p-2 text-error hover:bg-error/10 rounded-xl transition-colors cursor-pointer"
+                            className="p-2 text-error hover:bg-error/10 rounded-xl transition-colors cursor-pointer flex items-center justify-center"
+                            title="Hapus Data"
                           >
                             <Icon name="delete" className="text-base font-bold" />
                           </button>

@@ -15,16 +15,24 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const db = await getDb();
-    const body = await req.json() as { name?: string; wali?: string; kelas?: string };
-    const { name, wali, kelas } = body;
+    const body = await req.json() as { name?: string; wali?: string; kelas?: string; kelas_id?: string };
+    const { name, wali, kelas, kelas_id } = body;
 
-    if (!name || !wali || !kelas) {
+    if (!name || !wali || (!kelas && !kelas_id)) {
       return NextResponse.json({ error: "Semua kolom wajib diisi!" }, { status: 400 });
+    }
+
+    let kelasName = kelas || "";
+    if (kelas_id) {
+      const kelasRow = await db.prepare("SELECT name FROM kelas WHERE id = ?").bind(kelas_id).first() as any;
+      if (kelasRow) {
+        kelasName = kelasRow.name;
+      }
     }
 
     await db
       .prepare("INSERT INTO santri (name, wali, kelas) VALUES (?, ?, ?)")
-      .bind(name, wali, kelas)
+      .bind(name, wali, kelasName)
       .run();
 
     return NextResponse.json({ success: true, message: "Data santri baru berhasil disimpan." });
@@ -48,6 +56,36 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true, message: "Data santri berhasil dihapus." });
   } catch (error: any) {
     console.error("DELETE santri error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const db = await getDb();
+    const body = await req.json() as { id?: number; name?: string; wali?: string; kelas?: string; kelas_id?: string };
+    const { id, name, wali, kelas, kelas_id } = body;
+
+    if (!id || !name || !wali || (!kelas && !kelas_id)) {
+      return NextResponse.json({ error: "Semua kolom wajib diisi!" }, { status: 400 });
+    }
+
+    let kelasName = kelas || "";
+    if (kelas_id) {
+      const kelasRow = await db.prepare("SELECT name FROM kelas WHERE id = ?").bind(kelas_id).first() as any;
+      if (kelasRow) {
+        kelasName = kelasRow.name;
+      }
+    }
+
+    await db
+      .prepare("UPDATE santri SET name = ?, wali = ?, kelas = ? WHERE id = ?")
+      .bind(name, wali, kelasName, id)
+      .run();
+
+    return NextResponse.json({ success: true, message: "Data santri berhasil diperbarui." });
+  } catch (error: any) {
+    console.error("PUT santri error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

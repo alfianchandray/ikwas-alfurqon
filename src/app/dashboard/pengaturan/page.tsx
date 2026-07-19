@@ -47,7 +47,22 @@ interface SiteConfig {
 
 export default function PengaturanPage() {
   // Tab State: 'branding' | 'database' | 'headers'
-  const [activeTab, setActiveTab] = useState<'branding' | 'database' | 'headers'>('branding');
+  const [activeTab, setActiveTab] = useState<'branding' | 'database' | 'headers' | 'monitoring'>('branding');
+  const [monitoringData, setMonitoringData] = useState<any>(null);
+  const [isFetchingMonitoring, setIsFetchingMonitoring] = useState(false);
+
+  const fetchMonitoring = () => {
+    setIsFetchingMonitoring(true);
+    fetch('/api/dashboard/monitoring')
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data.success) {
+          setMonitoringData(data.monitoring);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setIsFetchingMonitoring(false));
+  };
 
   const [siteConfig, setSiteConfig] = useState<SiteConfig>({
     siteName: 'IKWAS Al-Furqon',
@@ -196,6 +211,12 @@ export default function PengaturanPage() {
   useEffect(() => {
     fetchSelectedPageHeader(selectedPath);
   }, [selectedPath]);
+
+  useEffect(() => {
+    if (activeTab === 'monitoring') {
+      fetchMonitoring();
+    }
+  }, [activeTab]);
 
   // Save Settings Handler
   const handleSaveSiteConfig = (e: React.FormEvent) => {
@@ -628,6 +649,16 @@ export default function PengaturanPage() {
           }`}
         >
           Pengaturan Halaman (CMS)
+        </button>
+        <button
+          onClick={() => setActiveTab('monitoring')}
+          className={`px-5 py-3.5 font-bold text-xs uppercase tracking-wider transition-all border-b-2 cursor-pointer ${
+            activeTab === 'monitoring'
+              ? 'border-primary text-primary font-extrabold'
+              : 'border-transparent text-outline hover:text-on-surface'
+          }`}
+        >
+          Limit &amp; Monitoring
         </button>
       </div>
 
@@ -1070,6 +1101,87 @@ export default function PengaturanPage() {
               </div>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* Tab Content 4: Limit & Monitoring */}
+      {activeTab === 'monitoring' && (
+        <div className="glass-card rounded-3xl p-6 shadow-sm border border-white/20 max-w-2xl mx-auto space-y-6 animate-fade-in-up">
+          <div className="flex justify-between items-center text-left">
+            <div>
+              <h3 className="font-bold text-sm text-on-surface">Limit &amp; Health Monitoring</h3>
+              <p className="text-xs text-on-surface-variant font-semibold leading-relaxed mt-1">
+                Pantau kapasitas database Cloudflare D1 serta jumlah baris data riil secara realtime tanpa masuk ke Cloudflare Console.
+              </p>
+            </div>
+            <button
+              onClick={fetchMonitoring}
+              disabled={isFetchingMonitoring}
+              className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-colors cursor-pointer flex items-center justify-center border border-primary/20"
+              title="Refresh Monitoring"
+            >
+              <Icon name="refresh" className={`text-base font-bold ${isFetchingMonitoring ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+
+          {monitoringData ? (
+            <div className="space-y-6 text-left">
+              {/* Progress Database Usage */}
+              <div className="glass-card p-5 rounded-2xl border border-primary/15 bg-white space-y-3">
+                <div className="flex justify-between items-center text-xs font-bold">
+                  <span className="text-on-surface">Penyimpanan Database D1</span>
+                  <span className="text-primary">{monitoringData.dbSizeFormatted} / {monitoringData.limitFormatted}</span>
+                </div>
+                <div className="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden">
+                  <div
+                    className="bg-primary h-full rounded-full transition-all duration-500"
+                    style={{ width: `${Math.max(1, parseFloat(monitoringData.usagePercent))}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between items-center text-[10px] text-on-surface-variant font-bold">
+                  <span>Persentase Pemakaian: {monitoringData.usagePercent}%</span>
+                  <span className="text-tertiary">Batas D1 Free Tier Cloudflare</span>
+                </div>
+              </div>
+
+              {/* Table Rows Count */}
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs text-on-surface flex items-center gap-1.5">
+                  <Icon name="table_chart" className="text-base text-primary" />
+                  Statistik Volume Baris Data (Rows Count)
+                </h4>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {Object.entries(monitoringData.rowCounts).map(([table, count]: any) => (
+                    <div key={table} className="bg-white/40 border border-primary/10 rounded-2xl p-3 px-4 flex flex-col">
+                      <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wide truncate">{table.replace('_', ' ')}</span>
+                      <span className="text-lg font-extrabold text-primary mt-1">{count} <span className="text-[10px] text-on-surface-variant font-semibold">baris</span></span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* System Info */}
+              <div className="border-t border-primary/10 pt-4 space-y-2 text-[10px] font-semibold text-on-surface-variant">
+                <div className="flex justify-between">
+                  <span>Platform Host:</span>
+                  <span className="text-on-surface font-extrabold">{monitoringData.platform}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Runtime Environment:</span>
+                  <span className="text-on-surface font-extrabold">{monitoringData.environment}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Latensi Database Internal:</span>
+                  <span className="text-on-surface font-extrabold">&lt; {monitoringData.latencyCheckMs} ms (Sub-millisecond)</span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="py-8 text-center text-xs font-semibold text-on-surface-variant flex flex-col items-center gap-2">
+              <Icon name="hourglass_empty" className="text-lg animate-pulse" />
+              Memuat metrik monitoring...
+            </div>
+          )}
         </div>
       )}
     </div>

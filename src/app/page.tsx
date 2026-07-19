@@ -12,8 +12,60 @@ export default function PublicDashboard() {
     siteDesc: 'Sistem manajemen keuangan terpadu Ikatan Keluarga Santri dengan amanah dan transparan.',
   });
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    saldoUtama: 0,
+    totalIn: 0,
+    totalOut: 0,
+  });
+
+  const [searchSantriName, setSearchSantriName] = useState('');
+  const [searchWaliName, setSearchWaliName] = useState('');
+  const [checkingSavings, setCheckingSavings] = useState(false);
+  const [savingsResult, setSavingsResult] = useState<any>(null);
+  const [savingsError, setSavingsError] = useState('');
+
+  const handleCheckSavings = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchSantriName || !searchWaliName) return;
+    setCheckingSavings(true);
+    setSavingsError('');
+    setSavingsResult(null);
+
+    fetch('/api/tabungan/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ santriName: searchSantriName, waliName: searchWaliName }),
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        setCheckingSavings(false);
+        if (data.success) {
+          setSavingsResult(data.data);
+        } else {
+          setSavingsError(data.error || 'Terjadi kesalahan sistem.');
+        }
+      })
+      .catch(() => {
+        setCheckingSavings(false);
+        setSavingsError('Gagal terhubung ke server.');
+      });
+  };
 
   useEffect(() => {
+    // Fetch stats
+    fetch('/api/dashboard/stats')
+      .then(res => res.json())
+      .then((data: any) => {
+        if (data && !data.error) {
+          setStats({
+            saldoUtama: data.saldoUtama || 0,
+            totalIn: data.totalIn || 0,
+            totalOut: data.totalOut || 0,
+          });
+        }
+      })
+      .catch(() => {});
+
     // 1. Fetch site config
     fetch('/api/site-config')
       .then(res => res.json())
@@ -176,11 +228,13 @@ export default function PublicDashboard() {
             <h3 className="text-sm text-on-surface-variant font-semibold mb-1">Saldo Kas Saat Ini</h3>
             <div className="flex items-baseline gap-1">
               <span className="text-xl font-bold text-primary">Rp</span>
-              <span className="text-3xl font-extrabold text-on-surface tracking-tight">142.850.000</span>
+              <span className="text-3xl font-extrabold text-on-surface tracking-tight">
+                {new Intl.NumberFormat('id-ID').format(stats.saldoUtama)}
+              </span>
             </div>
             <p className="mt-4 text-xs text-on-surface-variant flex items-center gap-1">
-              <Icon name="trending_up" className="text-sm text-primary" />
-              <span className="text-primary font-bold">+12%</span> dari bulan lalu
+              <Icon name="verified_user" className="text-sm text-primary" />
+              Realtime dari pembukuan pesantren
             </p>
           </div>
 
@@ -191,16 +245,19 @@ export default function PublicDashboard() {
               <div className="p-3 rounded-2xl bg-secondary-container text-on-secondary-container flex items-center justify-center">
                 <Icon name="payments" className="text-lg" />
               </div>
-              <span className="text-xs font-bold text-secondary bg-secondary/10 px-3 py-1 rounded-full">Bulan Ini</span>
+              <span className="text-xs font-bold text-secondary bg-secondary/10 px-3 py-1 rounded-full">Akumulasi</span>
             </div>
-            <h3 className="text-sm text-on-surface-variant font-semibold mb-1">Total Pemasukan</h3>
+            <h3 className="text-sm text-on-surface-variant font-semibold mb-1">Total Pemasukan Kas</h3>
             <div className="flex items-baseline gap-1">
               <span className="text-xl font-bold text-primary">Rp</span>
-              <span className="text-3xl font-extrabold text-on-surface tracking-tight">24.500.000</span>
+              <span className="text-3xl font-extrabold text-on-surface tracking-tight">
+                {new Intl.NumberFormat('id-ID').format(stats.totalIn)}
+              </span>
             </div>
-            <div className="w-full bg-surface-container-high h-1.5 rounded-full mt-6">
-              <div className="bg-primary h-full rounded-full" style={{ width: '75%' }}></div>
-            </div>
+            <p className="mt-4 text-xs text-on-surface-variant flex items-center gap-1">
+              <Icon name="check_circle_outline" className="text-sm text-primary" />
+              Tercatat otomatis via iuran &amp; program
+            </p>
           </div>
 
           {/* Pengeluaran Card */}
@@ -210,17 +267,19 @@ export default function PublicDashboard() {
               <div className="p-3 rounded-2xl bg-error-container text-on-error-container flex items-center justify-center">
                 <Icon name="shopping_cart_checkout" className="text-lg" />
               </div>
-              <span className="text-xs font-bold text-error bg-error/10 px-3 py-1 rounded-full">Bulan Ini</span>
+              <span className="text-xs font-bold text-error bg-error/10 px-3 py-1 rounded-full">Akumulasi</span>
             </div>
-            <h3 className="text-sm text-on-surface-variant font-semibold mb-1">Total Pengeluaran</h3>
+            <h3 className="text-sm text-on-surface-variant font-semibold mb-1">Total Pengeluaran Kas</h3>
             <div className="flex items-baseline gap-1">
               <span className="text-xl font-bold text-error">Rp</span>
-              <span className="text-3xl font-extrabold text-on-surface tracking-tight">8.120.000</span>
+              <span className="text-3xl font-extrabold text-on-surface tracking-tight">
+                {new Intl.NumberFormat('id-ID').format(stats.totalOut)}
+              </span>
             </div>
-            <div className="mt-4 flex items-center justify-between text-xs text-on-surface-variant font-semibold">
-              <span>Target Anggaran</span>
-              <span>33% Terpakai</span>
-            </div>
+            <p className="mt-4 text-xs text-on-surface-variant flex items-center gap-1">
+              <Icon name="error_outline" className="text-sm text-error" />
+              Buku besar operasional tervalidasi kuitansi
+            </p>
           </div>
         </div>
 
@@ -302,6 +361,134 @@ export default function PublicDashboard() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Cek Saldo Tabungan Mandiri Wali Santri */}
+        <div className="glass-card rounded-3xl p-6 md:p-8 shadow-sm border border-white/20 mb-10 text-left">
+          <div className="max-w-xl">
+            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">Fitur Transparansi Wali</span>
+            <h2 className="text-xl md:text-2xl font-extrabold text-on-surface tracking-tight mb-2">Cek Saldo Tabungan Santri</h2>
+            <p className="text-xs text-on-surface-variant font-medium leading-relaxed mb-6">
+              Masukkan Nama Lengkap Santri dan Nama Wali Murid yang terdaftar untuk melihat total saldo tabungan Wadiah serta 5 riwayat transaksi terakhir secara aman.
+            </p>
+          </div>
+
+          <form onSubmit={handleCheckSavings} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div className="space-y-1.5 text-left">
+              <label className="text-[10px] font-bold uppercase text-on-surface-variant tracking-wider">Nama Lengkap Santri</label>
+              <input
+                type="text"
+                required
+                className="w-full px-4 py-3 bg-surface-container-low border border-primary/10 rounded-2xl text-xs font-bold text-on-surface outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all placeholder:text-on-surface-variant/40"
+                placeholder="Contoh: Muhammad Rafli"
+                value={searchSantriName}
+                onChange={(e) => setSearchSantriName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5 text-left">
+              <label className="text-[10px] font-bold uppercase text-on-surface-variant tracking-wider">Nama Wali Murid</label>
+              <input
+                type="text"
+                required
+                className="w-full px-4 py-3 bg-surface-container-low border border-primary/10 rounded-2xl text-xs font-bold text-on-surface outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all placeholder:text-on-surface-variant/40"
+                placeholder="Contoh: Bpk. H. Ahmad Suraji"
+                value={searchWaliName}
+                onChange={(e) => setSearchWaliName(e.target.value)}
+              />
+            </div>
+            <div>
+              <button
+                type="submit"
+                disabled={checkingSavings}
+                className="w-full primary-gradient text-white py-3.5 px-6 rounded-2xl font-extrabold text-xs shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:scale-100"
+              >
+                {checkingSavings ? (
+                  <>
+                    <Icon name="hourglass_empty" className="text-base animate-pulse" />
+                    Memproses...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="search" className="text-base" />
+                    Periksa Rekening
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+
+          {/* Error Message */}
+          {savingsError && (
+            <div className="mt-6 p-4 bg-error-container/30 border border-error/20 text-error rounded-2xl text-xs font-bold flex items-center gap-2">
+              <Icon name="error_outline" className="text-lg flex-shrink-0" />
+              <span>{savingsError}</span>
+            </div>
+          )}
+
+          {/* Result Card */}
+          {savingsResult && (
+            <div className="mt-8 border-t border-primary/15 pt-6 space-y-6 animate-fade-in-up">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="bg-white/40 border border-primary/10 rounded-2xl p-4 flex flex-col justify-between">
+                  <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wide">Pemilik Rekening</span>
+                  <span className="text-sm font-extrabold text-on-surface mt-1">{savingsResult.santriName}</span>
+                </div>
+                <div className="bg-white/40 border border-primary/10 rounded-2xl p-4 flex flex-col justify-between">
+                  <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wide">Wali Murid</span>
+                  <span className="text-sm font-extrabold text-on-surface mt-1">{savingsResult.waliName}</span>
+                </div>
+                <div className="bg-white/40 border border-primary/10 rounded-2xl p-4 flex flex-col justify-between">
+                  <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wide">Kelas</span>
+                  <span className="text-sm font-extrabold text-on-surface mt-1">{savingsResult.kelasName}</span>
+                </div>
+                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group">
+                  <div className="absolute -right-4 -top-4 w-16 h-16 bg-primary/5 rounded-full blur-xl"></div>
+                  <span className="text-[10px] text-primary font-extrabold uppercase tracking-wide">Saldo Tabungan Akhir</span>
+                  <span className="text-lg font-black text-primary mt-1">
+                    Rp {new Intl.NumberFormat('id-ID').format(savingsResult.saldo)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Mutations List */}
+              <div className="space-y-3">
+                <h4 className="font-bold text-xs text-on-surface flex items-center gap-1.5">
+                  <Icon name="history" className="text-base text-primary" />
+                  Riwayat 5 Transaksi Terakhir
+                </h4>
+                <div className="overflow-hidden border border-primary/10 rounded-2xl bg-white/30">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-primary/5 text-primary text-[10px] font-bold border-b border-primary/10">
+                        <th className="px-4 py-3">Tanggal</th>
+                        <th className="px-4 py-3">Keterangan</th>
+                        <th className="px-4 py-3 text-right">Nominal</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-primary/5">
+                      {savingsResult.mutations.length > 0 ? (
+                        savingsResult.mutations.map((m: any) => (
+                          <tr key={m.id} className="hover:bg-white/20 transition-colors">
+                            <td className="px-4 py-2.5 text-[11px] font-semibold text-on-surface-variant">{m.tanggalFormatted}</td>
+                            <td className="px-4 py-2.5 text-[11px] font-bold text-on-surface">{m.keterangan || (m.tipe === 'in' ? 'Setoran Tabungan' : 'Penarikan Tabungan')}</td>
+                            <td className={`px-4 py-2.5 text-[11px] font-black text-right ${m.tipe === 'in' ? 'text-primary' : 'text-error'}`}>
+                              {m.tipe === 'in' ? '+' : '-'}Rp {new Intl.NumberFormat('id-ID').format(m.nominal)}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={3} className="px-4 py-6 text-center text-xs text-on-surface-variant font-semibold">
+                            Belum ada riwayat transaksi tabungan.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Buku Besar Publik */}

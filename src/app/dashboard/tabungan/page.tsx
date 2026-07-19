@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Icon from '@/components/atoms/Icon';
 import Button from '@/components/atoms/Button';
 import Input from '@/components/atoms/Input';
@@ -240,6 +240,19 @@ export default function TabunganPage() {
     },
   ];
 
+  const stats = useMemo(() => {
+    let totalSaldo = 0;
+    let totalPenabung = 0;
+    dataTabungan.forEach((row) => {
+      totalSaldo += row.saldo;
+      if (row.saldo > 0) {
+        totalPenabung++;
+      }
+    });
+    const rataRata = totalPenabung > 0 ? totalSaldo / totalPenabung : 0;
+    return { totalSaldo, totalPenabung, rataRata };
+  }, [dataTabungan]);
+
   return (
     <div className="space-y-8">
       {/* Toast */}
@@ -278,6 +291,54 @@ export default function TabunganPage() {
           </div>
         </div>
       </CollapsibleGuide>
+
+      {/* Stats Cards Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+        <div className="glass-card p-5 rounded-3xl shadow-sm border border-white/20 relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all duration-300"></div>
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wider">Total Saldo Wadiah</span>
+            <Icon name="account_balance_wallet" className="text-primary text-base" />
+          </div>
+          <div className="flex items-baseline gap-0.5">
+            <span className="text-xs font-bold text-primary">Rp</span>
+            <span className="text-2xl font-extrabold text-on-surface tracking-tight">
+              {new Intl.NumberFormat('id-ID').format(stats.totalSaldo)}
+            </span>
+          </div>
+          <p className="text-[10px] text-on-surface-variant font-bold mt-2">Akumulasi seluruh tabungan santri</p>
+        </div>
+
+        <div className="glass-card p-5 rounded-3xl shadow-sm border border-white/20 relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all duration-300"></div>
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wider">Santri Aktif Menabung</span>
+            <Icon name="group" className="text-primary text-base" />
+          </div>
+          <div className="flex items-baseline gap-0.5">
+            <span className="text-2xl font-extrabold text-on-surface tracking-tight">
+              {stats.totalPenabung}
+            </span>
+            <span className="text-xs font-bold text-on-surface-variant ml-1">Santri</span>
+          </div>
+          <p className="text-[10px] text-on-surface-variant font-bold mt-2">Jumlah santri dengan saldo &gt; Rp 0</p>
+        </div>
+
+        <div className="glass-card p-5 rounded-3xl shadow-sm border border-white/20 relative overflow-hidden group">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all duration-300"></div>
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wider">Rata-rata Saldo Tabungan</span>
+            <Icon name="payments" className="text-primary text-base" />
+          </div>
+          <div className="flex items-baseline gap-0.5">
+            <span className="text-xs font-bold text-primary">Rp</span>
+            <span className="text-2xl font-extrabold text-on-surface tracking-tight">
+              {new Intl.NumberFormat('id-ID').format(Math.round(stats.rataRata))}
+            </span>
+          </div>
+          <p className="text-[10px] text-on-surface-variant font-bold mt-2">Rata-rata kepemilikan dana per santri</p>
+        </div>
+      </div>
 
       {/* Main Datatable */}
       <div className="glass-card rounded-3xl overflow-hidden shadow-sm border border-white/20">
