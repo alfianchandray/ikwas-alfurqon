@@ -10,6 +10,8 @@ export default function PublicDashboard() {
   const [siteConfig, setSiteConfig] = useState({
     siteName: 'IKWAS Al-Furqon',
     siteDesc: 'Sistem manajemen keuangan terpadu Ikatan Keluarga Santri dengan amanah dan transparan.',
+    contactEmail: 'info@ikwasalfurqon.or.id',
+    contactWebsite: 'https://ikwasalfurqon.or.id',
   });
   const [transactions, setTransactions] = useState<any[]>([]);
   const [stats, setStats] = useState({
@@ -74,6 +76,8 @@ export default function PublicDashboard() {
           setSiteConfig({
             siteName: data.site_name,
             siteDesc: data.site_desc,
+            contactEmail: data.contact_email || 'info@ikwasalfurqon.or.id',
+            contactWebsite: data.contact_website || 'https://ikwasalfurqon.or.id',
           });
         }
       })
@@ -373,8 +377,8 @@ export default function PublicDashboard() {
             </p>
           </div>
 
-          <form onSubmit={handleCheckSavings} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            <div className="space-y-1.5 text-left">
+          <form onSubmit={handleCheckSavings} className="flex flex-col md:flex-row gap-4 items-end w-full">
+            <div className="space-y-1.5 text-left w-full md:flex-1">
               <label className="text-[10px] font-bold uppercase text-on-surface-variant tracking-wider">Nama Lengkap Santri</label>
               <input
                 type="text"
@@ -385,7 +389,7 @@ export default function PublicDashboard() {
                 onChange={(e) => setSearchSantriName(e.target.value)}
               />
             </div>
-            <div className="space-y-1.5 text-left">
+            <div className="space-y-1.5 text-left w-full md:flex-1">
               <label className="text-[10px] font-bold uppercase text-on-surface-variant tracking-wider">Nama Wali Murid</label>
               <input
                 type="text"
@@ -396,7 +400,7 @@ export default function PublicDashboard() {
                 onChange={(e) => setSearchWaliName(e.target.value)}
               />
             </div>
-            <div>
+            <div className="w-full md:w-auto md:min-w-[180px] flex-shrink-0">
               <button
                 type="submit"
                 disabled={checkingSavings}
@@ -410,7 +414,7 @@ export default function PublicDashboard() {
                 ) : (
                   <>
                     <Icon name="search" className="text-base" />
-                    Periksa Rekening
+                    Periksa Tabungan
                   </>
                 )}
               </button>
@@ -430,7 +434,7 @@ export default function PublicDashboard() {
             <div className="mt-8 border-t border-primary/15 pt-6 space-y-6 animate-fade-in-up">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-white/40 border border-primary/10 rounded-2xl p-4 flex flex-col justify-between">
-                  <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wide">Pemilik Rekening</span>
+                  <span className="text-[10px] text-on-surface-variant font-extrabold uppercase tracking-wide">Pemilik Tabungan</span>
                   <span className="text-sm font-extrabold text-on-surface mt-1">{savingsResult.santriName}</span>
                 </div>
                 <div className="bg-white/40 border border-primary/10 rounded-2xl p-4 flex flex-col justify-between">
@@ -596,19 +600,36 @@ export default function PublicDashboard() {
             <div className="text-left">
               <h4 className="font-bold text-xs text-on-surface mb-4">Tautan Cepat</h4>
               <ul className="space-y-2">
-                <li><a className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">Dashboard</a></li>
-                <li><a className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">Laporan Tahunan</a></li>
-                <li><a className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors" href="#">FAQ</a></li>
+                {navLinks.map((link) => (
+                  <li key={link.id}>
+                    <a className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors" href={link.url}>
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+                <li>
+                  <Link className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors" href="/login">
+                    Login Pengurus
+                  </Link>
+                </li>
               </ul>
             </div>
-            <div className="text-left">
+             <div className="text-left">
               <h4 className="font-bold text-xs text-on-surface mb-4">Hubungi Kami</h4>
-              <p className="text-xs font-semibold text-on-surface-variant mb-4">info@ikwasalfurqon.or.id</p>
+              <p className="text-xs font-semibold text-on-surface-variant mb-4">{siteConfig.contactEmail}</p>
               <div className="flex gap-4">
-                <a className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-200" href="#">
+                <a 
+                  className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-200" 
+                  href={siteConfig.contactWebsite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Icon name="language" className="text-lg" />
                 </a>
-                <a className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-200" href="#">
+                <a 
+                  className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-200" 
+                  href={`mailto:${siteConfig.contactEmail}`}
+                >
                   <Icon name="mail" className="text-lg" />
                 </a>
               </div>

@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 
+async function runAutoMigration(db: any) {
+  try {
+    await db.prepare("ALTER TABLE site_config ADD COLUMN contact_email TEXT DEFAULT 'info@ikwasalfurqon.or.id'").run().catch(() => {});
+    await db.prepare("ALTER TABLE site_config ADD COLUMN contact_website TEXT DEFAULT 'https://ikwasalfurqon.or.id'").run().catch(() => {});
+  } catch {}
+}
+
 export async function GET() {
   try {
     const db = await getDb();
+    await runAutoMigration(db);
+
     const config = await db
       .prepare("SELECT * FROM site_config WHERE id = 1")
       .first();
@@ -16,7 +25,9 @@ export async function GET() {
           theme_color: "teal",
           logo_type: "medallion",
           favicon_url: "",
-          logo_url: ""
+          logo_url: "",
+          contact_email: "info@ikwasalfurqon.or.id",
+          contact_website: "https://ikwasalfurqon.or.id"
         },
         { status: 200 }
       );
@@ -31,8 +42,19 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const db = await getDb();
-    const body = await req.json() as { siteName?: string; siteDesc?: string; themeColor?: string; logoType?: string; faviconUrl?: string; logoUrl?: string };
-    const { siteName, siteDesc, themeColor, logoType, faviconUrl, logoUrl } = body;
+    await runAutoMigration(db);
+
+    const body = await req.json() as { 
+      siteName?: string; 
+      siteDesc?: string; 
+      themeColor?: string; 
+      logoType?: string; 
+      faviconUrl?: string; 
+      logoUrl?: string;
+      contactEmail?: string;
+      contactWebsite?: string;
+    };
+    const { siteName, siteDesc, themeColor, logoType, faviconUrl, logoUrl, contactEmail, contactWebsite } = body;
 
     if (!siteName || !siteDesc) {
       return NextResponse.json({ error: "Nama dan Deskripsi wajib diisi!" }, { status: 400 });
@@ -40,9 +62,20 @@ export async function POST(req: NextRequest) {
 
     await db
       .prepare(
-        "UPDATE site_config SET site_name = ?, site_desc = ?, theme_color = ?, logo_type = ?, favicon_url = ?, logo_url = ? WHERE id = 1"
+        `UPDATE site_config 
+         SET site_name = ?, site_desc = ?, theme_color = ?, logo_type = ?, favicon_url = ?, logo_url = ?, contact_email = ?, contact_website = ?
+         WHERE id = 1`
       )
-      .bind(siteName, siteDesc, themeColor || "teal", logoType || "medallion", faviconUrl || "", logoUrl || "")
+      .bind(
+        siteName, 
+        siteDesc, 
+        themeColor || "teal", 
+        logoType || "medallion", 
+        faviconUrl || "", 
+        logoUrl || "", 
+        contactEmail || "info@ikwasalfurqon.or.id", 
+        contactWebsite || "https://ikwasalfurqon.or.id"
+      )
       .run();
 
     return NextResponse.json({ success: true, message: "Pengaturan situs berhasil disimpan." });

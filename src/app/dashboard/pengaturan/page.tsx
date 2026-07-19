@@ -43,6 +43,8 @@ interface SiteConfig {
   logoType: string;
   faviconUrl: string;
   logoUrl: string;
+  contactEmail: string;
+  contactWebsite: string;
 }
 
 export default function PengaturanPage() {
@@ -71,6 +73,8 @@ export default function PengaturanPage() {
     logoType: 'medallion',
     faviconUrl: '',
     logoUrl: '',
+    contactEmail: 'info@ikwasalfurqon.or.id',
+    contactWebsite: 'https://ikwasalfurqon.or.id',
   });
 
   const [classes, setClasses] = useState<Kelas[]>([]);
@@ -141,6 +145,8 @@ export default function PengaturanPage() {
             logoType: data.logo_type || 'medallion',
             faviconUrl: data.favicon_url || '',
             logoUrl: data.logo_url || '',
+            contactEmail: data.contact_email || 'info@ikwasalfurqon.or.id',
+            contactWebsite: data.contact_website || 'https://ikwasalfurqon.or.id',
           });
         }
       })
@@ -231,6 +237,8 @@ export default function PengaturanPage() {
         logoType: siteConfig.logoType,
         faviconUrl: siteConfig.faviconUrl,
         logoUrl: siteConfig.logoUrl,
+        contactEmail: siteConfig.contactEmail,
+        contactWebsite: siteConfig.contactWebsite,
       }),
     })
       .then((res) => res.json())
@@ -701,6 +709,24 @@ export default function PengaturanPage() {
                       required
                       value={siteConfig.siteDesc}
                       onChange={(e) => setSiteConfig({ ...siteConfig, siteDesc: e.target.value })}
+                    />
+                  </FormField>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField label="Email Kontak di Footer">
+                    <Input
+                      type="email"
+                      required
+                      value={siteConfig.contactEmail}
+                      onChange={(e) => setSiteConfig({ ...siteConfig, contactEmail: e.target.value })}
+                    />
+                  </FormField>
+                  <FormField label="Website Resmi (Link Bahasa)">
+                    <Input
+                      type="text"
+                      required
+                      value={siteConfig.contactWebsite}
+                      onChange={(e) => setSiteConfig({ ...siteConfig, contactWebsite: e.target.value })}
                     />
                   </FormField>
                 </div>

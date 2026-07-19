@@ -104,6 +104,7 @@ export default function InternalDashboard() {
     pengeluaranHariIni: 0,
     totalSantri: 0,
   });
+  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
 
   const fetchStats = () => {
     fetch('/api/dashboard/stats')
@@ -121,11 +122,23 @@ export default function InternalDashboard() {
       .catch(() => {});
   };
 
+  const fetchRecentTransactions = () => {
+    fetch('/api/transaksi')
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (Array.isArray(data)) {
+          setRecentTransactions(data.slice(0, 5));
+        }
+      })
+      .catch(() => {});
+  };
+
   // Load configuration
   useEffect(() => {
     fetchConfig();
     fetchKegiatan();
     fetchStats();
+    fetchRecentTransactions();
 
     // Load dynamic username
     const stored = typeof window !== 'undefined' ? sessionStorage.getItem('ikwas_user') : null;
@@ -298,7 +311,7 @@ export default function InternalDashboard() {
                 </span>
               </div>
               <div className="mt-2 text-[10px] text-primary font-bold flex items-center gap-1">
-                <Icon name="verified_user" className="text-xs font-bold" /> Realtime dari database D1
+                <Icon name="verified_user" className="text-xs font-bold" /> Terverifikasi secara realtime
               </div>
             </div>
 
@@ -353,29 +366,32 @@ export default function InternalDashboard() {
                 <Link href="/dashboard/laporan" className="text-[10px] font-bold text-primary hover:underline">Lihat Semua</Link>
               </div>
               <div className="divide-y divide-white/10">
-                {[
-                  { tgl: '12 Okt 2023', wali: 'Bpk. Ridwan (Santri: Ahmad)', ket: 'Iuran Bulanan Okt', kat: 'Pemasukan', nom: '+Rp 150.000', tipe: 'in' },
-                  { tgl: '12 Okt 2023', wali: 'Bpk. Lukman (Santri: Khadijah)', ket: 'Tabungan Santri', kat: 'Tabungan', nom: '+Rp 200.000', tipe: 'in' },
-                  { tgl: '11 Okt 2023', wali: 'Lembaga IKWAS', ket: 'Listrik & Air Asrama', kat: 'Operasional', nom: '-Rp 1.450.000', tipe: 'out' },
-                  { tgl: '10 Okt 2023', wali: 'Hamba Allah', ket: 'Zakat Mal', kat: 'Zakat', nom: '+Rp 500.000', tipe: 'in' },
-                  { tgl: '10 Okt 2023', wali: 'Toko Buku Islami', ket: 'Beli Kitab Kuning', kat: 'Pendidikan', nom: '-Rp 300.000', tipe: 'out' }
-                ].map((trx, idx) => (
-                  <div key={idx} className="p-4 px-6 flex justify-between items-center hover:bg-primary/5 transition-colors duration-150">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-on-surface-variant">{trx.tgl}</span>
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
-                          trx.tipe === 'in' ? 'bg-primary/10 text-primary' : 'bg-error-container text-on-error-container'
-                        }`}>{trx.kat}</span>
+                {recentTransactions.length > 0 ? (
+                  recentTransactions.map((trx) => (
+                    <div key={trx.id} className="p-4 px-6 flex justify-between items-center hover:bg-primary/5 transition-colors duration-150">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold text-on-surface-variant">
+                            {new Date(trx.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </span>
+                          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold ${
+                            trx.tipe === 'in' ? 'bg-primary/10 text-primary' : 'bg-error-container text-on-error-container'
+                          }`}>{trx.kategori}</span>
+                        </div>
+                        <h4 className="text-xs font-bold text-on-surface leading-tight truncate max-w-[240px] md:max-w-[320px]">
+                          {trx.keterangan || 'Catatan transaksi kas'}
+                        </h4>
                       </div>
-                      <h4 className="text-xs font-bold text-on-surface">{trx.wali}</h4>
-                      <p className="text-[10px] text-on-surface-variant font-medium">{trx.ket}</p>
+                      <div className={`text-xs font-bold ${trx.tipe === 'in' ? 'text-primary' : 'text-error'}`}>
+                        {trx.tipe === 'in' ? '+' : '-'}Rp {new Intl.NumberFormat('id-ID').format(trx.nominal)}
+                      </div>
                     </div>
-                    <div className={`text-xs font-bold ${trx.tipe === 'in' ? 'text-primary' : 'text-error'}`}>
-                      {trx.nom}
-                    </div>
+                  ))
+                ) : (
+                  <div className="p-6 text-center text-xs font-semibold text-on-surface-variant">
+                    Belum ada pencatatan transaksi kas.
                   </div>
-                ))}
+                )}
               </div>
             </div>
 
