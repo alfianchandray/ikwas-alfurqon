@@ -111,6 +111,38 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
+/* ── Fade In Up Animation (used across modals, cards, toasts) ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.22s ease-out both;
+}
+
+/* ── Slide Up (for bottom-sheet style modals on mobile) ── */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
 /* Custom Hide Scrollbar */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
