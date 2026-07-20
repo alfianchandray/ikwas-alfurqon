@@ -2,8 +2,8 @@
  * Utility helper untuk mengonversi angka nominal ke dalam teks Terbilang Bahasa Indonesia.
  * Contoh: 1500000 -> "Satu Juta Lima Ratus Ribu Rupiah"
  */
-export function terbilang(n: number): string {
-  if (isNaN(n) || n === 0) return "";
+function konversiTerbilang(n: number): string {
+  if (n === 0) return "";
 
   const angka = [
     "", "Satu", "Dua", "Tiga", "Empat", "Lima",
@@ -16,25 +16,32 @@ export function terbilang(n: number): string {
   if (num < 12) {
     result = angka[num];
   } else if (num < 20) {
-    result = terbilang(num - 10) + " Belas";
+    result = konversiTerbilang(num - 10) + " Belas";
   } else if (num < 100) {
-    result = terbilang(Math.floor(num / 10)) + " Puluh " + terbilang(num % 10);
+    result = konversiTerbilang(Math.floor(num / 10)) + " Puluh " + konversiTerbilang(num % 10);
   } else if (num < 200) {
-    result = "Seratus " + terbilang(num - 100);
+    result = "Seratus " + konversiTerbilang(num - 100);
   } else if (num < 1000) {
-    result = terbilang(Math.floor(num / 100)) + " Ratus " + terbilang(num % 100);
+    result = konversiTerbilang(Math.floor(num / 100)) + " Ratus " + konversiTerbilang(num % 100);
   } else if (num < 2000) {
-    result = "Seribu " + terbilang(num - 1000);
+    result = "Seribu " + konversiTerbilang(num - 1000);
   } else if (num < 1000000) {
-    result = terbilang(Math.floor(num / 1000)) + " Ribu " + terbilang(num % 1000);
+    result = konversiTerbilang(Math.floor(num / 1000)) + " Ribu " + konversiTerbilang(num % 1000);
   } else if (num < 1000000000) {
-    result = terbilang(Math.floor(num / 1000000)) + " Juta " + terbilang(num % 1000000);
+    result = konversiTerbilang(Math.floor(num / 1000000)) + " Juta " + konversiTerbilang(num % 1000000);
   } else if (num < 1000000000000) {
-    result = terbilang(Math.floor(num / 1000000000)) + " Miliar " + terbilang(num % 1000000000);
+    result = konversiTerbilang(Math.floor(num / 1000000000)) + " Miliar " + konversiTerbilang(num % 1000000000);
   } else {
-    result = terbilang(Math.floor(num / 1000000000000)) + " Triliun " + terbilang(num % 1000000000000);
+    result = konversiTerbilang(Math.floor(num / 1000000000000)) + " Triliun " + konversiTerbilang(num % 1000000000000);
   }
 
+  return result.trim();
+}
+
+export function terbilang(n: number): string {
+  if (isNaN(n) || n === 0) return "";
+  let result = konversiTerbilang(n);
+  
   // Bersihkan spasi ganda
   result = result.replace(/\s+/g, " ").trim();
   return result ? `${result} Rupiah` : "";

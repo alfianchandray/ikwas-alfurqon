@@ -14,6 +14,7 @@ interface MenuItem {
 interface SidebarNavProps {
   menuItems: MenuItem[];
   onLogout: () => void;
+  logoType?: string;
 }
 
 interface CurrentUser {
@@ -22,7 +23,7 @@ interface CurrentUser {
   role: string;
 }
 
-export default function SidebarNav({ menuItems, onLogout }: SidebarNavProps) {
+export default function SidebarNav({ menuItems, onLogout, logoType = 'mosque' }: SidebarNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -123,7 +124,11 @@ export default function SidebarNav({ menuItems, onLogout }: SidebarNavProps) {
       <div className={`flex items-center gap-2 mb-10 px-2 justify-between ${isMinimized ? 'flex-col gap-4' : ''}`}>
         <div className="flex items-center gap-2 overflow-hidden">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white shadow-md shadow-primary/20 flex-shrink-0">
-            <Icon name="account_balance" className="text-xl" fill={true} />
+            <Icon 
+              name={logoType === 'crescent' ? 'brightness_3' : logoType === 'star' ? 'grade' : 'account_balance'} 
+              className="text-xl" 
+              fill={true} 
+            />
           </div>
           {!isMinimized && (
             <div className="transition-opacity duration-200">

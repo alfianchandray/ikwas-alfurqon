@@ -15,11 +15,20 @@ interface MenuItem {
   icon: string;
 }
 
+const colorMap: Record<string, { primary: string; dark: string; container: string }> = {
+  teal: { primary: '#0D9488', dark: '#0B7A70', container: '#008378' },
+  emerald: { primary: '#059669', dark: '#047857', container: '#064e3b' },
+  gold: { primary: '#D97706', dark: '#B45309', container: '#78350f' },
+  indigo: { primary: '#4F46E5', dark: '#3730A3', container: '#1e1b4b' },
+};
+
 export default function DashboardTemplate({ children }: DashboardTemplateProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [siteName, setSiteName] = useState('IKWAS Al-Furqon');
+  const [themeColor, setThemeColor] = useState('teal');
+  const [logoType, setLogoType] = useState('mosque');
   const [authChecked, setAuthChecked] = useState(false);
 
   const [menuItems, setMenuItems] = useState<MenuItem[]>([
@@ -51,7 +60,25 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
     if (savedConfig) {
       const config = JSON.parse(savedConfig);
       if (config.siteName) setSiteName(config.siteName);
+      if (config.themeColor) setThemeColor(config.themeColor);
+      if (config.logoType) setLogoType(config.logoType);
     }
+
+    fetch('/api/site-config')
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data && !data.error) {
+          if (data.site_name) setSiteName(data.site_name);
+          if (data.theme_color) setThemeColor(data.theme_color);
+          if (data.logo_type) setLogoType(data.logo_type);
+          localStorage.setItem('ikwas_site_config', JSON.stringify({
+            siteName: data.site_name,
+            themeColor: data.theme_color,
+            logoType: data.logo_type,
+          }));
+        }
+      })
+      .catch(() => {});
 
     // Dynamic Sidebar Menu
     fetch('/api/sidebar-menu')
@@ -78,24 +105,43 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
     router.push('/login');
   };
 
-  return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row relative">
-      {/* Auth loading screen */}
-      {!authChecked && (
-        <div className="fixed inset-0 bg-background z-[9999] flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <Icon name="sync" className="animate-spin text-4xl text-primary" />
-            <span className="text-xs font-bold tracking-widest text-on-surface-variant">Memverifikasi sesi...</span>
-          </div>
+  const colors = colorMap[themeColor] || colorMap.teal;
+
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 text-xs font-extrabold text-primary">
+        <style dangerouslySetInnerHTML={{__html: `
+          :root {
+            --color-primary: ${colors.primary} !important;
+            --color-primary-dark: ${colors.dark} !important;
+            --color-primary-container: ${colors.container} !important;
+          }
+        `}} />
+        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center animate-spin">
+          <Icon name="sync" className="text-xl" />
         </div>
-      )}
+        Memverifikasi sesi pengurus...
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen bg-background font-sans relative">
+      <style dangerouslySetInnerHTML={{__html: `
+        :root {
+          --color-primary: ${colors.primary} !important;
+          --color-primary-dark: ${colors.dark} !important;
+          --color-primary-container: ${colors.container} !important;
+        }
+      `}} />
+      
       {/* Custom loading indicator overlay */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[9999] flex items-center justify-center text-white select-none">
-          <div className="flex flex-col items-center gap-3">
-            <Icon name="sync" className="animate-spin text-4xl text-primary" />
-            <span className="text-xs font-bold tracking-widest text-white/90">Memproses Keluar...</span>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-xs z-[9999] flex flex-col items-center justify-center gap-2 text-xs font-bold text-white select-none">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center animate-spin border border-primary/20">
+            <Icon name="sync" className="text-xl text-primary" />
           </div>
+          Memproses...
         </div>
       )}
 
@@ -112,12 +158,16 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
       />
 
       {/* Desktop Sidebar Nav Organism */}
-      <SidebarNav menuItems={menuItems} onLogout={() => setShowLogoutModal(true)} />
+      <SidebarNav menuItems={menuItems} onLogout={() => setShowLogoutModal(true)} logoType={logoType} />
 
       {/* Mobile Top Header (100% custom) */}
       <header className="md:hidden flex justify-between items-center px-6 py-4 bg-white/80 backdrop-blur-xl border-b border-primary/10 sticky top-0 z-40 select-none">
         <div className="flex items-center gap-2">
-          <Icon name="account_balance" className="text-primary text-2xl font-bold" fill={true} />
+          <Icon 
+            name={logoType === 'crescent' ? 'brightness_3' : logoType === 'star' ? 'grade' : 'account_balance'} 
+            className="text-primary text-2xl font-bold" 
+            fill={true} 
+          />
           <span className="font-extrabold text-sm text-primary tracking-tight">{siteName}</span>
         </div>
         <div className="flex items-center gap-2">

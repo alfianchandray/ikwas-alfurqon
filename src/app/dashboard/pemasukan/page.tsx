@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Icon from '@/components/atoms/Icon';
@@ -44,7 +44,10 @@ function CashflowContent() {
 
   // Kas Keluar specific
   const [penerima, setPenerima] = useState('');
+  const [penerimaSuggestions, setPenerimaSuggestions] = useState<string[]>([]);
+  const [showPenerimaSuggestions, setShowPenerimaSuggestions] = useState(false);
   const [receiptImage, setReceiptImage] = useState<string | null>(null);
+  const penerimaContainerRef = useRef<HTMLDivElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -81,7 +84,29 @@ function CashflowContent() {
               ]
         );
       });
+    if (mode === 'out') {
+      fetch('/api/transaksi/penerima')
+        .then(res => res.json())
+        .then((data: unknown) => {
+          if (Array.isArray(data)) {
+            setPenerimaSuggestions(data as string[]);
+          }
+        })
+        .catch(() => {});
+    }
   }, [mode]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (penerimaContainerRef.current && !penerimaContainerRef.current.contains(event.target as Node)) {
+        setShowPenerimaSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleModeSwitch = (newMode: 'in' | 'out') => {
     setMode(newMode);
@@ -336,13 +361,46 @@ function CashflowContent() {
           {/* [Kas Keluar] Penerima Dana */}
           {mode === 'out' && (
             <FormField label="Penerima Dana / Pihak Ketiga">
-              <Input
-                type="text"
-                placeholder="Contoh: Toko Kitab Al-Azhar / PLN / Ustadz Hasan"
-                value={penerima}
-                onChange={e => setPenerima(e.target.value)}
-                disabled={isLoading}
-              />
+              <div ref={penerimaContainerRef} className="relative w-full">
+                <Input
+                  type="text"
+                  placeholder="Contoh: Toko Kitab Al-Azhar / PLN / Ustadz Hasan"
+                  value={penerima}
+                  onChange={e => {
+                    setPenerima(e.target.value);
+                    setShowPenerimaSuggestions(true);
+                  }}
+                  onFocus={() => setShowPenerimaSuggestions(true)}
+                  disabled={isLoading}
+                />
+                {showPenerimaSuggestions && penerima && (
+                  <div className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-primary/10 max-h-48 overflow-y-auto z-[999] no-scrollbar">
+                    {penerimaSuggestions.filter(s => s.toLowerCase().includes(penerima.toLowerCase())).length > 0 ? (
+                      penerimaSuggestions
+                        .filter(s => s.toLowerCase().includes(penerima.toLowerCase()))
+                        .map((s, idx) => (
+                          <div
+                            key={idx}
+                            className="px-4 py-3 hover:bg-primary/5 cursor-pointer text-xs border-b border-primary/5 last:border-0 flex justify-between items-center text-left"
+                            onClick={() => {
+                              setPenerima(s);
+                              setShowPenerimaSuggestions(false);
+                            }}
+                          >
+                            <span className="font-bold text-on-surface">{s}</span>
+                            <span className="flex items-center gap-1 text-[9px] text-primary bg-primary/10 px-2 py-0.5 rounded-full font-extrabold uppercase">
+                              <Icon name="history" className="text-[10px]" /> Tersimpan
+                            </span>
+                          </div>
+                        ))
+                    ) : (
+                      <div className="px-4 py-3 text-xs text-on-surface-variant italic text-left">
+                        Penerima baru (akan disimpan otomatis)
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </FormField>
           )}
 
