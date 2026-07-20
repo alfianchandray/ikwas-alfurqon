@@ -50,6 +50,10 @@ export default function SantriPage() {
   const [newKelas, setNewKelas] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Permissions
+  const [canWriteSantri, setCanWriteSantri] = useState(true);
+  const [canWriteTagihan, setCanWriteTagihan] = useState(true);
+
   // Delete modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [santriToDelete, setSantriToDelete] = useState<Santri | null>(null);
@@ -163,6 +167,23 @@ export default function SantriPage() {
     fetchSantri();
     fetchClasses();
     fetchCategories();
+
+    // Load permissions
+    if (typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem('ikwas_user');
+      if (stored) {
+        try {
+          const user = JSON.parse(stored);
+          if (user.role === 'Super Admin') {
+            setCanWriteSantri(true);
+            setCanWriteTagihan(true);
+          } else if (user.permissions) {
+            setCanWriteSantri(!!user.permissions.santri_write);
+            setCanWriteTagihan(!!user.permissions.tagihan_write);
+          }
+        } catch {}
+      }
+    }
 
     // Load custom placeholder from settings
     const saved = localStorage.getItem('ikwas_sidebar_menu');
@@ -535,15 +556,17 @@ export default function SantriPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="w-full md:w-auto px-5 py-3 bg-primary text-white font-extrabold text-xs rounded-2xl hover:brightness-105 active:scale-95 transition-all shadow-md shadow-primary/20 cursor-pointer flex items-center justify-center gap-2"
-            >
-              <Icon name="person_add" className="text-base" />
-              Registrasi Santri
-            </button>
+            {canWriteSantri && (
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="w-full md:w-auto px-5 py-3 bg-primary text-white font-extrabold text-xs rounded-2xl hover:brightness-105 active:scale-95 transition-all shadow-md shadow-primary/20 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Icon name="person_add" className="text-base" />
+                Registrasi Santri
+              </button>
+            )}
           </div>
-
+ 
           {/* Table */}
           <div className="glass-card rounded-3xl overflow-hidden shadow-sm border border-white/20">
             <div className="overflow-x-auto">
@@ -564,22 +587,28 @@ export default function SantriPage() {
                         <td className="p-4 px-6">{s.wali}</td>
                         <td className="p-4 px-6">{s.kelas}</td>
                         <td className="p-4 px-6 text-center no-print flex items-center justify-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => triggerEdit(s)}
-                            className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-colors cursor-pointer flex items-center justify-center"
-                            title="Ubah Data"
-                          >
-                            <Icon name="edit" className="text-base font-bold" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => triggerDelete(s)}
-                            className="p-2 text-error hover:bg-error/10 rounded-xl transition-colors cursor-pointer flex items-center justify-center"
-                            title="Hapus Data"
-                          >
-                            <Icon name="delete" className="text-base font-bold" />
-                          </button>
+                          {canWriteSantri ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => triggerEdit(s)}
+                                className="p-2 text-primary hover:bg-primary/10 rounded-xl transition-colors cursor-pointer flex items-center justify-center"
+                                title="Ubah Data"
+                              >
+                                <Icon name="edit" className="text-base font-bold" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => triggerDelete(s)}
+                                className="p-2 text-error hover:bg-error/10 rounded-xl transition-colors cursor-pointer flex items-center justify-center"
+                                title="Hapus Data"
+                              >
+                                <Icon name="delete" className="text-base font-bold" />
+                              </button>
+                            </>
+                          ) : (
+                            <span className="text-[10px] text-outline italic">Hanya Lihat</span>
+                          )}
                         </td>
                       </tr>
                     ))
@@ -693,13 +722,20 @@ export default function SantriPage() {
                         </td>
                         <td className="p-4 px-6 text-center no-print">
                           {b.status === 'belum_bayar' ? (
-                            <button
-                              onClick={() => triggerPayment(b)}
-                              className="px-3.5 py-1.5 bg-primary text-white text-[10px] font-extrabold uppercase rounded-xl hover:brightness-105 transition-all cursor-pointer shadow-md shadow-primary/10 flex items-center gap-1 mx-auto"
-                            >
-                              <Icon name="price_check" className="text-sm" />
-                              Bayar Cepat
-                            </button>
+                            canWriteTagihan ? (
+                              <button
+                                onClick={() => triggerPayment(b)}
+                                className="px-3.5 py-1.5 bg-primary text-white text-[10px] font-extrabold uppercase rounded-xl hover:brightness-105 transition-all cursor-pointer shadow-md shadow-primary/10 flex items-center gap-1 mx-auto"
+                              >
+                                <Icon name="price_check" className="text-sm" />
+                                Bayar Cepat
+                              </button>
+                            ) : (
+                              <span className="text-[10px] text-error font-extrabold flex items-center justify-center gap-1">
+                                <Icon name="pending" className="text-sm animate-pulse" />
+                                Menunggak
+                              </span>
+                            )
                           ) : (
                             <span className="text-[10px] text-outline font-bold flex items-center justify-center gap-1 text-primary">
                               <Icon name="check_circle" className="text-sm" />

@@ -15,14 +15,19 @@ interface Pengurus {
   name: string;
   role: string;
   permissions: {
-    dashboard: boolean;
-    pemasukan: boolean;
-    pengeluaran: boolean;
-    santri: boolean;
-    tabungan: boolean;
-    tagihan: boolean;
-    laporan: boolean;
-    pengaturan: boolean;
+    pemasukan_view: boolean;
+    pemasukan_write: boolean;
+    pengeluaran_view: boolean;
+    pengeluaran_write: boolean;
+    santri_view: boolean;
+    santri_write: boolean;
+    tabungan_view: boolean;
+    tabungan_write: boolean;
+    tagihan_view: boolean;
+    tagihan_write: boolean;
+    laporan_view: boolean;
+    pengaturan_view: boolean;
+    pengaturan_write: boolean;
   };
 }
 
@@ -30,14 +35,19 @@ interface CustomRole {
   id: string;
   name: string;
   defaultPermissions: {
-    dashboard: boolean;
-    pemasukan: boolean;
-    pengeluaran: boolean;
-    santri: boolean;
-    tabungan: boolean;
-    tagihan: boolean;
-    laporan: boolean;
-    pengaturan: boolean;
+    pemasukan_view: boolean;
+    pemasukan_write: boolean;
+    pengeluaran_view: boolean;
+    pengeluaran_write: boolean;
+    santri_view: boolean;
+    santri_write: boolean;
+    tabungan_view: boolean;
+    tabungan_write: boolean;
+    tagihan_view: boolean;
+    tagihan_write: boolean;
+    laporan_view: boolean;
+    pengaturan_view: boolean;
+    pengaturan_write: boolean;
   };
 }
 
@@ -86,14 +96,19 @@ export default function PenggunaPage() {
   
   const [newRoleName, setNewRoleName] = useState('');
   const [newRolePerms, setNewRolePerms] = useState({
-    dashboard: true,
-    pemasukan: false,
-    pengeluaran: false,
-    santri: false,
-    tabungan: false,
-    tagihan: false,
-    laporan: true,
-    pengaturan: false,
+    pemasukan_view: true,
+    pemasukan_write: false,
+    pengeluaran_view: true,
+    pengeluaran_write: false,
+    santri_view: true,
+    santri_write: false,
+    tabungan_view: true,
+    tabungan_write: false,
+    tagihan_view: true,
+    tagihan_write: false,
+    laporan_view: true,
+    pengaturan_view: false,
+    pengaturan_write: false,
   });
 
   const [selectedRoleForEdit, setSelectedRoleForEdit] = useState<CustomRole | null>(null);
@@ -133,13 +148,29 @@ export default function PenggunaPage() {
             id: '1',
             name: 'Alfian Chandra',
             role: 'Super Admin',
-            permissions: { dashboard: true, pemasukan: true, pengeluaran: true, santri: true, tabungan: true, tagihan: true, laporan: true, pengaturan: true },
+            permissions: {
+              pemasukan_view: true, pemasukan_write: true,
+              pengeluaran_view: true, pengeluaran_write: true,
+              santri_view: true, santri_write: true,
+              tabungan_view: true, tabungan_write: true,
+              tagihan_view: true, tagihan_write: true,
+              laporan_view: true,
+              pengaturan_view: true, pengaturan_write: true
+            },
           },
           {
             id: '2',
             name: 'Ustadzah Fatimah',
             role: 'Bendahara Pemasukan',
-            permissions: { dashboard: true, pemasukan: true, pengeluaran: false, santri: true, tabungan: true, tagihan: false, laporan: false, pengaturan: false },
+            permissions: {
+              pemasukan_view: true, pemasukan_write: true,
+              pengeluaran_view: false, pengeluaran_write: false,
+              santri_view: true, santri_write: false,
+              tabungan_view: true, tabungan_write: false,
+              tagihan_view: false, tagihan_write: false,
+              laporan_view: true,
+              pengaturan_view: false, pengaturan_write: false
+            },
           },
         ]);
       });
@@ -159,12 +190,28 @@ export default function PenggunaPage() {
           {
             id: '1',
             name: 'Super Admin',
-            defaultPermissions: { dashboard: true, pemasukan: true, pengeluaran: true, santri: true, tabungan: true, tagihan: true, laporan: true, pengaturan: true },
+            defaultPermissions: {
+              pemasukan_view: true, pemasukan_write: true,
+              pengeluaran_view: true, pengeluaran_write: true,
+              santri_view: true, santri_write: true,
+              tabungan_view: true, tabungan_write: true,
+              tagihan_view: true, tagihan_write: true,
+              laporan_view: true,
+              pengaturan_view: true, pengaturan_write: true
+            },
           },
           {
             id: '2',
             name: 'Bendahara Pemasukan',
-            defaultPermissions: { dashboard: true, pemasukan: true, pengeluaran: false, santri: true, tabungan: true, tagihan: false, laporan: false, pengaturan: false },
+            defaultPermissions: {
+              pemasukan_view: true, pemasukan_write: true,
+              pengeluaran_view: false, pengeluaran_write: false,
+              santri_view: true, santri_write: false,
+              tabungan_view: true, tabungan_write: false,
+              tagihan_view: false, tagihan_write: false,
+              laporan_view: true,
+              pengaturan_view: false, pengaturan_write: false
+            },
           },
         ]);
       });
@@ -215,7 +262,15 @@ export default function PenggunaPage() {
     const matchedRole = rolesList.find((r) => r.name === newUserRole);
     const initialPerms = matchedRole
       ? matchedRole.defaultPermissions
-      : { dashboard: true, pemasukan: false, pengeluaran: false, santri: false, tabungan: false, tagihan: false, laporan: true, pengaturan: false };
+      : {
+          pemasukan_view: true, pemasukan_write: false,
+          pengeluaran_view: true, pengeluaran_write: false,
+          santri_view: true, santri_write: false,
+          tabungan_view: true, tabungan_write: false,
+          tagihan_view: true, tagihan_write: false,
+          laporan_view: true,
+          pengaturan_view: false, pengaturan_write: false
+        };
 
     fetch('/api/pengurus', {
       method: 'POST',
@@ -273,7 +328,15 @@ export default function PenggunaPage() {
       setIsLoading(false);
       if (data.success) {
         setNewRoleName('');
-        setNewRolePerms({ dashboard: true, pemasukan: false, pengeluaran: false, santri: false, tabungan: false, tagihan: false, laporan: true, pengaturan: false });
+        setNewRolePerms({
+          pemasukan_view: true, pemasukan_write: false,
+          pengeluaran_view: true, pengeluaran_write: false,
+          santri_view: true, santri_write: false,
+          tabungan_view: true, tabungan_write: false,
+          tagihan_view: true, tagihan_write: false,
+          laporan_view: true,
+          pengaturan_view: false, pengaturan_write: false
+        });
         setShowAddRoleModal(false);
         setToastMessage('Peran (Role) baru berhasil dibuat.');
         setToastType('success');
@@ -548,14 +611,13 @@ export default function PenggunaPage() {
                 <thead>
                   <tr className="bg-primary/5 text-primary text-[11px] font-bold border-b border-primary/10 select-none">
                     <th className="px-6 py-4">Pengguna</th>
-                    <th className="px-6 py-4 text-center">Dashboard</th>
-                    <th className="px-6 py-4 text-center">Pemasukan</th>
-                    <th className="px-6 py-4 text-center">Pengeluaran</th>
-                    <th className="px-6 py-4 text-center">Santri</th>
-                    <th className="px-6 py-4 text-center">Tabungan</th>
-                    <th className="px-6 py-4 text-center">Tagihan</th>
-                    <th className="px-6 py-4 text-center">Laporan</th>
-                    <th className="px-6 py-4 text-center">Pengaturan</th>
+                    <th className="px-4 py-4 text-center">Pemasukan</th>
+                    <th className="px-4 py-4 text-center">Pengeluaran</th>
+                    <th className="px-4 py-4 text-center">Data Santri</th>
+                    <th className="px-4 py-4 text-center">Tabungan</th>
+                    <th className="px-4 py-4 text-center">Tagihan &amp; Iuran</th>
+                    <th className="px-4 py-4 text-center">Laporan</th>
+                    <th className="px-4 py-4 text-center">Pengaturan</th>
                     <th className="px-6 py-4 text-center">Aksi</th>
                   </tr>
                 </thead>
@@ -566,17 +628,153 @@ export default function PenggunaPage() {
                         <p className="text-xs font-bold text-on-surface">{user.name}</p>
                         <p className="text-[9px] text-primary font-bold">{user.role}</p>
                       </td>
-                      {(['dashboard', 'pemasukan', 'pengeluaran', 'santri', 'tabungan', 'tagihan', 'laporan', 'pengaturan'] as Array<keyof typeof user.permissions>).map((module) => (
-                        <td key={module} className="px-6 py-4 text-center">
-                          <div className="flex justify-center">
+                      
+                      {/* Pemasukan */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions[module] || false}
-                              onChange={() => handleUserPermissionToggle(user.id, module)}
+                              checked={user.permissions.pemasukan_view || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'pemasukan_view')}
                               disabled={user.role === 'Super Admin'}
                             />
-                          </div>
-                        </td>
-                      ))}
+                            <span>Lihat</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.pemasukan_write || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'pemasukan_write')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Catat</span>
+                          </label>
+                        </div>
+                      </td>
+
+                      {/* Pengeluaran */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.pengeluaran_view || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'pengeluaran_view')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Lihat</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.pengeluaran_write || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'pengeluaran_write')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Catat</span>
+                          </label>
+                        </div>
+                      </td>
+
+                      {/* Data Santri */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.santri_view || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'santri_view')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Lihat</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.santri_write || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'santri_write')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Kelola</span>
+                          </label>
+                        </div>
+                      </td>
+
+                      {/* Tabungan */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.tabungan_view || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'tabungan_view')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Lihat</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.tabungan_write || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'tabungan_write')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Setor/Tarik</span>
+                          </label>
+                        </div>
+                      </td>
+
+                      {/* Tagihan & Iuran */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.tagihan_view || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'tagihan_view')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Lihat</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.tagihan_write || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'tagihan_write')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Kelola</span>
+                          </label>
+                        </div>
+                      </td>
+
+                      {/* Laporan */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.laporan_view || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'laporan_view')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Lihat</span>
+                          </label>
+                        </div>
+                      </td>
+
+                      {/* Pengaturan */}
+                      <td className="px-4 py-4 text-center">
+                        <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.pengaturan_view || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'pengaturan_view')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Lihat</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.permissions.pengaturan_write || false}
+                              onChange={() => handleUserPermissionToggle(user.id, 'pengaturan_write')}
+                              disabled={user.role === 'Super Admin'}
+                            />
+                            <span>Kelola</span>
+                          </label>
+                        </div>
+                      </td>
+
                       <td className="px-6 py-4 text-center">
                         <button
                           onClick={() => triggerDeleteUser(user)}

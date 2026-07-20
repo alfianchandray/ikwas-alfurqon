@@ -54,6 +54,9 @@ export default function TabunganPage() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
+  
+  // Permissions
+  const [canWriteTabungan, setCanWriteTabungan] = useState(true);
 
   const fetchTabungan = () => {
     setIsLoading(true);
@@ -76,6 +79,22 @@ export default function TabunganPage() {
 
   useEffect(() => {
     fetchTabungan();
+
+    // Load permissions
+    if (typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem('ikwas_user');
+      if (stored) {
+        try {
+          const user = JSON.parse(stored);
+          if (user.role === 'Super Admin') {
+            setCanWriteTabungan(true);
+          } else if (user.permissions) {
+            setCanWriteTabungan(!!user.permissions.tabungan_write);
+          }
+        } catch {}
+      }
+    }
+
     const saved = localStorage.getItem('ikwas_sidebar_menu');
     if (saved) {
       const menu = JSON.parse(saved);
@@ -219,23 +238,27 @@ export default function TabunganPage() {
             <Icon name="visibility" className="text-xs" />
             Detail
           </button>
-          <button
-            onClick={() => handleOpenTransaction('setor', row)}
-            className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-xl text-[10px] font-extrabold transition-all cursor-pointer border border-primary/20"
-            title="Setor Tabungan"
-          >
-            <Icon name="add" className="text-xs" />
-            Setor
-          </button>
-          <button
-            onClick={() => handleOpenTransaction('tarik', row)}
-            className="flex items-center gap-1 px-3 py-1.5 bg-error-container text-error hover:bg-error hover:text-white rounded-xl text-[10px] font-extrabold transition-all cursor-pointer border border-error/20"
-            title="Tarik Tabungan"
-            disabled={row.saldo <= 0}
-          >
-            <Icon name="remove" className="text-xs" />
-            Tarik
-          </button>
+          {canWriteTabungan && (
+            <>
+              <button
+                onClick={() => handleOpenTransaction('setor', row)}
+                className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 hover:bg-primary text-primary hover:text-white rounded-xl text-[10px] font-extrabold transition-all cursor-pointer border border-primary/20"
+                title="Setor Tabungan"
+              >
+                <Icon name="add" className="text-xs" />
+                Setor
+              </button>
+              <button
+                onClick={() => handleOpenTransaction('tarik', row)}
+                className="flex items-center gap-1 px-3 py-1.5 bg-error-container text-error hover:bg-error hover:text-white rounded-xl text-[10px] font-extrabold transition-all cursor-pointer border border-error/20"
+                title="Tarik Tabungan"
+                disabled={row.saldo <= 0}
+              >
+                <Icon name="remove" className="text-xs" />
+                Tarik
+              </button>
+            </>
+          )}
         </div>
       ),
     },

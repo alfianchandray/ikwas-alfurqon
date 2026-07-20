@@ -48,6 +48,10 @@ function CashflowContent() {
   const [showPenerimaSuggestions, setShowPenerimaSuggestions] = useState(false);
   const [receiptImage, setReceiptImage] = useState<string | null>(null);
   const penerimaContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Permissions
+  const [canWriteIn, setCanWriteIn] = useState(true);
+  const [canWriteOut, setCanWriteOut] = useState(true);
 
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -108,6 +112,24 @@ function CashflowContent() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem('ikwas_user');
+      if (stored) {
+        try {
+          const user = JSON.parse(stored);
+          if (user.role === 'Super Admin') {
+            setCanWriteIn(true);
+            setCanWriteOut(true);
+          } else if (user.permissions) {
+            setCanWriteIn(!!user.permissions.pemasukan_write);
+            setCanWriteOut(!!user.permissions.pengeluaran_write);
+          }
+        } catch {}
+      }
+    }
+  }, []);
+
   const handleModeSwitch = (newMode: 'in' | 'out') => {
     setMode(newMode);
     // Reset all form fields when switching
@@ -138,6 +160,18 @@ function CashflowContent() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === 'in' && !canWriteIn) {
+      setToastMessage('Anda tidak memiliki hak akses untuk mencatat pemasukan (Read-Only)!');
+      setToastType('error');
+      setShowToast(true);
+      return;
+    }
+    if (mode === 'out' && !canWriteOut) {
+      setToastMessage('Anda tidak memiliki hak akses untuk mencatat pengeluaran (Read-Only)!');
+      setToastType('error');
+      setShowToast(true);
+      return;
+    }
     if (!kategori || !nominal) {
       setToastMessage('Kategori dan Nominal wajib diisi!');
       setToastType('error');
