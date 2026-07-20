@@ -24,28 +24,25 @@ function CashflowContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Mode: 'in' (Pemasukan) | 'out' (Pengeluaran)
   const initialMode = searchParams.get('type') === 'out' ? 'out' : 'in';
   const [mode, setMode] = useState<'in' | 'out'>(initialMode);
 
+  // Shared state
   const [kategori, setKategori] = useState('');
   const [tanggal, setTanggal] = useState(() => {
     const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    const dd = String(today.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   });
   const [nominal, setNominal] = useState('');
   const [keterangan, setKeterangan] = useState('');
 
-  // Mode IN specific states
+  // Kas Masuk specific
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSantri, setSelectedSantri] = useState<SantriMock | null>(null);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [manualAsalDana, setManualAsalDana] = useState('');
 
-  // Mode OUT specific states
+  // Kas Keluar specific
   const [penerima, setPenerima] = useState('');
   const [receiptImage, setReceiptImage] = useState<string | null>(null);
 
@@ -53,46 +50,42 @@ function CashflowContent() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<'success' | 'error'>('success');
-
   const [kategoriOptions, setKategoriOptions] = useState<{ value: string; label: string }[]>([]);
 
-  // Load dynamic categories based on mode ('in' or 'out')
   useEffect(() => {
     setKategori('');
     fetch('/api/categories')
       .then(res => res.json())
-      .then((data: any) => {
+      .then((data: unknown) => {
         if (Array.isArray(data)) {
-          const filtered = data
-            .filter((c: any) => c.tipe === mode)
-            .map((c: any) => ({ value: c.name, label: c.name }));
+          const filtered = (data as { tipe: string; name: string }[])
+            .filter(c => c.tipe === mode)
+            .map(c => ({ value: c.name, label: c.name }));
           setKategoriOptions(filtered);
-        } else {
-          throw new Error();
-        }
+        } else throw new Error();
       })
       .catch(() => {
-        // Fallback
-        if (mode === 'in') {
-          setKategoriOptions([
-            { value: 'Iuran Wali', label: 'Iuran Wali Santri (Bulanan)' },
-            { value: 'Tabungan', label: 'Tabungan Santri' },
-            { value: 'Hibah', label: 'Hibah / Waqaf Kelembagaan' },
-            { value: 'Lainnya', label: 'Lain-lain' },
-          ]);
-        } else {
-          setKategoriOptions([
-            { value: 'Operasional', label: 'Operasional Kantor / Asrama' },
-            { value: 'Logistik', label: 'Konsumsi & Logistik Santri' },
-            { value: 'Pendidikan', label: 'Biaya Pendidikan / Kitab' },
-            { value: 'Lainnya', label: 'Lain-lain' },
-          ]);
-        }
+        setKategoriOptions(
+          mode === 'in'
+            ? [
+                { value: 'Iuran Wali', label: 'Iuran Wali Santri (Bulanan)' },
+                { value: 'Tabungan', label: 'Tabungan Santri' },
+                { value: 'Hibah', label: 'Hibah / Waqaf Kelembagaan' },
+                { value: 'Lainnya', label: 'Lain-lain' },
+              ]
+            : [
+                { value: 'Operasional', label: 'Operasional Kantor / Asrama' },
+                { value: 'Logistik', label: 'Konsumsi & Logistik Santri' },
+                { value: 'Pendidikan', label: 'Biaya Pendidikan / Kitab' },
+                { value: 'Lainnya', label: 'Lain-lain' },
+              ]
+        );
       });
   }, [mode]);
 
   const handleModeSwitch = (newMode: 'in' | 'out') => {
     setMode(newMode);
+    // Reset all form fields when switching
     setKategori('');
     setNominal('');
     setKeterangan('');
@@ -101,7 +94,7 @@ function CashflowContent() {
     setManualAsalDana('');
     setPenerima('');
     setReceiptImage(null);
-    router.replace(`/dashboard/pemasukan?type=${newMode}`);
+    router.replace(`/dashboard/pemasukan?type=${newMode}`, { scroll: false });
   };
 
   const mockSantriList: SantriMock[] = [
@@ -109,11 +102,11 @@ function CashflowContent() {
     { name: 'Aisyah Putri', wali: 'Ibu Fatimah' },
     { name: 'Ahmad Rafli', wali: 'Bpk. Ridwan' },
     { name: 'Khadijah Az-Zahra', wali: 'Bpk. Lukman' },
-    { name: 'Fatih Nur Rahman', wali: 'Bpk. Nu\'man' },
+    { name: "Fatih Nur Rahman", wali: "Bpk. Nu'man" },
   ];
 
   const filteredSantri = mockSantriList.filter(
-    (s) =>
+    s =>
       s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       s.wali.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -126,21 +119,20 @@ function CashflowContent() {
       setShowToast(true);
       return;
     }
-
     setIsLoading(true);
-    const cleanNominal = parseInt(nominal.replace(/[^0-9]/g, ""), 10);
 
+    const cleanNominal = parseInt(nominal.replace(/[^0-9]/g, ''), 10);
     let ketText = '';
     if (mode === 'in') {
-      ketText = selectedSantri 
+      ketText = selectedSantri
         ? `Wali: ${selectedSantri.wali} (Santri: ${selectedSantri.name}) - ${keterangan}`
-        : manualAsalDana 
-          ? `Sumber: ${manualAsalDana} - ${keterangan}`
-          : keterangan || 'Kas masuk';
+        : manualAsalDana
+        ? `Sumber: ${manualAsalDana} - ${keterangan}`
+        : keterangan || 'Kas masuk';
     } else {
-      ketText = penerima 
+      ketText = penerima
         ? `Penerima: ${penerima} - ${keterangan}`
-        : keterangan || 'Catatan pengeluaran kas';
+        : keterangan || 'Pengeluaran kas';
     }
 
     fetch('/api/transaksi', {
@@ -155,47 +147,34 @@ function CashflowContent() {
         receiptImage: mode === 'out' ? (receiptImage || null) : null,
       }),
     })
-    .then((res) => res.json())
-    .then((data: any) => {
-      setIsLoading(false);
-      if (data.success) {
-        setToastMessage(`Transaksi ${mode === 'in' ? 'pemasukan' : 'pengeluaran'} berhasil disimpan!`);
-        setToastType('success');
+      .then(res => res.json())
+      .then((raw: unknown) => {
+        const data = raw as { success?: boolean; error?: string };
+        setIsLoading(false);
+        if (data.success) {
+          setToastMessage(`Transaksi ${mode === 'in' ? 'pemasukan' : 'pengeluaran'} berhasil disimpan!`);
+          setToastType('success');
+          setShowToast(true);
+          setKategori(''); setNominal(''); setKeterangan('');
+          setSearchQuery(''); setSelectedSantri(null); setManualAsalDana('');
+          setPenerima(''); setReceiptImage(null);
+        } else throw new Error(data.error);
+      })
+      .catch((err: Error) => {
+        setIsLoading(false);
+        setToastMessage(err.message || 'Gagal menyimpan transaksi.');
+        setToastType('error');
         setShowToast(true);
-
-        // Reset form states
-        setKategori('');
-        setNominal('');
-        setKeterangan('');
-        setSearchQuery('');
-        setSelectedSantri(null);
-        setManualAsalDana('');
-        setPenerima('');
-        setReceiptImage(null);
-      } else {
-        throw new Error(data.error);
-      }
-    })
-    .catch((err) => {
-      setIsLoading(false);
-      setToastMessage(err.message || 'Gagal menyimpan transaksi.');
-      setToastType('error');
-      setShowToast(true);
-    });
+      });
   };
 
   const showSantriSearch = mode === 'in' && (kategori === 'Iuran Wali' || kategori === 'Tabungan');
   const showManualAsalDana = mode === 'in' && (kategori === 'Hibah' || kategori === 'Waqaf' || kategori === 'Lainnya');
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
-      {/* Toast Alert */}
+    <div className="space-y-8 max-w-3xl mx-auto">
       {showToast && (
-        <Toast
-          message={toastMessage}
-          type={toastType}
-          onClose={() => setShowToast(false)}
-        />
+        <Toast message={toastMessage} type={toastType} onClose={() => setShowToast(false)} />
       )}
 
       {/* Header */}
@@ -206,111 +185,90 @@ function CashflowContent() {
         defaultDesc="Pencatatan kas masuk dan kas keluar secara instan, transparan, dan profesional."
       />
 
-      {/* Segmented Mode Switcher (Kas Masuk vs Kas Keluar) */}
-      <div className="flex p-1.5 bg-surface-container-high/60 backdrop-blur-md rounded-2xl border border-primary/10 w-full max-w-lg mx-auto shadow-inner gap-1">
-        <button
-          type="button"
-          onClick={() => handleModeSwitch('in')}
-          className={`flex-1 py-2.5 md:py-3 rounded-xl text-[10px] md:text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none min-w-0 ${
-            mode === 'in'
-              ? 'bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]'
-              : 'text-on-surface-variant hover:text-primary'
-          }`}
-        >
-          <Icon name="arrow_circle_down" className="text-base flex-shrink-0" />
-          <span className="whitespace-nowrap">Kas Masuk</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => handleModeSwitch('out')}
-          className={`flex-1 py-2.5 md:py-3 rounded-xl text-[10px] md:text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none min-w-0 ${
-            mode === 'out'
-              ? 'bg-error text-white shadow-md shadow-error/20 scale-[1.02]'
-              : 'text-on-surface-variant hover:text-error'
-          }`}
-        >
-          <Icon name="arrow_circle_up" className="text-base flex-shrink-0" />
-          <span className="whitespace-nowrap">Kas Keluar</span>
-        </button>
-      </div>
+      {/* Single Card with Tab inside */}
+      <div className="glass-card rounded-3xl shadow-sm border border-white/20 overflow-hidden">
 
-      {/* Panduan Spoiler */}
-      <CollapsibleGuide title="Panduan & Status Pencatatan" icon="help_outline" defaultOpen={false}>
-        <div className="space-y-6 text-left">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-primary animate-pulse"></div>
-              <p className="text-xs font-bold text-primary">Database Utama Tersinkronisasi</p>
-            </div>
-            <p className="text-[11px] text-on-surface-variant font-semibold leading-relaxed">
-              Setiap pencatatan kas masuk maupun kas keluar akan langsung ter-sinkronisasi ke Buku Besar Publik dan Laporan Keuangan secara real-time.
-            </p>
-          </div>
+        {/* ── Tab Bar (Kas Masuk | Kas Keluar) ── */}
+        <div className="flex border-b border-outline/10 select-none">
+          <button
+            type="button"
+            onClick={() => handleModeSwitch('in')}
+            disabled={isLoading}
+            className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border-b-2 ${
+              mode === 'in'
+                ? 'border-primary text-primary bg-primary/5 font-extrabold'
+                : 'border-transparent text-outline hover:text-on-surface hover:bg-surface-container-low'
+            }`}
+          >
+            <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${mode === 'in' ? 'bg-primary' : 'bg-outline/40'}`} />
+            <Icon name="arrow_circle_down" className="text-base" />
+            Kas Masuk
+          </button>
 
-          <div className="space-y-2 border-t border-primary/10 pt-4">
-            <h4 className="font-bold text-xs text-tertiary flex items-center gap-1.5">
-              <Icon name="tips_and_updates" className="text-base" />
-              Petunjuk Pencatatan Kas
-            </h4>
-            <ul className="text-[11px] text-on-surface-variant space-y-2 font-semibold">
-              <li>&bull; Pilih jenis transaksi menggunakan switch <strong>Kas Masuk</strong> atau <strong>Kas Keluar</strong> di atas.</li>
-              <li>&bull; Cukup ketik angka tanpa titik di kolom nominal. Format Rupiah dan Terbilang akan otomatis muncul.</li>
-              <li>&bull; Untuk Pengeluaran Kas, disarankan mengunggah foto kuitansi/nota sebagai bukti sah audit.</li>
-            </ul>
-          </div>
-        </div>
-      </CollapsibleGuide>
+          <div className="w-px bg-outline/10 my-2" />
 
-      {/* Centered Form Area */}
-      <div className={`glass-card rounded-3xl p-6 md:p-8 shadow-sm border transition-all duration-300 max-w-2xl mx-auto ${
-        mode === 'in' ? 'border-primary/20' : 'border-error/20'
-      }`}>
-        <div className="flex items-center justify-between pb-4 mb-4 border-b border-primary/10">
-          <span className={`px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
-            mode === 'in' ? 'bg-primary/10 text-primary' : 'bg-error-container text-on-error-container'
-          }`}>
-            {mode === 'in' ? 'Mode Kas Masuk' : 'Mode Kas Keluar'}
-          </span>
-          <span className="text-xs font-semibold text-on-surface-variant">
-            {mode === 'in' ? 'Pemasukan Kas Yayasan' : 'Pengeluaran Kas Operasional'}
-          </span>
+          <button
+            type="button"
+            onClick={() => handleModeSwitch('out')}
+            disabled={isLoading}
+            className={`flex-1 flex items-center justify-center gap-2 px-6 py-4 text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border-b-2 ${
+              mode === 'out'
+                ? 'border-error text-error bg-error-container/30 font-extrabold'
+                : 'border-transparent text-outline hover:text-on-surface hover:bg-surface-container-low'
+            }`}
+          >
+            <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${mode === 'out' ? 'bg-error' : 'bg-outline/40'}`} />
+            <Icon name="arrow_circle_up" className="text-base" />
+            Kas Keluar
+          </button>
         </div>
 
-        <form className="space-y-5 text-left" onSubmit={handleSubmit}>
-          {/* Kategori Transaksi */}
+        {/* ── Context Banner (type indicator) ── */}
+        <div className={`px-6 py-3 flex items-center gap-3 text-[11px] font-semibold transition-colors ${
+          mode === 'in'
+            ? 'bg-primary/5 text-primary/70'
+            : 'bg-error-container/20 text-on-error-container/80'
+        }`}>
+          <Icon name={mode === 'in' ? 'info' : 'warning_amber'} className="text-base flex-shrink-0" />
+          {mode === 'in'
+            ? 'Anda sedang mencatat pemasukan kas. Semua transaksi langsung tersinkronisasi ke Buku Besar Publik.'
+            : 'Anda sedang mencatat pengeluaran kas. Disarankan mengunggah bukti nota/kuitansi untuk keperluan audit.'}
+        </div>
+
+        {/* ── Form Fields ── */}
+        <form className="p-6 space-y-5 text-left" onSubmit={handleSubmit}>
+
+          {/* Kategori */}
           <FormField label={`Kategori ${mode === 'in' ? 'Pemasukan' : 'Pengeluaran'}`}>
             <Select
               options={kategoriOptions}
               value={kategori}
-              onChange={(val) => {
-                setKategori(val);
-                setSelectedSantri(null);
-                setSearchQuery('');
-              }}
+              onChange={val => { setKategori(val); setSelectedSantri(null); setSearchQuery(''); }}
               placeholder={`-- Pilih Kategori ${mode === 'in' ? 'Pemasukan' : 'Pengeluaran'} --`}
               disabled={isLoading}
             />
           </FormField>
 
+          {/* Tabungan warning */}
           {mode === 'in' && kategori === 'Tabungan' && (
-            <div className="p-4 bg-tertiary-container/10 border border-tertiary/20 rounded-2xl animate-fade-in-up flex gap-3 text-left">
-              <Icon name="info" className="text-tertiary text-lg flex-shrink-0" />
-              <p className="text-[11px] leading-relaxed font-bold text-on-tertiary-fixed-variant">
-                ⚠️ <strong className="text-tertiary">Perhatian</strong>: Untuk mencatat tabungan pribadi santri agar terhitung ke saldo wadiah mereka secara otomatis, silakan menginputnya langsung melalui menu <Link href="/dashboard/tabungan" className="text-primary hover:underline font-extrabold">Buku Tabungan Santri</Link> (klik tombol **Setor**). Penginputan di form Pemasukan ini hanya ditujukan untuk iuran wajib, infaq, atau hibah umum.
+            <div className="p-4 bg-tertiary-container/10 border border-tertiary/20 rounded-2xl flex gap-3 animate-fade-in-up">
+              <Icon name="info" className="text-tertiary text-lg flex-shrink-0 mt-0.5" />
+              <p className="text-[11px] leading-relaxed font-semibold text-on-tertiary-fixed-variant">
+                Untuk mencatat tabungan pribadi santri agar masuk ke saldo wadiah otomatis, gunakan menu{' '}
+                <Link href="/dashboard/tabungan" className="text-primary font-extrabold hover:underline">
+                  Buku Tabungan Santri
+                </Link>{' '}
+                (tombol <strong>Setor</strong>). Form ini hanya untuk iuran wajib, infaq, dan hibah umum.
               </p>
             </div>
           )}
 
-          {/* Tanggal Transaksi */}
+          {/* Tanggal */}
           <FormField label="Tanggal Transaksi">
-            <DatePicker
-              value={tanggal}
-              onChange={setTanggal}
-              disabled={isLoading}
-            />
+            <DatePicker value={tanggal} onChange={setTanggal} disabled={isLoading} />
           </FormField>
 
-          {/* Mode IN: Santri Search */}
+          {/* [Kas Masuk] Santri Search */}
           {showSantriSearch && (
             <div className="space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 animate-fade-in-up">
               <label className="text-xs font-bold text-primary ml-1" htmlFor="santri-search">
@@ -324,27 +282,18 @@ function CashflowContent() {
                   className="w-full pl-12 pr-4 py-3.5 bg-white border border-primary/10 rounded-xl focus:ring-2 focus:ring-primary focus:outline-none text-xs font-semibold text-on-surface"
                   placeholder="Ketik nama santri atau wali..."
                   value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setShowSearchResults(true);
-                  }}
+                  onChange={e => { setSearchQuery(e.target.value); setShowSearchResults(true); }}
                   onFocus={() => setShowSearchResults(true)}
                   disabled={isLoading}
                 />
-
-                {/* Dropdown search results */}
                 {showSearchResults && searchQuery && (
                   <div className="absolute left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-primary/10 max-h-48 overflow-y-auto z-50 no-scrollbar">
                     {filteredSantri.length > 0 ? (
                       filteredSantri.map((s, idx) => (
                         <div
                           key={idx}
-                          className="px-4 py-3 hover:bg-primary/5 cursor-pointer text-xs border-b border-primary/5 flex justify-between items-center"
-                          onClick={() => {
-                            setSelectedSantri(s);
-                            setSearchQuery(`${s.wali} (${s.name})`);
-                            setShowSearchResults(false);
-                          }}
+                          className="px-4 py-3 hover:bg-primary/5 cursor-pointer text-xs border-b border-primary/5 last:border-0 flex justify-between items-center"
+                          onClick={() => { setSelectedSantri(s); setSearchQuery(`${s.wali} (${s.name})`); setShowSearchResults(false); }}
                         >
                           <div>
                             <p className="font-bold text-on-surface">{s.name}</p>
@@ -360,16 +309,10 @@ function CashflowContent() {
                 )}
               </div>
               {selectedSantri && (
-                <div className="flex justify-between items-center bg-white p-2 px-3 rounded-xl border border-primary/20 text-xs">
-                  <span className="font-bold text-primary">Santri Terpilih: {selectedSantri.name} ({selectedSantri.wali})</span>
-                  <button
-                    type="button"
-                    className="text-error text-xs font-bold hover:underline"
-                    onClick={() => {
-                      setSelectedSantri(null);
-                      setSearchQuery('');
-                    }}
-                  >
+                <div className="flex justify-between items-center bg-white p-2.5 px-4 rounded-xl border border-primary/20 text-xs">
+                  <span className="font-bold text-primary">✓ {selectedSantri.name} ({selectedSantri.wali})</span>
+                  <button type="button" className="text-error font-bold hover:underline text-[10px]"
+                    onClick={() => { setSelectedSantri(null); setSearchQuery(''); }}>
                     Batal
                   </button>
                 </div>
@@ -377,33 +320,33 @@ function CashflowContent() {
             </div>
           )}
 
-          {/* Mode IN: Manual Asal Dana */}
+          {/* [Kas Masuk] Sumber Dana */}
           {showManualAsalDana && (
             <FormField label="Sumber / Asal Dana">
               <Input
                 type="text"
-                placeholder="Contoh: H. Abdullah (Hamba Allah) / PT. Mulia Bersama"
+                placeholder="Contoh: H. Abdullah / PT. Mulia Bersama"
                 value={manualAsalDana}
-                onChange={(e) => setManualAsalDana(e.target.value)}
+                onChange={e => setManualAsalDana(e.target.value)}
                 disabled={isLoading}
               />
             </FormField>
           )}
 
-          {/* Mode OUT: Penerima Dana */}
+          {/* [Kas Keluar] Penerima Dana */}
           {mode === 'out' && (
             <FormField label="Penerima Dana / Pihak Ketiga">
               <Input
                 type="text"
                 placeholder="Contoh: Toko Kitab Al-Azhar / PLN / Ustadz Hasan"
                 value={penerima}
-                onChange={(e) => setPenerima(e.target.value)}
+                onChange={e => setPenerima(e.target.value)}
                 disabled={isLoading}
               />
             </FormField>
           )}
 
-          {/* Nominal (Smart Currency) */}
+          {/* Nominal */}
           <FormField label={`Nominal ${mode === 'in' ? 'Pemasukan' : 'Pengeluaran'} (Rp)`}>
             <SmartCurrencyInput
               id="nominal"
@@ -422,37 +365,60 @@ function CashflowContent() {
               className="w-full px-4 py-3.5 bg-surface-container-low border-0 rounded-2xl focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:bg-white transition-all text-xs font-bold text-on-surface outline-none placeholder:text-on-surface-variant/40"
               placeholder={mode === 'in' ? 'Tulis rincian atau keterangan tambahan...' : 'Tulis alasan pengeluaran kas secara lengkap...'}
               value={keterangan}
-              onChange={(e) => setKeterangan(e.target.value)}
+              onChange={e => setKeterangan(e.target.value)}
               disabled={isLoading}
-            ></textarea>
+            />
           </FormField>
 
-          {/* Mode OUT: Upload Kuitansi */}
+          {/* [Kas Keluar] Upload Kuitansi */}
           {mode === 'out' && (
-            <div className="space-y-2 pt-2">
+            <div className="space-y-2">
               <label className="text-xs font-bold text-on-surface-variant ml-1">
                 Bukti Pembayaran / Kuitansi (Opsional)
               </label>
-              <ImagePicker
-                value={receiptImage}
-                onChange={setReceiptImage}
-                disabled={isLoading}
-              />
+              <ImagePicker value={receiptImage} onChange={setReceiptImage} disabled={isLoading} />
             </div>
           )}
 
-          {/* Submit Button */}
+          {/* Divider */}
+          <div className="border-t border-outline/10 pt-2" />
+
+          {/* Submit */}
           <Button
             type="submit"
             variant={mode === 'in' ? 'primary' : 'error'}
             isLoading={isLoading}
-            className="w-full py-4 mt-6 cursor-pointer"
+            className="w-full py-4 cursor-pointer"
             rightIcon={!isLoading ? 'save' : undefined}
           >
-            {mode === 'in' ? 'Simpan Transaksi Pemasukan' : 'Simpan Transaksi Pengeluaran'}
+            {mode === 'in' ? '💾  Simpan Pemasukan Kas' : '💾  Simpan Pengeluaran Kas'}
           </Button>
         </form>
       </div>
+
+      {/* Panduan collapsible di bawah */}
+      <CollapsibleGuide title="Panduan & Status Pencatatan" icon="help_outline" defaultOpen={false}>
+        <div className="space-y-4 text-left">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full bg-primary animate-pulse flex-shrink-0" />
+            <p className="text-xs font-bold text-primary">Database Utama Tersinkronisasi</p>
+          </div>
+          <p className="text-[11px] text-on-surface-variant font-semibold leading-relaxed">
+            Setiap pencatatan kas masuk maupun kas keluar akan langsung ter-sinkronisasi ke Buku Besar Publik dan Laporan Keuangan secara real-time.
+          </p>
+          <div className="space-y-2 border-t border-primary/10 pt-4">
+            <h4 className="font-bold text-xs text-tertiary flex items-center gap-1.5">
+              <Icon name="tips_and_updates" className="text-base" />
+              Tips Pencatatan Kas
+            </h4>
+            <ul className="text-[11px] text-on-surface-variant space-y-2 font-semibold">
+              <li>&bull; Pilih tab <strong>Kas Masuk</strong> atau <strong>Kas Keluar</strong> sesuai jenis transaksi.</li>
+              <li>&bull; Cukup ketik angka di kolom nominal — terbilang muncul otomatis.</li>
+              <li>&bull; Untuk pengeluaran, sertakan foto kuitansi/nota sebagai bukti audit.</li>
+            </ul>
+          </div>
+        </div>
+      </CollapsibleGuide>
     </div>
   );
 }
