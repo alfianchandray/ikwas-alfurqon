@@ -180,6 +180,22 @@ export default function PublicDashboard() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.22s ease-out both !important;
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(24px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-slide-up {
+          animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both !important;
+        }
+      `}} />
       {/* TopNavBar Publik */}
       <header className="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-2xl shadow-md border-b border-primary/10 select-none">
         <nav className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto w-full">
