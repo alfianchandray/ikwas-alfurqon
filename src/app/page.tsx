@@ -28,6 +28,12 @@ export default function PublicDashboard() {
     belumBayarPercentage: 0
   });
 
+  const [heroHeader, setHeroHeader] = useState({
+    badge: 'Portal Publik',
+    title: 'Transparansi Keuangan Ummat',
+    description: 'Laporan real-time pengelolaan dana santri IKWAS. Mewujudkan akuntabilitas yang bersih, amanah, dan profesional.',
+  });
+
   const [searchSantriName, setSearchSantriName] = useState('');
   const [searchWaliName, setSearchWaliName] = useState('');
   const [checkingSavings, setCheckingSavings] = useState(false);
@@ -74,6 +80,20 @@ export default function PublicDashboard() {
           });
           if (data.monthlyTrend) setMonthlyTrend(data.monthlyTrend);
           if (data.santriStats) setSantriStats(data.santriStats);
+        }
+      })
+      .catch(() => {});
+
+    // Fetch home page header
+    fetch('/api/page-headers?path=/')
+      .then(res => res.json())
+      .then((data: any) => {
+        if (data && data.title) {
+          setHeroHeader({
+            badge: data.badge || 'Portal Publik',
+            title: data.title,
+            description: data.description || '',
+          });
         }
       })
       .catch(() => {});
@@ -200,12 +220,14 @@ export default function PublicDashboard() {
         {/* Hero Section & CTA */}
         <div className="mb-10 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="max-w-2xl">
-            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2 inline-block">Portal Publik</span>
+            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+              {heroHeader.badge}
+            </span>
             <h1 className="text-3xl md:text-5xl font-extrabold text-on-surface tracking-tight leading-none mb-2">
-              Transparansi Keuangan Ummat
+              {heroHeader.title}
             </h1>
             <p className="text-base md:text-lg text-on-surface-variant font-medium leading-relaxed">
-              Laporan real-time pengelolaan dana santri IKWAS. Mewujudkan akuntabilitas yang bersih, amanah, dan profesional.
+              {heroHeader.description}
             </p>
           </div>
           <div className="flex gap-4 justify-center md:justify-end">

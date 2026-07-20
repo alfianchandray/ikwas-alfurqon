@@ -200,9 +200,9 @@ CREATE TABLE IF NOT EXISTS page_headers (
 );
 
 INSERT OR IGNORE INTO page_headers (path, badge, title, description) VALUES
+('/', 'Portal Publik', 'Transparansi Keuangan Ummat', 'Laporan real-time pengelolaan dana santri IKWAS. Mewujudkan akuntabilitas yang bersih, amanah, dan profesional.'),
 ('/dashboard', 'Ikhtisar', 'Beranda Keuangan', 'Selamat datang di panel utama pengelolaan keuangan IKWAS Al-Furqon. Amanah, transparan, dan realtime.'),
-('/dashboard/pemasukan', 'Kas Masuk', 'Form Pemasukan Pintar', 'Pencatatan pemasukan kas secara otomatis mendeteksi relasi wali santri secara kondisional.'),
-('/dashboard/pengeluaran', 'Kas Keluar', 'Form Pengeluaran Baru', 'Pencatatan kas keluar secara profesional dilengkapi dengan manajemen unggah bukti bayar kuitansi.'),
+('/dashboard/pemasukan', 'Arus Kas', 'Form Pencatatan Kas', 'Pencatatan kas masuk dan kas keluar secara instan, transparan, dan profesional.'),
 ('/dashboard/santri', 'Manajemen Santri', 'Data Santri & Wali', 'Pengelolaan data santri beserta wali murid guna mempermudah penagihan iuran dan tabungan wadiah.'),
 ('/dashboard/tabungan', 'Modul Wadiah', 'Buku Tabungan Santri', 'Pencatatan titipan dana pribadi santri terpisah dari iuran wajib dan kas operasional yayasan.'),
 ('/dashboard/laporan', 'Buku Besar', 'Laporan Keuangan', 'Laporan arus kas masuk dan keluar secara terperinci dilengkapi dengan kuitansi fisik.'),
@@ -221,12 +221,11 @@ CREATE TABLE IF NOT EXISTS sidebar_menu (
 
 INSERT OR IGNORE INTO sidebar_menu (name, path, icon, sort_order, placeholder) VALUES
 ('Beranda', '/dashboard', 'dashboard', 1, 'Cari aktivitas...'),
-('Pemasukan', '/dashboard/pemasukan', 'arrow_circle_down', 2, 'Cari pemasukan...'),
-('Pengeluaran', '/dashboard/pengeluaran', 'arrow_circle_up', 3, 'Cari pengeluaran...'),
-('Iuran & Tagihan', '/dashboard/santri', 'group', 4, 'Cari nama santri, wali...'),
-('Buku Tabungan', '/dashboard/tabungan', 'account_balance_wallet', 5, 'Cari nama santri, rekening...'),
-('Laporan Keuangan', '/dashboard/laporan', 'description', 6, 'Cari transaksi, keterangan...'),
-('Pengguna', '/dashboard/pengguna', 'manage_accounts', 7, 'Cari pengurus...');
+('Pencatatan Kas', '/dashboard/pemasukan', 'swap_horiz', 2, 'Cari transaksi kas...'),
+('Iuran & Tagihan', '/dashboard/santri', 'group', 3, 'Cari nama santri, wali...'),
+('Buku Tabungan', '/dashboard/tabungan', 'account_balance_wallet', 4, 'Cari nama santri, rekening...'),
+('Laporan Keuangan', '/dashboard/laporan', 'description', 5, 'Cari transaksi, keterangan...'),
+('Pengguna', '/dashboard/pengguna', 'manage_accounts', 6, 'Cari pengurus...');
 
 -- 17. Tagihan Dinamis Santri (Berelasi ke Kategori)
 CREATE TABLE IF NOT EXISTS tagihan_santri (

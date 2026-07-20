@@ -499,9 +499,9 @@ export default function PengaturanPage() {
   ];
 
   const dashboardPages = [
+    { value: '/', label: '🌐 Landing Page Portal Publik (Hero Banner)' },
     { value: '/dashboard', label: 'Beranda Keuangan' },
-    { value: '/dashboard/pemasukan', label: 'Form Pemasukan Pintar' },
-    { value: '/dashboard/pengeluaran', label: 'Form Pengeluaran Baru' },
+    { value: '/dashboard/pemasukan', label: 'Form Pencatatan Kas (Arus Kas)' },
     { value: '/dashboard/santri', label: 'Data Santri & Wali' },
     { value: '/dashboard/tabungan', label: 'Buku Tabungan Santri' },
     { value: '/dashboard/laporan', label: 'Laporan Keuangan (Buku Besar)' },

@@ -262,13 +262,13 @@ export default function InternalDashboard() {
           <p className="text-xs md:text-sm text-on-surface-variant font-semibold">Assalamu'alaikum. Selamat datang di portal {siteName}. Semoga segala pencatatan bernilai ibadah.</p>
         </div>
         <div className="flex gap-3">
-          <Link href="/dashboard/pemasukan" className="primary-gradient text-white px-5 py-3 rounded-2xl text-xs font-bold shadow-md shadow-primary/10 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">
+          <Link href="/dashboard/pemasukan?type=in" className="primary-gradient text-white px-5 py-3 rounded-2xl text-xs font-bold shadow-md shadow-primary/10 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">
             <Icon name="add" className="text-sm font-bold" />
-            Pemasukan Baru
+            Kas Masuk (Pemasukan)
           </Link>
-          <Link href="/dashboard/pengeluaran" className="bg-white border border-primary/20 text-primary px-5 py-3 rounded-2xl text-xs font-bold flex items-center gap-2 hover:bg-primary/5 active:scale-[0.98] transition-all cursor-pointer">
+          <Link href="/dashboard/pemasukan?type=out" className="bg-white border border-error/20 text-error px-5 py-3 rounded-2xl text-xs font-bold flex items-center gap-2 hover:bg-error/5 active:scale-[0.98] transition-all cursor-pointer">
             <Icon name="remove" className="text-sm font-bold" />
-            Pengeluaran Baru
+            Kas Keluar (Pengeluaran)
           </Link>
         </div>
       </div>
