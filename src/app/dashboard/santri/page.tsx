@@ -360,7 +360,7 @@ export default function SantriPage() {
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-visible animate-fade-in-up flex-shrink-0 min-w-[320px] md:min-w-[448px]">
-            <div className="p-6 bg-primary text-white flex justify-between items-center">
+            <div className="p-6 bg-primary text-white flex justify-between items-center rounded-t-3xl">
               <h3 className="font-bold text-sm">{isEditMode ? 'Ubah Data Santri' : 'Registrasi Santri Baru'}</h3>
               <button
                 onClick={() => {
