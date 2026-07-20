@@ -369,7 +369,7 @@ export default function TabunganPage() {
       {/* Transaction Setor/Tarik Modal */}
       {showFormModal && targetSantri && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
             <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl">
               <h3 className="font-bold text-sm">
                 {formType === 'setor' ? 'Setoran Tabungan' : 'Penarikan Tabungan'}
@@ -444,7 +444,7 @@ export default function TabunganPage() {
       {/* Detail & Mutasi Modal */}
       {showDetailModal && selectedSantri && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[640px] max-h-[90vh] overflow-y-auto z-[999] animate-fade-in-up border border-primary/10 text-left">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[640px] max-h-[90vh] overflow-y-auto z-[999] animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[640px]">
             <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl sticky top-0 z-10">
               <div>
                 <h3 className="font-bold text-sm">Buku Rekening Tabungan</h3>

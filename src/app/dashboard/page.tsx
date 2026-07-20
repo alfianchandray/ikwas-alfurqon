@@ -99,6 +99,7 @@ export default function InternalDashboard() {
   const [userName, setUserName] = useState('Ustadz Ahmad');
   const [userRole, setUserRole] = useState('Pengurus');
   const [timeGreeting, setTimeGreeting] = useState('Selamat bekerja');
+  const [dashboardBadge, setDashboardBadge] = useState("Ikhtisar");
   const [dashboardDesc, setDashboardDesc] = useState("Assalamu'alaikum. Selamat datang di portal IKWAS Al-Furqon.\nSemoga segala pencatatan bernilai ibadah.");
   const [dashboardTitle, setDashboardTitle] = useState("Beranda Keuangan");
   const [stats, setStats] = useState({
@@ -152,6 +153,9 @@ export default function InternalDashboard() {
         }
         if (data && data.title) {
           setDashboardTitle(data.title);
+        }
+        if (data && data.badge) {
+          setDashboardBadge(data.badge);
         }
       })
       .catch(() => {});
@@ -277,8 +281,8 @@ export default function InternalDashboard() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-left">
         <div>
-          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2 inline-block">
-            Anda Login Sebagai {userRole}
+          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+            {dashboardBadge} &bull; Anda Login Sebagai {userRole}
           </span>
           <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
             {timeGreeting}, {userName} &bull; {dashboardTitle}

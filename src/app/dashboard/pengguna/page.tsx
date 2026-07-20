@@ -648,7 +648,7 @@ export default function PenggunaPage() {
       {/* Add User Modal */}
       {showAddUserModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
             <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl">
               <h3 className="font-bold text-sm">Tambah Pengguna Baru</h3>
               <button
@@ -701,7 +701,7 @@ export default function PenggunaPage() {
       {/* Add Role Modal */}
       {showAddRoleModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
             <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl">
               <h3 className="font-bold text-sm">Buat Peran (Role) Baru</h3>
               <button
@@ -770,7 +770,7 @@ export default function PenggunaPage() {
       {/* Edit Role Modal */}
       {showEditRoleModal && selectedRoleForEdit && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
             <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl">
               <h3 className="font-bold text-sm">Edit Hak Akses Peran: {selectedRoleForEdit.name}</h3>
               <button

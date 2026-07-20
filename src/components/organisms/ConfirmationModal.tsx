@@ -37,7 +37,7 @@ export default function ConfirmationModal({
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
       {/* Modal Card */}
-      <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar animate-fade-in-up border border-primary/10 text-left">
+      <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
         {/* Modal Header */}
         <div className={`p-6 ${headerBg} text-white flex justify-between items-center`}>
           <h3 className="font-bold text-sm select-none">{title}</h3>
