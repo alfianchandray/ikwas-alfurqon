@@ -88,8 +88,8 @@ export async function DELETE(req: NextRequest) {
 
     // Protect Super Admin from deletion
     const pengurus = await db.prepare("SELECT * FROM pengurus WHERE id = ?").bind(id).first() as any;
-    if (pengurus && pengurus.role === "Super Admin") {
-      return NextResponse.json({ error: "Super Admin tidak boleh dihapus!" }, { status: 400 });
+    if (pengurus && pengurus.name === "Alfian Chandra") {
+      return NextResponse.json({ error: "Akun Super Admin utama (Alfian Chandra) tidak boleh dihapus!" }, { status: 400 });
     }
 
     await db.prepare("DELETE FROM pengurus WHERE id = ?").bind(id).run();

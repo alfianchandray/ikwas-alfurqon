@@ -19,7 +19,10 @@ interface Pengurus {
     pemasukan: boolean;
     pengeluaran: boolean;
     santri: boolean;
+    tabungan: boolean;
+    tagihan: boolean;
     laporan: boolean;
+    pengaturan: boolean;
   };
 }
 
@@ -31,7 +34,10 @@ interface CustomRole {
     pemasukan: boolean;
     pengeluaran: boolean;
     santri: boolean;
+    tabungan: boolean;
+    tagihan: boolean;
     laporan: boolean;
+    pengaturan: boolean;
   };
 }
 
@@ -84,7 +90,10 @@ export default function PenggunaPage() {
     pemasukan: false,
     pengeluaran: false,
     santri: false,
+    tabungan: false,
+    tagihan: false,
     laporan: true,
+    pengaturan: false,
   });
 
   const [selectedRoleForEdit, setSelectedRoleForEdit] = useState<CustomRole | null>(null);
@@ -122,15 +131,15 @@ export default function PenggunaPage() {
         setPengurusList([
           {
             id: '1',
-            name: 'Ustadz Ahmad',
+            name: 'Alfian Chandra',
             role: 'Super Admin',
-            permissions: { dashboard: true, pemasukan: true, pengeluaran: true, santri: true, laporan: true },
+            permissions: { dashboard: true, pemasukan: true, pengeluaran: true, santri: true, tabungan: true, tagihan: true, laporan: true, pengaturan: true },
           },
           {
             id: '2',
             name: 'Ustadzah Fatimah',
             role: 'Bendahara Pemasukan',
-            permissions: { dashboard: true, pemasukan: true, pengeluaran: false, santri: true, laporan: false },
+            permissions: { dashboard: true, pemasukan: true, pengeluaran: false, santri: true, tabungan: true, tagihan: false, laporan: false, pengaturan: false },
           },
         ]);
       });
@@ -150,12 +159,12 @@ export default function PenggunaPage() {
           {
             id: '1',
             name: 'Super Admin',
-            defaultPermissions: { dashboard: true, pemasukan: true, pengeluaran: true, santri: true, laporan: true },
+            defaultPermissions: { dashboard: true, pemasukan: true, pengeluaran: true, santri: true, tabungan: true, tagihan: true, laporan: true, pengaturan: true },
           },
           {
             id: '2',
             name: 'Bendahara Pemasukan',
-            defaultPermissions: { dashboard: true, pemasukan: true, pengeluaran: false, santri: true, laporan: false },
+            defaultPermissions: { dashboard: true, pemasukan: true, pengeluaran: false, santri: true, tabungan: true, tagihan: false, laporan: false, pengaturan: false },
           },
         ]);
       });
@@ -206,7 +215,7 @@ export default function PenggunaPage() {
     const matchedRole = rolesList.find((r) => r.name === newUserRole);
     const initialPerms = matchedRole
       ? matchedRole.defaultPermissions
-      : { dashboard: true, pemasukan: false, pengeluaran: false, santri: false, laporan: true };
+      : { dashboard: true, pemasukan: false, pengeluaran: false, santri: false, tabungan: false, tagihan: false, laporan: true, pengaturan: false };
 
     fetch('/api/pengurus', {
       method: 'POST',
@@ -264,7 +273,7 @@ export default function PenggunaPage() {
       setIsLoading(false);
       if (data.success) {
         setNewRoleName('');
-        setNewRolePerms({ dashboard: true, pemasukan: false, pengeluaran: false, santri: false, laporan: true });
+        setNewRolePerms({ dashboard: true, pemasukan: false, pengeluaran: false, santri: false, tabungan: false, tagihan: false, laporan: true, pengaturan: false });
         setShowAddRoleModal(false);
         setToastMessage('Peran (Role) baru berhasil dibuat.');
         setToastType('success');
@@ -428,10 +437,12 @@ export default function PenggunaPage() {
     });
   };
 
-  const roleDropdownOptions = rolesList.map((r) => ({
-    value: r.name,
-    label: r.name,
-  }));
+  const roleDropdownOptions = rolesList
+    .filter((r) => r.name !== 'Super Admin')
+    .map((r) => ({
+      value: r.name,
+      label: r.name,
+    }));
 
   return (
     <div className="space-y-10 text-left">
@@ -525,9 +536,9 @@ export default function PenggunaPage() {
       )}
 
       {activeTab === 'rbac' ? (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Kolom Kiri: Tabel Pengguna & Matriks Hak Akses */}
-        <div className="lg:col-span-2 space-y-6">
+      <div className="flex flex-col gap-6 w-full">
+        {/* Baris Atas: Tabel Pengguna & Matriks Hak Akses (Lebar Penuh) */}
+        <div className="w-full space-y-6">
           <div className="glass-card rounded-3xl shadow-sm border border-white/20 overflow-visible">
             <div className="p-4 px-6 border-b border-white/20 bg-white/20">
               <h3 className="font-bold text-sm text-on-surface">Daftar Pengguna &amp; Matriks Hak Akses</h3>
@@ -540,8 +551,11 @@ export default function PenggunaPage() {
                     <th className="px-6 py-4 text-center">Dashboard</th>
                     <th className="px-6 py-4 text-center">Pemasukan</th>
                     <th className="px-6 py-4 text-center">Pengeluaran</th>
-                    <th className="px-6 py-4 text-center">Data Santri</th>
+                    <th className="px-6 py-4 text-center">Santri</th>
+                    <th className="px-6 py-4 text-center">Tabungan</th>
+                    <th className="px-6 py-4 text-center">Tagihan</th>
                     <th className="px-6 py-4 text-center">Laporan</th>
+                    <th className="px-6 py-4 text-center">Pengaturan</th>
                     <th className="px-6 py-4 text-center">Aksi</th>
                   </tr>
                 </thead>
@@ -552,11 +566,11 @@ export default function PenggunaPage() {
                         <p className="text-xs font-bold text-on-surface">{user.name}</p>
                         <p className="text-[9px] text-primary font-bold">{user.role}</p>
                       </td>
-                      {(['dashboard', 'pemasukan', 'pengeluaran', 'santri', 'laporan'] as Array<keyof typeof user.permissions>).map((module) => (
+                      {(['dashboard', 'pemasukan', 'pengeluaran', 'santri', 'tabungan', 'tagihan', 'laporan', 'pengaturan'] as Array<keyof typeof user.permissions>).map((module) => (
                         <td key={module} className="px-6 py-4 text-center">
                           <div className="flex justify-center">
                             <Checkbox
-                              checked={user.permissions[module]}
+                              checked={user.permissions[module] || false}
                               onChange={() => handleUserPermissionToggle(user.id, module)}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -566,8 +580,9 @@ export default function PenggunaPage() {
                       <td className="px-6 py-4 text-center">
                         <button
                           onClick={() => triggerDeleteUser(user)}
-                          disabled={user.role === 'Super Admin'}
+                          disabled={user.name === 'Alfian Chandra'}
                           className="text-error hover:bg-error/10 p-1.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          title={user.name === 'Alfian Chandra' ? "Akun utama tidak boleh dihapus" : "Hapus Pengguna"}
                         >
                           <Icon name="delete" className="text-base" />
                         </button>
@@ -580,20 +595,20 @@ export default function PenggunaPage() {
           </div>
         </div>
 
-        {/* Kolom Kanan: Daftar Peran (Role) Custom */}
-        <div className="space-y-6">
+        {/* Baris Bawah: Daftar Peran (Role) Custom (Lebar Penuh) */}
+        <div className="w-full">
           <div className="glass-card rounded-3xl shadow-sm border border-white/20 p-6 space-y-4">
             <h3 className="font-bold text-sm text-on-surface">Daftar Peran (Roles)</h3>
             <p className="text-[10px] text-on-surface-variant font-semibold leading-relaxed">
               Hak akses default dari Peran di bawah akan diterapkan secara otomatis saat Anda membuat pengguna baru.
             </p>
 
-            <div className="space-y-2 max-h-96 overflow-y-auto no-scrollbar">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto no-scrollbar">
               {rolesList.map((role) => (
-                <div key={role.id} className="p-3 rounded-2xl bg-white border border-primary/10 flex justify-between items-center">
-                  <div>
+                <div key={role.id} className="p-4 rounded-2xl bg-white border border-primary/10 flex justify-between items-center">
+                  <div className="space-y-1">
                     <p className="text-xs font-bold text-on-surface">{role.name}</p>
-                    <div className="flex gap-1.5 mt-1">
+                    <div className="flex flex-wrap gap-1 mt-1 max-w-[200px]">
                       {Object.entries(role.defaultPermissions)
                         .filter(([_, allowed]) => allowed)
                         .map(([mod]) => (
@@ -603,13 +618,13 @@ export default function PenggunaPage() {
                         ))}
                     </div>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 flex-shrink-0">
                     <button
                       onClick={() => {
                         setSelectedRoleForEdit(role);
                         setShowEditRoleModal(true);
                       }}
-                      className="text-primary hover:bg-primary/10 p-1 rounded-lg transition-colors cursor-pointer"
+                      className="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors cursor-pointer"
                       title="Edit Peran"
                     >
                       <Icon name="edit" className="text-sm font-bold" />
@@ -617,7 +632,7 @@ export default function PenggunaPage() {
                     <button
                       onClick={() => triggerDeleteRole(role)}
                       disabled={role.name === 'Super Admin'}
-                      className="text-error hover:bg-error/10 p-1 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+                      className="text-error hover:bg-error/10 p-1.5 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                       title="Hapus Peran"
                     >
                       <Icon name="delete" className="text-sm font-bold" />
@@ -626,7 +641,7 @@ export default function PenggunaPage() {
                 </div>
               ))}
             </div>
-        </div>
+          </div>
         </div>
       </div>
       ) : (
