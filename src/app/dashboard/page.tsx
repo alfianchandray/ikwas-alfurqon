@@ -281,11 +281,17 @@ export default function InternalDashboard() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-left">
         <div>
-          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-2 inline-block">
-            {dashboardBadge} &bull; Anda Login Sebagai {userRole}
-          </span>
+          {dashboardBadge ? (
+            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+              {dashboardBadge} &bull; Anda Login Sebagai {userRole}
+            </span>
+          ) : (
+            <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] md:text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+              Anda Login Sebagai {userRole}
+            </span>
+          )}
           <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
-            {timeGreeting}, {userName} &bull; {dashboardTitle}
+            {timeGreeting}, {userName}{dashboardTitle ? ` \u2022 ${dashboardTitle}` : ''}
           </h1>
           <p className="text-xs md:text-sm text-on-surface-variant font-semibold mt-1 leading-relaxed whitespace-pre-line">
             {dashboardDesc}

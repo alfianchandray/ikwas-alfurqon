@@ -35,6 +35,37 @@ interface CustomRole {
   };
 }
 
+const formatLogDetail = (action: string, detailStr: string) => {
+  if (!detailStr) return '-';
+  try {
+    const detail = JSON.parse(detailStr);
+    switch (action) {
+      case 'CREATE_TRANSAKSI':
+        return `Kategori: ${detail.kategori || ''} - Nominal: Rp ${new Intl.NumberFormat('id-ID').format(detail.nominal || 0)} - Ket: ${detail.keterangan || ''}`;
+      case 'DELETE_TRANSAKSI':
+        return `Hapus Transaksi ID ${detail.id || ''} - Nominal: Rp ${new Intl.NumberFormat('id-ID').format(detail.nominal || 0)}`;
+      case 'CREATE_SANTRI':
+        return `Nama Santri: ${detail.name || ''} - Wali: ${detail.wali || ''}`;
+      case 'UPDATE_SANTRI':
+        return `ID: ${detail.id || ''} - Perubahan: ${JSON.stringify(detail.changes || detail)}`;
+      case 'DELETE_SANTRI':
+        return `Hapus Santri ID ${detail.id || ''} - Nama: ${detail.name || ''}`;
+      case 'SETOR_TABUNGAN':
+        return `Setor Tabungan - Santri ID: ${detail.santri_id || ''} - Nominal: Rp ${new Intl.NumberFormat('id-ID').format(detail.nominal || 0)}`;
+      case 'TARIK_TABUNGAN':
+        return `Tarik Tabungan - Santri ID: ${detail.santri_id || ''} - Nominal: Rp ${new Intl.NumberFormat('id-ID').format(detail.nominal || 0)}`;
+      case 'LOGIN':
+        return 'Berhasil masuk ke dashboard';
+      case 'LOGOUT':
+        return 'Sesi berakhir / keluar';
+      default:
+        return typeof detail === 'object' ? JSON.stringify(detail) : String(detail);
+    }
+  } catch {
+    return detailStr;
+  }
+};
+
 export default function PenggunaPage() {
   const [pengurusList, setPengurusList] = useState<Pengurus[]>([]);
   const [rolesList, setRolesList] = useState<CustomRole[]>([]);
@@ -608,6 +639,7 @@ export default function PenggunaPage() {
                 <th className="py-3 px-4 font-bold">Waktu</th>
                 <th className="py-3 px-4 font-bold">Pengguna</th>
                 <th className="py-3 px-4 font-bold">Aksi</th>
+                <th className="py-3 px-4 font-bold">Detail / Deskripsi Aktivitas</th>
                 <th className="py-3 px-4 font-bold">Status</th>
                 <th className="py-3 px-4 font-bold">IP Address</th>
               </tr>
@@ -623,6 +655,9 @@ export default function PenggunaPage() {
                   </td>
                   <td className="py-3 px-4 text-primary font-bold">{log.username || 'Sistem / Anonim'}</td>
                   <td className="py-3 px-4 font-semibold text-on-surface">{log.action}</td>
+                  <td className="py-3 px-4 text-on-surface-variant max-w-xs truncate" title={formatLogDetail(log.action, log.detail)}>
+                    {formatLogDetail(log.action, log.detail)}
+                  </td>
                   <td className="py-3 px-4">
                     <span className={`px-2 py-1 rounded-md text-[10px] font-bold ${log.status === 'success' ? 'bg-primary/10 text-primary' : 'bg-error-container text-error'}`}>
                       {log.status.toUpperCase()}
@@ -633,7 +668,7 @@ export default function PenggunaPage() {
               ))}
               {activityLogs.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-outline">Tidak ada log aktivitas.</td>
+                  <td colSpan={6} className="py-8 text-center text-outline">Tidak ada log aktivitas.</td>
                 </tr>
               )}
             </tbody>

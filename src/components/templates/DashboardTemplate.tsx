@@ -141,10 +141,6 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
         {/* Desktop Header */}
         <header className="hidden md:flex justify-between items-center px-10 py-6 bg-white/20 backdrop-blur-md border-b border-white/10 sticky top-0 z-30 select-none">
           <div>
-            <h2 className="text-xs font-semibold text-on-surface-variant flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-              Sistem Portal Keuangan &bull; Koneksi Terenkripsi SSL
-            </h2>
           </div>
           <div className="flex items-center gap-4">
             <div className="px-4 py-2 rounded-full bg-primary/10 text-primary text-[10px] font-extrabold flex items-center gap-2">

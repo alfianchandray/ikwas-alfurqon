@@ -338,7 +338,7 @@ export default function SantriPage() {
       {/* Add Student Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up flex-shrink-0 min-w-[320px] md:min-w-[448px]">
+          <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-visible animate-fade-in-up flex-shrink-0 min-w-[320px] md:min-w-[448px]">
             <div className="p-6 bg-primary text-white flex justify-between items-center">
               <h3 className="font-bold text-sm">{isEditMode ? 'Ubah Data Santri' : 'Registrasi Santri Baru'}</h3>
               <button
@@ -384,6 +384,7 @@ export default function SantriPage() {
                 <Button
                   type="button"
                   variant="secondary"
+                  className="px-5 py-3"
                   onClick={() => {
                     setShowAddModal(false);
                     setIsEditMode(false);
@@ -394,7 +395,7 @@ export default function SantriPage() {
                 >
                   Batalkan
                 </Button>
-                <Button type="submit" variant="primary" isLoading={isLoading} leftIcon="save">
+                <Button type="submit" variant="primary" isLoading={isLoading} leftIcon="save" className="px-5 py-3">
                   Simpan Santri
                 </Button>
               </div>
@@ -406,7 +407,7 @@ export default function SantriPage() {
       {/* Payment Processing Modal */}
       {showPaymentModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up flex-shrink-0 min-w-[320px] md:min-w-[448px]">
+          <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-visible animate-fade-in-up flex-shrink-0 min-w-[320px] md:min-w-[448px]">
             <div className="p-6 bg-primary text-white flex justify-between items-center">
               <h3 className="font-bold text-sm flex items-center gap-1.5">
                 <Icon name="payments" className="text-sm" />
