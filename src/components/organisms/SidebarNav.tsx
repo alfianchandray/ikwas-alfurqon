@@ -115,7 +115,7 @@ export default function SidebarNav({ menuItems, onLogout }: SidebarNavProps) {
 
   return (
     <aside
-      className={`hidden md:flex flex-col transition-all duration-300 ease-in-out glass-card border-r border-primary/10 h-screen sticky top-0 z-40 select-none flex-shrink-0 overflow-hidden ${
+      className={`hidden md:flex flex-col transition-all duration-300 ease-in-out glass-card border-r border-primary/10 h-screen sticky top-0 z-40 select-none flex-shrink-0 ${
         isMinimized ? 'w-20 p-4' : 'w-72 p-6'
       }`}
     >
@@ -221,7 +221,7 @@ export default function SidebarNav({ menuItems, onLogout }: SidebarNavProps) {
           {showDropdown && (
             <div
               className={`absolute bg-white rounded-2xl shadow-xl border border-primary/10 p-2 z-50 animate-fade-in-up ${
-                isMinimized ? 'bottom-14 left-14 w-48' : 'bottom-14 left-0 w-full'
+                isMinimized ? 'bottom-2 left-20 w-52 ml-2' : 'bottom-14 left-0 w-full'
               }`}
             >
               <div className="px-4 py-2 border-b border-surface mb-1">

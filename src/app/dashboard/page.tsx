@@ -97,6 +97,7 @@ export default function InternalDashboard() {
   };
 
   const [userName, setUserName] = useState('Ustadz Ahmad');
+  const [userRole, setUserRole] = useState('Pengurus');
   const [timeGreeting, setTimeGreeting] = useState('Selamat bekerja');
   const [stats, setStats] = useState({
     saldoUtama: 0,
@@ -146,12 +147,16 @@ export default function InternalDashboard() {
       try {
         const user = JSON.parse(stored);
         if (user.name) setUserName(user.name);
+        if (user.role) setUserRole(user.role);
       } catch {}
     } else {
       fetch('/api/auth/me')
         .then((res) => res.json())
         .then((data: any) => {
-          if (data?.user?.name) setUserName(data.user.name);
+          if (data?.user) {
+            if (data.user.name) setUserName(data.user.name);
+            if (data.user.role) setUserRole(data.user.role);
+          }
         })
         .catch(() => {});
     }
@@ -257,9 +262,17 @@ export default function InternalDashboard() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-left">
         <div>
-          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2 inline-block">Portal Pengurus</span>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">{timeGreeting}, {userName}</h1>
-          <p className="text-xs md:text-sm text-on-surface-variant font-semibold">Assalamu'alaikum. Selamat datang di portal {siteName}. Semoga segala pencatatan bernilai ibadah.</p>
+          <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+            Anda Login Sebagai {userRole}
+          </span>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
+            {timeGreeting}, {userName}
+          </h1>
+          <p className="text-xs md:text-sm text-on-surface-variant font-semibold mt-1 leading-relaxed">
+            Assalamu'alaikum. Selamat datang di portal {siteName}.
+            <br />
+            Semoga segala pencatatan bernilai ibadah.
+          </p>
         </div>
         <div className="flex gap-3">
           <Link href="/dashboard/pemasukan?type=in" className="primary-gradient text-white px-5 py-3 rounded-2xl text-xs font-bold shadow-md shadow-primary/10 flex items-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer">
