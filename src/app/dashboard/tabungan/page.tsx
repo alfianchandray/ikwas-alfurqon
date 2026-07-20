@@ -5,6 +5,7 @@ import Icon from '@/components/atoms/Icon';
 import Button from '@/components/atoms/Button';
 import Input from '@/components/atoms/Input';
 import FormField from '@/components/molecules/FormField';
+import SmartCurrencyInput from '@/components/molecules/SmartCurrencyInput';
 import Toast from '@/components/molecules/Toast';
 import DatatablePro, { ColumnDef } from '@/components/organisms/DatatablePro';
 import CollapsibleGuide from '@/components/molecules/CollapsibleGuide';
@@ -392,24 +393,14 @@ export default function TabunganPage() {
                 </p>
               </div>
 
-              <FormField label="Nominal Transaksi (Rupiah)">
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-on-surface-variant/40">
-                    Rp
-                  </span>
-                  <Input
-                    id="nominal-transaksi"
-                    type="text"
-                    required
-                    placeholder="Contoh: 150.000"
-                    className="pl-10"
-                    value={nominal}
-                    onChange={(e) => {
-                      const val = e.target.value.replace(/[^0-9]/g, '');
-                      setNominal(val ? new Intl.NumberFormat('id-ID').format(parseInt(val, 10)) : '');
-                    }}
-                  />
-                </div>
+              <FormField label="Nominal Transaksi (Rp)">
+                <SmartCurrencyInput
+                  id="nominal-transaksi"
+                  value={nominal}
+                  onChange={setNominal}
+                  disabled={isSubmitting}
+                  placeholder="Contoh: 150.000"
+                />
               </FormField>
 
               <FormField label="Keterangan / Catatan Transaksi">

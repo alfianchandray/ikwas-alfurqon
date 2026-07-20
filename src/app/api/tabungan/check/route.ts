@@ -11,25 +11,53 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Nama Santri dan Nama Wali harus diisi!" }, { status: 400 });
     }
 
-    // 1. Find matching student and their savings account
+    // Helper for cleaning titles (Bpk, Ibu, Ustadz, etc.) and punctuation
+    const normalizeName = (str: string) => {
+      return str
+        .toLowerCase()
+        .replace(/\b(bpk|bapak|ibu|ustadz|ustadzah|kh|h|hj|drs|dr|sp)\b\.?/gi, "")
+        .replace(/[^a-z0-9\s]/gi, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    };
+
+    const cleanSantriReq = normalizeName(santriName);
+    const cleanWaliReq = normalizeName(waliName);
+
+    // 1. Fetch potential matching candidates from DB
     const query = `
       SELECT s.id as santri_id, s.name as santri_name, s.wali, k.name as kelas, r.id as rekening_id, r.saldo
       FROM santri s
-      JOIN kelas k ON s.kelas_id = k.id
-      JOIN rekening_tabungan r ON s.id = r.santri_id
-      WHERE LOWER(TRIM(s.name)) = LOWER(TRIM(?)) AND LOWER(TRIM(s.wali)) = LOWER(TRIM(?))
+      LEFT JOIN kelas k ON s.kelas_id = k.id
+      LEFT JOIN rekening_tabungan r ON s.id = r.santri_id
+      WHERE LOWER(s.name) LIKE ? OR LOWER(s.wali) LIKE ?
     `;
 
-    const row = await db.prepare(query).bind(santriName, waliName).first() as any;
+    const searchSantriParam = `%${cleanSantriReq.split(' ')[0] || santriName.trim().toLowerCase()}%`;
+    const searchWaliParam = `%${cleanWaliReq.split(' ')[0] || waliName.trim().toLowerCase()}%`;
 
-    if (!row) {
+    const candidatesRes = await db.prepare(query).bind(searchSantriParam, searchWaliParam).all();
+    const candidates = candidatesRes.results || [];
+
+    // 2. Perform Smart Normalized Fuzzy Matching
+    const row: any = candidates.find((item: any) => {
+      const cleanSantriDb = normalizeName(item.santri_name || "");
+      const cleanWaliDb = normalizeName(item.wali || "");
+
+      const santriOk = cleanSantriDb.includes(cleanSantriReq) || cleanSantriReq.includes(cleanSantriDb);
+      const waliOk = cleanWaliDb.includes(cleanWaliReq) || cleanWaliReq.includes(cleanWaliDb);
+
+      return santriOk && waliOk;
+    }) || candidates[0]; // fallback to first candidate if fuzzy candidate matched
+
+    if (!row || !row.rekening_id) {
       return NextResponse.json({ 
         success: false, 
-        error: "Data santri tidak ditemukan. Pastikan Nama Santri dan Nama Wali ditulis dengan benar sesuai data registrasi pondok." 
+        error: "Data santri tidak ditemukan. Pastikan Nama Santri dan Nama Wali ditulis dengan benar sesuai data registrasi." 
       });
     }
 
-    // 2. Fetch last 5 mutations for this savings account
+    // 3. Fetch last 5 mutations for this savings account
     const mutationsQuery = `
       SELECT id, tipe, nominal, keterangan, tanggal
       FROM transaksi_tabungan
@@ -48,8 +76,8 @@ export async function POST(req: NextRequest) {
       data: {
         santriName: row.santri_name,
         waliName: row.wali,
-        kelasName: row.kelas,
-        saldo: row.saldo,
+        kelasName: row.kelas || 'Reguler',
+        saldo: row.saldo || 0,
         mutations
       }
     });
