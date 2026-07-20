@@ -201,7 +201,8 @@ CREATE TABLE IF NOT EXISTS page_headers (
 
 INSERT OR IGNORE INTO page_headers (path, badge, title, description) VALUES
 ('/', 'Portal Publik', 'Transparansi Keuangan Ummat', 'Laporan real-time pengelolaan dana santri IKWAS. Mewujudkan akuntabilitas yang bersih, amanah, dan profesional.'),
-('/dashboard', 'Ikhtisar', 'Beranda Keuangan', 'Selamat datang di panel utama pengelolaan keuangan IKWAS Al-Furqon. Amanah, transparan, dan realtime.'),
+('/dashboard', 'Ikhtisar', 'Beranda Keuangan', 'Assalamu''alaikum. Selamat datang di portal IKWAS Al-Furqon.
+Semoga segala pencatatan bernilai ibadah.'),
 ('/dashboard/pemasukan', 'Arus Kas', 'Form Pencatatan Kas', 'Pencatatan kas masuk dan kas keluar secara instan, transparan, dan profesional.'),
 ('/dashboard/santri', 'Manajemen Santri', 'Data Santri & Wali', 'Pengelolaan data santri beserta wali murid guna mempermudah penagihan iuran dan tabungan wadiah.'),
 ('/dashboard/tabungan', 'Modul Wadiah', 'Buku Tabungan Santri', 'Pencatatan titipan dana pribadi santri terpisah dari iuran wajib dan kas operasional yayasan.'),

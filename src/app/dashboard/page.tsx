@@ -99,6 +99,8 @@ export default function InternalDashboard() {
   const [userName, setUserName] = useState('Ustadz Ahmad');
   const [userRole, setUserRole] = useState('Pengurus');
   const [timeGreeting, setTimeGreeting] = useState('Selamat bekerja');
+  const [dashboardDesc, setDashboardDesc] = useState("Assalamu'alaikum. Selamat datang di portal IKWAS Al-Furqon.\nSemoga segala pencatatan bernilai ibadah.");
+  const [dashboardTitle, setDashboardTitle] = useState("Beranda Keuangan");
   const [stats, setStats] = useState({
     saldoUtama: 0,
     pemasukanHariIni: 0,
@@ -140,6 +142,19 @@ export default function InternalDashboard() {
     fetchKegiatan();
     fetchStats();
     fetchRecentTransactions();
+
+    // Fetch dashboard header CMS
+    fetch('/api/page-headers?path=/dashboard')
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data && data.description) {
+          setDashboardDesc(data.description);
+        }
+        if (data && data.title) {
+          setDashboardTitle(data.title);
+        }
+      })
+      .catch(() => {});
 
     // Load dynamic username
     const stored = typeof window !== 'undefined' ? sessionStorage.getItem('ikwas_user') : null;
@@ -266,12 +281,10 @@ export default function InternalDashboard() {
             Anda Login Sebagai {userRole}
           </span>
           <h1 className="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
-            {timeGreeting}, {userName}
+            {timeGreeting}, {userName} &bull; {dashboardTitle}
           </h1>
-          <p className="text-xs md:text-sm text-on-surface-variant font-semibold mt-1 leading-relaxed">
-            Assalamu'alaikum. Selamat datang di portal {siteName}.
-            <br />
-            Semoga segala pencatatan bernilai ibadah.
+          <p className="text-xs md:text-sm text-on-surface-variant font-semibold mt-1 leading-relaxed whitespace-pre-line">
+            {dashboardDesc}
           </p>
         </div>
         <div className="flex gap-3">
