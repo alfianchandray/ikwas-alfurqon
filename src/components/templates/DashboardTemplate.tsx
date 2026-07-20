@@ -126,7 +126,7 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
   }
 
   return (
-    <div className="flex min-h-screen bg-background font-sans relative">
+    <div className="flex flex-col md:flex-row min-h-screen bg-background font-sans relative">
       <style dangerouslySetInnerHTML={{__html: `
         :root {
           --color-primary: ${colors.primary} !important;
