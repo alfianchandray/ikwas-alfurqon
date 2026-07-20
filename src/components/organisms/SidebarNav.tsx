@@ -115,7 +115,7 @@ export default function SidebarNav({ menuItems, onLogout }: SidebarNavProps) {
 
   return (
     <aside
-      className={`hidden md:flex flex-col transition-all duration-300 ease-in-out glass-card border-r border-primary/10 h-screen sticky top-0 z-40 select-none flex-shrink-0 ${
+      className={`hidden md:flex flex-col transition-all duration-300 ease-in-out glass-card border-r border-primary/10 h-screen sticky top-0 z-40 select-none flex-shrink-0 overflow-hidden ${
         isMinimized ? 'w-20 p-4' : 'w-72 p-6'
       }`}
     >
@@ -142,7 +142,7 @@ export default function SidebarNav({ menuItems, onLogout }: SidebarNavProps) {
       </div>
 
       {/* Menu Links */}
-      <nav className="flex-grow space-y-2">
+      <nav className="flex-grow space-y-1.5 overflow-y-auto no-scrollbar">
         {menuItems.map((item) => {
           const isActive = pathname === item.path;
           return (

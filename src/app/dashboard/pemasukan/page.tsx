@@ -207,30 +207,30 @@ function CashflowContent() {
       />
 
       {/* Segmented Mode Switcher (Kas Masuk vs Kas Keluar) */}
-      <div className="flex p-1.5 bg-surface-container-high/60 backdrop-blur-md rounded-2xl border border-primary/10 max-w-md mx-auto shadow-inner">
+      <div className="flex p-1.5 bg-surface-container-high/60 backdrop-blur-md rounded-2xl border border-primary/10 w-full max-w-lg mx-auto shadow-inner gap-1">
         <button
           type="button"
           onClick={() => handleModeSwitch('in')}
-          className={`flex-1 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer select-none ${
+          className={`flex-1 py-2.5 md:py-3 rounded-xl text-[10px] md:text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none min-w-0 ${
             mode === 'in'
               ? 'bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]'
               : 'text-on-surface-variant hover:text-primary'
           }`}
         >
-          <Icon name="arrow_circle_down" className="text-base" />
-          🟢 Kas Masuk (Pemasukan)
+          <Icon name="arrow_circle_down" className="text-base flex-shrink-0" />
+          <span className="whitespace-nowrap">Kas Masuk</span>
         </button>
         <button
           type="button"
           onClick={() => handleModeSwitch('out')}
-          className={`flex-1 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer select-none ${
+          className={`flex-1 py-2.5 md:py-3 rounded-xl text-[10px] md:text-xs font-extrabold flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none min-w-0 ${
             mode === 'out'
               ? 'bg-error text-white shadow-md shadow-error/20 scale-[1.02]'
               : 'text-on-surface-variant hover:text-error'
           }`}
         >
-          <Icon name="arrow_circle_up" className="text-base" />
-          🔴 Kas Keluar (Pengeluaran)
+          <Icon name="arrow_circle_up" className="text-base flex-shrink-0" />
+          <span className="whitespace-nowrap">Kas Keluar</span>
         </button>
       </div>
 

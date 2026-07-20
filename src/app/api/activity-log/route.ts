@@ -2,8 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { getClientIp } from "@/lib/ip";
 
+interface D1Database {
+  prepare(query: string): D1PreparedStatement;
+}
+interface D1PreparedStatement {
+  bind(...values: unknown[]): D1PreparedStatement;
+  first(): Promise<Record<string, unknown>>;
+  run(): Promise<void>;
+  all(): Promise<{ results: Record<string, unknown>[] }>;
+}
+interface SessionRow { user_id: number; username: string; role: string; }
+interface CountRow { total: number; }
+
 // Helper: validate Super Admin session
-async function validateSuperAdmin(req: NextRequest, db: any) {
+async function validateSuperAdmin(req: NextRequest, db: D1Database) {
   const token = req.cookies.get("ikwas_session")?.value;
   if (!token) return null;
 
@@ -16,7 +28,7 @@ async function validateSuperAdmin(req: NextRequest, db: any) {
        WHERE s.token = ? AND s.is_revoked = 0 AND s.expires_at > datetime('now')`
     )
     .bind(token)
-    .first() as any;
+    .first() as unknown as SessionRow | null;
 
   if (!session || session.role !== "Super Admin") return null;
   return session;
@@ -45,7 +57,7 @@ export async function GET(req: NextRequest) {
       FROM activity_log
       WHERE created_at >= datetime('now', '-90 days')
     `;
-    const params: any[] = [];
+    const params: (string | number)[] = [];
 
     if (filterAction) {
       query += " AND action = ?";
@@ -67,12 +79,12 @@ export async function GET(req: NextRequest) {
 
     // Get total count for pagination
     let countQuery = "SELECT COUNT(*) as total FROM activity_log WHERE created_at >= datetime('now', '-90 days')";
-    const countParams: any[] = [];
+    const countParams: (string | number)[] = [];
     if (filterAction) { countQuery += " AND action = ?"; countParams.push(filterAction); }
     if (filterUser) { countQuery += " AND username LIKE ?"; countParams.push(`%${filterUser}%`); }
     if (filterStatus) { countQuery += " AND status = ?"; countParams.push(filterStatus); }
 
-    const countResult = await db.prepare(countQuery).bind(...countParams).first() as any;
+    const countResult = await db.prepare(countQuery).bind(...countParams).first() as unknown as CountRow | null;
     const total = countResult?.total || 0;
 
     return NextResponse.json({
@@ -84,9 +96,10 @@ export async function GET(req: NextRequest) {
         totalPages: Math.ceil(total / limit),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Unknown error';
     console.error("GET /api/activity-log error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -100,7 +113,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Akses ditolak." }, { status: 403 });
     }
 
-    const result = await db
+    await db
       .prepare("DELETE FROM activity_log WHERE created_at < datetime('now', '-90 days')")
       .run();
 
@@ -111,8 +124,9 @@ export async function DELETE(req: NextRequest) {
     ).bind(admin.user_id, admin.username, JSON.stringify({ note: "manual cleanup triggered" }), ip).run();
 
     return NextResponse.json({ success: true, message: "Log lama berhasil dibersihkan." });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Unknown error';
     console.error("DELETE /api/activity-log error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
