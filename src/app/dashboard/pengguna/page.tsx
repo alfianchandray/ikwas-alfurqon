@@ -213,6 +213,19 @@ export default function PenggunaPage() {
               pengaturan_view: false, pengaturan_write: false
             },
           },
+          {
+            id: '3',
+            name: 'Demo / Tamu (Read-Only)',
+            defaultPermissions: {
+              pemasukan_view: true, pemasukan_write: false,
+              pengeluaran_view: true, pengeluaran_write: false,
+              santri_view: true, santri_write: false,
+              tabungan_view: true, tabungan_write: false,
+              tagihan_view: true, tagihan_write: false,
+              laporan_view: true,
+              pengaturan_view: false, pengaturan_write: false
+            },
+          },
         ]);
       });
   };
@@ -634,7 +647,7 @@ export default function PenggunaPage() {
                         <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.pemasukan_view || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.pemasukan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'pemasukan_view')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -642,7 +655,7 @@ export default function PenggunaPage() {
                           </label>
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.pemasukan_write || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.pemasukan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'pemasukan_write')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -656,7 +669,7 @@ export default function PenggunaPage() {
                         <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.pengeluaran_view || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.pengeluaran_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengeluaran_view')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -664,7 +677,7 @@ export default function PenggunaPage() {
                           </label>
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.pengeluaran_write || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.pengeluaran_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengeluaran_write')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -678,7 +691,7 @@ export default function PenggunaPage() {
                         <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.santri_view || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.santri_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'santri_view')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -686,7 +699,7 @@ export default function PenggunaPage() {
                           </label>
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.santri_write || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.santri_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'santri_write')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -700,7 +713,7 @@ export default function PenggunaPage() {
                         <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.tabungan_view || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.tabungan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'tabungan_view')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -708,7 +721,7 @@ export default function PenggunaPage() {
                           </label>
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.tabungan_write || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.tabungan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'tabungan_write')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -722,7 +735,7 @@ export default function PenggunaPage() {
                         <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.tagihan_view || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.tagihan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'tagihan_view')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -730,7 +743,7 @@ export default function PenggunaPage() {
                           </label>
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.tagihan_write || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.tagihan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'tagihan_write')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -744,7 +757,7 @@ export default function PenggunaPage() {
                         <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.laporan_view || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.laporan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'laporan_view')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -758,7 +771,7 @@ export default function PenggunaPage() {
                         <div className="flex flex-col gap-1.5 items-start justify-center mx-auto w-max text-[10px]">
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.pengaturan_view || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.pengaturan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengaturan_view')}
                               disabled={user.role === 'Super Admin'}
                             />
@@ -766,7 +779,7 @@ export default function PenggunaPage() {
                           </label>
                           <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
                             <Checkbox
-                              checked={user.permissions.pengaturan_write || false}
+                              checked={user.role === 'Super Admin' || !!user.permissions.pengaturan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengaturan_write')}
                               disabled={user.role === 'Super Admin'}
                             />

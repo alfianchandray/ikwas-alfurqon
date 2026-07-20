@@ -10,6 +10,24 @@ interface RoleBody {
 export async function GET() {
   try {
     const db = await getDb();
+    
+    // Auto-seed Demo role if not exists
+    const demoRole = await db.prepare("SELECT * FROM roles WHERE name = ?").bind("Demo / Tamu (Read-Only)").first();
+    if (!demoRole) {
+      const demoPerms = JSON.stringify({
+        pemasukan_view: true, pemasukan_write: false,
+        pengeluaran_view: true, pengeluaran_write: false,
+        santri_view: true, santri_write: false,
+        tabungan_view: true, tabungan_write: false,
+        tagihan_view: true, tagihan_write: false,
+        laporan_view: true,
+        pengaturan_view: false, pengaturan_write: false
+      });
+      await db.prepare("INSERT INTO roles (name, default_permissions) VALUES (?, ?)")
+        .bind("Demo / Tamu (Read-Only)", demoPerms)
+        .run();
+    }
+
     const { results } = await db.prepare("SELECT * FROM roles ORDER BY id ASC").all();
 
     const parsedResults = (results as any[]).map((r) => ({
