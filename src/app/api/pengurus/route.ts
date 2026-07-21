@@ -1,17 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { hashPassword } from "@/lib/crypto";
 
 interface PengurusBody {
   name?: string;
   role?: string;
+  username?: string;
   permissions?: Record<string, boolean> | string;
   id?: string | number;
+  action?: string;
 }
 
 export async function GET() {
   try {
     const db = await getDb();
-    const { results } = await db.prepare("SELECT * FROM pengurus ORDER BY id ASC").all();
+    const { results } = await db.prepare(
+      "SELECT p.*, u.username, u.is_active FROM pengurus p LEFT JOIN users u ON u.pengurus_id = p.id ORDER BY p.id ASC"
+    ).all();
     
     // Parse permissions JSON string
     const parsedResults = (results as any[]).map((r) => ({
@@ -30,22 +35,55 @@ export async function POST(req: NextRequest) {
   try {
     const db = await getDb();
     const body = await req.json() as PengurusBody;
-    const { name, role, permissions } = body;
+    const { name, role, username, permissions } = body;
 
-    if (!name || !role) {
-      return NextResponse.json({ error: "Nama dan Jabatan wajib diisi!" }, { status: 400 });
+    if (!name || !role || !username) {
+      return NextResponse.json({ error: "Nama, Jabatan, dan Username wajib diisi!" }, { status: 400 });
+    }
+
+    const cleanUsername = username.trim().toLowerCase();
+    if (!/^[a-z0-9_]{3,20}$/.test(cleanUsername)) {
+      return NextResponse.json({ error: "Username hanya boleh huruf kecil, angka, dan garis bawah (3-20 karakter)!" }, { status: 400 });
+    }
+
+    // Check if username already exists
+    const existingUser = await db.prepare("SELECT id FROM users WHERE username = ?").bind(cleanUsername).first();
+    if (existingUser) {
+      return NextResponse.json({ error: `Username '${cleanUsername}' sudah terdaftar oleh pengurus lain!` }, { status: 400 });
     }
 
     const permsStr = typeof permissions === "object" ? JSON.stringify(permissions) : JSON.stringify({
-      dashboard: true, pemasukan: false, pengeluaran: false, santri: false, laporan: true
+      pemasukan_view: true, pemasukan_write: false,
+      pengeluaran_view: true, pengeluaran_write: false,
+      santri_view: true, santri_write: false,
+      tabungan_view: true, tabungan_write: false,
+      tagihan_view: true, tagihan_write: false,
+      laporan_view: true,
+      pengaturan_view: false, pengaturan_write: false
     });
 
-    await db
+    // Generate default password hash for: ikwas2026
+    const defaultPasswordHash = await hashPassword("ikwas2026");
+
+    // Insert pengurus
+    const insertPengurusResult = await db
       .prepare("INSERT INTO pengurus (name, role, permissions) VALUES (?, ?, ?)")
       .bind(name, role, permsStr)
       .run();
 
-    return NextResponse.json({ success: true, message: "Pengurus baru berhasil ditambahkan." });
+    const newPengurusId = insertPengurusResult.meta.last_row_id || insertPengurusResult.lastRowId;
+
+    if (!newPengurusId) {
+      throw new Error("Gagal mengambil ID pengurus baru.");
+    }
+
+    // Insert user credential with must_change_pw = 1
+    await db
+      .prepare("INSERT INTO users (pengurus_id, username, password_hash, must_change_pw) VALUES (?, ?, ?, 1)")
+      .bind(newPengurusId, cleanUsername, defaultPasswordHash)
+      .run();
+
+    return NextResponse.json({ success: true, message: "Pengurus baru dan akun login berhasil ditambahkan dengan kata sandi bawaan 'ikwas2026'." });
   } catch (error: any) {
     console.error("POST pengurus error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -56,10 +94,25 @@ export async function PUT(req: NextRequest) {
   try {
     const db = await getDb();
     const body = await req.json() as PengurusBody;
-    const { id, permissions } = body;
+    const { id, permissions, action } = body;
 
-    if (!id || !permissions) {
-      return NextResponse.json({ error: "ID dan Hak Akses wajib diisi!" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "ID pengurus wajib diisi!" }, { status: 400 });
+    }
+
+    // Support Password Reset
+    if (action === "reset_password") {
+      const defaultPasswordHash = await hashPassword("ikwas2026");
+      await db
+        .prepare("UPDATE users SET password_hash = ?, must_change_pw = 1 WHERE pengurus_id = ?")
+        .bind(defaultPasswordHash, id)
+        .run();
+
+      return NextResponse.json({ success: true, message: "Kata sandi berhasil di-reset kembali ke bawaan 'ikwas2026' dan wajib diganti saat masuk." });
+    }
+
+    if (!permissions) {
+      return NextResponse.json({ error: "Hak Akses wajib diisi!" }, { status: 400 });
     }
 
     const permsStr = typeof permissions === "object" ? JSON.stringify(permissions) : permissions;

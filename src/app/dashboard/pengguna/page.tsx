@@ -15,6 +15,7 @@ interface Pengurus {
   id: string;
   name: string;
   role: string;
+  username?: string;
   permissions: {
     pemasukan_view: boolean;
     pemasukan_write: boolean;
@@ -94,6 +95,7 @@ export default function PenggunaPage() {
   
   const [newUserName, setNewUserName] = useState('');
   const [newUserRole, setNewUserRole] = useState('');
+  const [newUserUsername, setNewUserUsername] = useState('');
   
   const [newRoleName, setNewRoleName] = useState('');
   const [newRolePerms, setNewRolePerms] = useState({
@@ -294,8 +296,8 @@ export default function PenggunaPage() {
   // Add User
   const handleAddUser = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newUserName || !newUserRole) {
-      setToastMessage('Nama Pengguna dan Peran wajib dipilih!');
+    if (!newUserName || !newUserRole || !newUserUsername) {
+      setToastMessage('Nama Pengguna, Peran, dan Username wajib diisi!');
       setToastType('error');
       setShowToast(true);
       return;
@@ -322,6 +324,7 @@ export default function PenggunaPage() {
       body: JSON.stringify({
         name: newUserName,
         role: newUserRole,
+        username: newUserUsername,
         permissions: initialPerms,
       }),
     })
@@ -330,8 +333,9 @@ export default function PenggunaPage() {
       setIsLoading(false);
       if (data.success) {
         setNewUserName('');
+        setNewUserUsername('');
         setShowAddUserModal(false);
-        setToastMessage('Pengguna baru berhasil ditambahkan.');
+        setToastMessage(data.message || 'Pengguna baru berhasil ditambahkan.');
         setToastType('success');
         setShowToast(true);
         fetchUsers();
@@ -345,6 +349,43 @@ export default function PenggunaPage() {
       setToastType('error');
       setShowToast(true);
     });
+  };
+
+  // Reset Password for a User
+  const handleResetPassword = (userId: string | number) => {
+    const matchedUser = pengurusList.find((u) => u.id === userId);
+    if (!matchedUser) return;
+
+    if (!confirm(`Apakah Anda yakin ingin me-reset kata sandi untuk pengurus "${matchedUser.name}" kembali ke bawaan 'ikwas2026'?`)) {
+      return;
+    }
+
+    setIsLoading(true);
+    fetch('/api/pengurus', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: userId,
+        action: 'reset_password',
+      }),
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        setIsLoading(false);
+        if (data.success) {
+          setToastMessage(data.message || 'Kata sandi berhasil di-reset.');
+          setToastType('success');
+          setShowToast(true);
+        } else {
+          throw new Error(data.error);
+        }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setToastMessage(err.message || 'Gagal mereset kata sandi.');
+        setToastType('error');
+        setShowToast(true);
+      });
   };
 
   // Add Role
@@ -677,6 +718,9 @@ export default function PenggunaPage() {
                       <td className="px-6 py-4">
                         <p className="text-xs font-bold text-on-surface">{user.name}</p>
                         <p className="text-[9px] text-primary font-bold">{user.role}</p>
+                        {user.username && (
+                          <p className="text-[9px] text-outline font-semibold select-all mt-0.5">@{user.username}</p>
+                        )}
                       </td>
                       
                       {/* Pemasukan */}
@@ -826,14 +870,24 @@ export default function PenggunaPage() {
                       </td>
 
                       <td className="px-6 py-4 text-center">
-                        <button
-                          onClick={() => triggerDeleteUser(user)}
-                          disabled={user.name === 'Alfian Chandra'}
-                          className="text-error hover:bg-error/10 p-1.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                          title={user.name === 'Alfian Chandra' ? "Akun utama tidak boleh dihapus" : "Hapus Pengguna"}
-                        >
-                          <Icon name="delete" className="text-base" />
-                        </button>
+                        <div className="flex gap-2 justify-center items-center">
+                          <button
+                            onClick={() => handleResetPassword(user.id)}
+                            disabled={user.name === 'Alfian Chandra'}
+                            className="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Reset Kata Sandi ke 'ikwas2026'"
+                          >
+                            <Icon name="vpn_key" className="text-base" />
+                          </button>
+                          <button
+                            onClick={() => triggerDeleteUser(user)}
+                            disabled={user.name === 'Alfian Chandra'}
+                            className="text-error hover:bg-error/10 p-1.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            title={user.name === 'Alfian Chandra' ? "Akun utama tidak boleh dihapus" : "Hapus Pengguna"}
+                          >
+                            <Icon name="delete" className="text-base" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -976,6 +1030,15 @@ export default function PenggunaPage() {
                   onChange={(e) => setNewUserName(e.target.value)}
                 />
               </FormField>
+              <FormField label="Username Login">
+                <Input
+                  type="text"
+                  required
+                  placeholder="Contoh: bendahara_baru (huruf kecil & angka)"
+                  value={newUserUsername}
+                  onChange={(e) => setNewUserUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                />
+              </FormField>
               <FormField label="Pilih Peran (Role)">
                 <Select
                   options={roleDropdownOptions}
@@ -983,6 +1046,15 @@ export default function PenggunaPage() {
                   onChange={setNewUserRole}
                 />
               </FormField>
+
+              <div className="p-3.5 bg-primary/5 border border-primary/10 rounded-2xl">
+                <p className="text-[10px] text-primary font-bold leading-relaxed flex items-start gap-1.5">
+                  <Icon name="info" className="text-xs mt-0.5" />
+                  <span>
+                    Akun baru otomatis dibuat dengan kata sandi bawaan <strong>ikwas2026</strong>. Pengguna wajib menggantinya saat pertama kali masuk ke aplikasi.
+                  </span>
+                </p>
+              </div>
               <div className="flex gap-4 pt-2">
                 <Button
                   type="button"
