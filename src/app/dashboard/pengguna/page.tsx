@@ -207,19 +207,45 @@ export default function PenggunaPage() {
           },
           {
             id: '2',
-            name: 'Bendahara Pemasukan',
+            name: 'Bendahara',
             defaultPermissions: {
               pemasukan_view: true, pemasukan_write: true,
-              pengeluaran_view: false, pengeluaran_write: false,
+              pengeluaran_view: true, pengeluaran_write: true,
               santri_view: true, santri_write: false,
-              tabungan_view: true, tabungan_write: false,
-              tagihan_view: false, tagihan_write: false,
+              tabungan_view: true, tabungan_write: true,
+              tagihan_view: true, tagihan_write: true,
               laporan_view: true,
               pengaturan_view: false, pengaturan_write: false
             },
           },
           {
             id: '3',
+            name: 'Sekretaris',
+            defaultPermissions: {
+              pemasukan_view: true, pemasukan_write: false,
+              pengeluaran_view: true, pengeluaran_write: false,
+              santri_view: true, santri_write: true,
+              tabungan_view: true, tabungan_write: false,
+              tagihan_view: true, tagihan_write: true,
+              laporan_view: true,
+              pengaturan_view: false, pengaturan_write: false
+            },
+          },
+          {
+            id: '4',
+            name: 'Ketua',
+            defaultPermissions: {
+              pemasukan_view: true, pemasukan_write: false,
+              pengeluaran_view: true, pengeluaran_write: false,
+              santri_view: true, santri_write: false,
+              tabungan_view: true, tabungan_write: false,
+              tagihan_view: true, tagihan_write: false,
+              laporan_view: true,
+              pengaturan_view: true, pengaturan_write: false
+            },
+          },
+          {
+            id: '5',
             name: 'Demo / Tamu (Read-Only)',
             defaultPermissions: {
               pemasukan_view: true, pemasukan_write: false,
@@ -983,8 +1009,8 @@ export default function PenggunaPage() {
       {/* Add Role Modal */}
       {showAddRoleModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
-            <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] max-h-[90vh] flex flex-col overflow-hidden border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
+            <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl flex-shrink-0">
               <h3 className="font-bold text-sm">Buat Peran (Role) Baru</h3>
               <button
                 onClick={() => setShowAddRoleModal(false)}
@@ -993,7 +1019,7 @@ export default function PenggunaPage() {
                 <Icon name="close" className="text-base" />
               </button>
             </div>
-            <form onSubmit={handleAddRole} className="p-6 space-y-4">
+            <form onSubmit={handleAddRole} className="p-6 space-y-4 overflow-y-auto no-scrollbar flex-grow">
               <FormField label="Nama Peran / Jabatan">
                 <Input
                   type="text"
@@ -1008,7 +1034,7 @@ export default function PenggunaPage() {
                 <label className="text-xs font-bold text-primary ml-1 block select-none">
                   Hak Akses Default Modul
                 </label>
-                <div className="space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                <div className="space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 max-h-52 overflow-y-auto no-scrollbar">
                   {Object.keys(newRolePerms).map((mod) => (
                     <div key={mod} className="flex justify-between items-center">
                       <span className="text-xs font-bold text-on-surface select-none capitalize">{mod}</span>
@@ -1052,8 +1078,8 @@ export default function PenggunaPage() {
       {/* Edit Role Modal */}
       {showEditRoleModal && selectedRoleForEdit && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
-            <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] max-h-[90vh] flex flex-col overflow-hidden border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
+            <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl flex-shrink-0">
               <h3 className="font-bold text-sm">Edit Hak Akses Peran: {selectedRoleForEdit.name}</h3>
               <button
                 onClick={() => {
@@ -1065,7 +1091,7 @@ export default function PenggunaPage() {
                 <Icon name="close" className="text-base" />
               </button>
             </div>
-            <form onSubmit={handleEditRole} className="p-6 space-y-4">
+            <form onSubmit={handleEditRole} className="p-6 space-y-4 overflow-y-auto no-scrollbar flex-grow">
               <FormField label="Nama Peran / Jabatan">
                 <Input
                   type="text"
@@ -1086,7 +1112,7 @@ export default function PenggunaPage() {
                 <label className="text-xs font-bold text-primary ml-1 block select-none">
                   Hak Akses Default Modul
                 </label>
-                <div className="space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                <div className="space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 max-h-52 overflow-y-auto no-scrollbar">
                   {Object.keys(selectedRoleForEdit.defaultPermissions).map((mod) => (
                     <div key={mod} className="flex justify-between items-center">
                       <span className="text-xs font-bold text-on-surface select-none capitalize">{mod}</span>

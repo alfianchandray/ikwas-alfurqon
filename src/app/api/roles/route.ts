@@ -11,21 +11,65 @@ export async function GET() {
   try {
     const db = await getDb();
     
-    // Auto-seed Demo role if not exists
-    const demoRole = await db.prepare("SELECT * FROM roles WHERE name = ?").bind("Demo / Tamu (Read-Only)").first();
-    if (!demoRole) {
-      const demoPerms = JSON.stringify({
-        pemasukan_view: true, pemasukan_write: false,
-        pengeluaran_view: true, pengeluaran_write: false,
-        santri_view: true, santri_write: false,
-        tabungan_view: true, tabungan_write: false,
-        tagihan_view: true, tagihan_write: false,
-        laporan_view: true,
-        pengaturan_view: false, pengaturan_write: false
-      });
-      await db.prepare("INSERT INTO roles (name, default_permissions) VALUES (?, ?)")
-        .bind("Demo / Tamu (Read-Only)", demoPerms)
-        .run();
+    // Auto-seed default roles if not exists
+    const rolesToSeed = [
+      {
+        name: "Bendahara",
+        perms: {
+          pemasukan_view: true, pemasukan_write: true,
+          pengeluaran_view: true, pengeluaran_write: true,
+          santri_view: true, santri_write: false,
+          tabungan_view: true, tabungan_write: true,
+          tagihan_view: true, tagihan_write: true,
+          laporan_view: true,
+          pengaturan_view: false, pengaturan_write: false
+        }
+      },
+      {
+        name: "Sekretaris",
+        perms: {
+          pemasukan_view: true, pemasukan_write: false,
+          pengeluaran_view: true, pengeluaran_write: false,
+          santri_view: true, santri_write: true,
+          tabungan_view: true, tabungan_write: false,
+          tagihan_view: true, tagihan_write: true,
+          laporan_view: true,
+          pengaturan_view: false, pengaturan_write: false
+        }
+      },
+      {
+        name: "Ketua",
+        perms: {
+          pemasukan_view: true, pemasukan_write: false,
+          pengeluaran_view: true, pengeluaran_write: false,
+          santri_view: true, santri_write: false,
+          tabungan_view: true, tabungan_write: false,
+          tagihan_view: true, tagihan_write: false,
+          laporan_view: true,
+          pengaturan_view: true, pengaturan_write: false
+        }
+      },
+      {
+        name: "Demo / Tamu (Read-Only)",
+        perms: {
+          pemasukan_view: true, pemasukan_write: false,
+          pengeluaran_view: true, pengeluaran_write: false,
+          santri_view: true, santri_write: false,
+          tabungan_view: true, tabungan_write: false,
+          tagihan_view: true, tagihan_write: false,
+          laporan_view: true,
+          pengaturan_view: false, pengaturan_write: false
+        }
+      }
+    ];
+
+    for (const r of rolesToSeed) {
+      const exists = await db.prepare("SELECT * FROM roles WHERE name = ?").bind(r.name).first();
+      if (!exists) {
+        await db.prepare("INSERT INTO roles (name, default_permissions) VALUES (?, ?)")
+          .bind(r.name, JSON.stringify(r.perms))
+          .run();
+      }
     }
 
     const { results } = await db.prepare("SELECT * FROM roles ORDER BY id ASC").all();
