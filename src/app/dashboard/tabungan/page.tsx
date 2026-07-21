@@ -386,6 +386,7 @@ export default function TabunganPage() {
           searchKeys={['santri_name', 'wali', 'kelas']}
           hideToolbarSearch={true}
           externalSearchTerm={searchTerm}
+          isLoading={isLoading}
         />
       </div>
 

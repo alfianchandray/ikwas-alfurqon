@@ -92,6 +92,42 @@ export default function DashboardTemplate({ children }: DashboardTemplateProps) 
       .catch(() => {});
   }, []);
 
+  // Inactivity Auto-Logout (30 Minutes)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let lastActive = Date.now();
+
+    const updateActivity = () => {
+      lastActive = Date.now();
+    };
+
+    // Listen to mouse/keyboard interactions
+    window.addEventListener('mousemove', updateActivity);
+    window.addEventListener('keydown', updateActivity);
+    window.addEventListener('click', updateActivity);
+    window.addEventListener('scroll', updateActivity);
+
+    const checkInterval = setInterval(() => {
+      const now = Date.now();
+      const diff = now - lastActive;
+      const timeoutLimit = 30 * 60 * 1000; // 30 Minutes
+
+      if (diff > timeoutLimit) {
+        clearInterval(checkInterval);
+        handleLogout();
+      }
+    }, 15000); // Check every 15s
+
+    return () => {
+      window.removeEventListener('mousemove', updateActivity);
+      window.removeEventListener('keydown', updateActivity);
+      window.removeEventListener('click', updateActivity);
+      window.removeEventListener('scroll', updateActivity);
+      clearInterval(checkInterval);
+    };
+  }, [authChecked]);
+
   const handleLogout = async () => {
     setShowLogoutModal(false);
     setIsLoading(true);

@@ -16,6 +16,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Username dan Password wajib diisi." }, { status: 400 });
     }
 
+    // Rate Limiter Check (Max 5 failed attempts in 15 minutes)
+    const failedAttempts = await db
+      .prepare("SELECT COUNT(*) as count FROM activity_log WHERE ip_address = ? AND action = 'LOGIN_FAILED' AND created_at > datetime('now', '-15 minutes')")
+      .bind(ip)
+      .first() as { count: number } | null;
+
+    if (failedAttempts && failedAttempts.count >= 5) {
+      return NextResponse.json({ error: "Terlalu banyak percobaan gagal. IP Anda diblokir sementara (15 menit)." }, { status: 429 });
+    }
+
     // 1. Find user
     const user = await db
       .prepare("SELECT u.*, p.name as pengurus_name, p.role, p.permissions FROM users u JOIN pengurus p ON u.pengurus_id = p.id WHERE u.username = ? COLLATE NOCASE")

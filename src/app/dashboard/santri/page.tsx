@@ -9,6 +9,8 @@ import FormField from '@/components/molecules/FormField';
 import Toast from '@/components/molecules/Toast';
 import ConfirmationModal from '@/components/organisms/ConfirmationModal';
 import PageHeader from '@/components/molecules/PageHeader';
+import TableSkeleton from '@/components/atoms/TableSkeleton';
+import Pagination from '@/components/molecules/Pagination';
 
 interface Santri {
   id: string;
@@ -49,6 +51,9 @@ export default function SantriPage() {
   const [newWali, setNewWali] = useState('');
   const [newKelas, setNewKelas] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSantriLoading, setIsSantriLoading] = useState(false);
+  const [santriPage, setSantriPage] = useState(1);
+  const [santriPageSize, setSantriPageSize] = useState(10);
 
   // Permissions
   const [canWriteSantri, setCanWriteSantri] = useState(true);
@@ -67,6 +72,8 @@ export default function SantriPage() {
   const [billingSearchTerm, setBillingSearchTerm] = useState('');
   const [billingStatusFilter, setBillingStatusFilter] = useState('');
   const [isBillingLoading, setIsBillingLoading] = useState(false);
+  const [tagihanPage, setTagihanPage] = useState(1);
+  const [tagihanPageSize, setTagihanPageSize] = useState(10);
 
   // Payment Modal States
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -102,12 +109,14 @@ export default function SantriPage() {
   };
 
   const fetchSantri = () => {
+    setIsSantriLoading(true);
     fetch('/api/santri')
       .then((res) => res.json())
       .then((data: any) => {
         if (Array.isArray(data)) setSantriList(data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setIsSantriLoading(false));
   };
 
   const fetchClasses = () => {
@@ -337,6 +346,20 @@ export default function SantriPage() {
     return matchesSearch && matchesStatus;
   });
 
+  // Paginated calculations for Santri
+  const totalSantriPages = Math.ceil(filteredSantri.length / santriPageSize);
+  const paginatedSantri = filteredSantri.slice(
+    (santriPage - 1) * santriPageSize,
+    santriPage * santriPageSize
+  );
+
+  // Paginated calculations for Billing
+  const totalBillingPages = Math.ceil(filteredBilling.length / tagihanPageSize);
+  const paginatedBilling = filteredBilling.slice(
+    (tagihanPage - 1) * tagihanPageSize,
+    tagihanPage * tagihanPageSize
+  );
+
   return (
     <div className="space-y-8 text-left">
       {/* Toast Alert */}
@@ -429,7 +452,7 @@ export default function SantriPage() {
       {showPaymentModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[99] flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-visible animate-fade-in-up flex-shrink-0 min-w-[320px] md:min-w-[448px]">
-            <div className="p-6 bg-primary text-white flex justify-between items-center">
+            <div className="p-6 bg-primary text-white flex justify-between items-center rounded-t-3xl">
               <h3 className="font-bold text-sm flex items-center gap-1.5">
                 <Icon name="payments" className="text-sm" />
                 Pelunasan Tagihan Cepat
@@ -580,8 +603,10 @@ export default function SantriPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-primary/5">
-                  {filteredSantri.length > 0 ? (
-                    filteredSantri.map((s) => (
+                  {isSantriLoading ? (
+                    <TableSkeleton rowCount={santriPageSize} colCount={4} />
+                  ) : paginatedSantri.length > 0 ? (
+                    paginatedSantri.map((s) => (
                       <tr key={s.id} className="hover:bg-white/20 transition-colors">
                         <td className="p-4 px-6 font-bold">{s.name}</td>
                         <td className="p-4 px-6">{s.wali}</td>
@@ -622,6 +647,16 @@ export default function SantriPage() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+              currentPage={santriPage}
+              totalPages={totalSantriPages}
+              onPageChange={(p) => setSantriPage(p)}
+              pageSize={santriPageSize}
+              onPageSizeChange={(s) => {
+                setSantriPageSize(s);
+                setSantriPage(1);
+              }}
+            />
           </div>
         </div>
       )}
@@ -691,14 +726,9 @@ export default function SantriPage() {
                 </thead>
                 <tbody className="divide-y divide-primary/5">
                   {isBillingLoading ? (
-                    <tr>
-                      <td colSpan={7} className="p-12 text-center text-outline">
-                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        Memuat data tagihan...
-                      </td>
-                    </tr>
-                  ) : filteredBilling.length > 0 ? (
-                    filteredBilling.map((b) => (
+                    <TableSkeleton rowCount={tagihanPageSize} colCount={7} />
+                  ) : paginatedBilling.length > 0 ? (
+                    paginatedBilling.map((b) => (
                       <tr key={b.tagihan_id} className="hover:bg-white/20 transition-colors">
                         <td className="p-4 px-6 font-bold">{b.santri_name}</td>
                         <td className="p-4 px-6">{b.wali}</td>
@@ -755,6 +785,16 @@ export default function SantriPage() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+              currentPage={tagihanPage}
+              totalPages={totalBillingPages}
+              onPageChange={(p) => setTagihanPage(p)}
+              pageSize={tagihanPageSize}
+              onPageSizeChange={(s) => {
+                setTagihanPageSize(s);
+                setTagihanPage(1);
+              }}
+            />
           </div>
         </div>
       )}

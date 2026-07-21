@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Icon from '../atoms/Icon';
 import Select from '../atoms/Select';
+import TableSkeleton from '../atoms/TableSkeleton';
 
 export interface ColumnDef<T> {
   key: string;
@@ -22,6 +23,7 @@ interface DatatableProProps<T> {
   tipeKey?: keyof T;
   hideToolbarSearch?: boolean;
   externalSearchTerm?: string;
+  isLoading?: boolean;
 }
 
 export default function DatatablePro<T extends { id: string }>({
@@ -34,6 +36,7 @@ export default function DatatablePro<T extends { id: string }>({
   tipeKey,
   hideToolbarSearch = false,
   externalSearchTerm = '',
+  isLoading = false,
 }: DatatableProProps<T>) {
   const [searchTerm, setSearchTerm] = useState('');
   const activeSearchTerm = hideToolbarSearch ? externalSearchTerm : searchTerm;
@@ -42,7 +45,7 @@ export default function DatatablePro<T extends { id: string }>({
   const [sortBy, setSortBy] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const handleSort = (key: string) => {
     if (sortBy === key) {
@@ -211,21 +214,24 @@ export default function DatatablePro<T extends { id: string }>({
             </tr>
           </thead>
           <tbody className="divide-y divide-white/10">
-            {paginatedData.map((row) => (
-              <tr key={row.id} className="hover:bg-primary/5 transition-colors duration-150">
-                {columns.map((col) => {
-                  const alignClass =
-                    col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left';
-                  const cellContent = col.render ? col.render(row) : String(row[col.key as keyof T] || '-');
-                  return (
-                    <td key={col.key} className={`px-6 py-4 text-xs font-semibold ${alignClass}`}>
-                      {cellContent}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-            {paginatedData.length === 0 && (
+            {isLoading ? (
+              <TableSkeleton rowCount={itemsPerPage} colCount={columns.length} />
+            ) : paginatedData.length > 0 ? (
+              paginatedData.map((row) => (
+                <tr key={row.id} className="hover:bg-primary/5 transition-colors duration-150">
+                  {columns.map((col) => {
+                    const alignClass =
+                      col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left';
+                    const cellContent = col.render ? col.render(row) : String(row[col.key as keyof T] || '-');
+                    return (
+                      <td key={col.key} className={`px-6 py-4 text-xs font-semibold ${alignClass}`}>
+                        {cellContent}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td colSpan={columns.length} className="px-6 py-8 text-center text-xs text-on-surface-variant font-semibold">
                   Tidak ada data yang cocok.

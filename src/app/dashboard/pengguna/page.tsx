@@ -9,6 +9,7 @@ import Checkbox from '@/components/atoms/Checkbox';
 import FormField from '@/components/molecules/FormField';
 import Toast from '@/components/molecules/Toast';
 import ConfirmationModal from '@/components/organisms/ConfirmationModal';
+import Pagination from '@/components/molecules/Pagination';
 
 interface Pengurus {
   id: string;
@@ -117,6 +118,10 @@ export default function PenggunaPage() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<'success' | 'warning' | 'error'>('success');
+  
+  // Pagination
+  const [userPage, setUserPage] = useState(1);
+  const [userPageSize, setUserPageSize] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
 
   // Deletions Confirmations
@@ -520,6 +525,12 @@ export default function PenggunaPage() {
       label: r.name,
     }));
 
+  const totalUserPages = Math.ceil(pengurusList.length / userPageSize);
+  const paginatedPengurus = pengurusList.slice(
+    (userPage - 1) * userPageSize,
+    userPage * userPageSize
+  );
+
   return (
     <div className="space-y-10 text-left">
       {/* Toast Alert */}
@@ -635,7 +646,7 @@ export default function PenggunaPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
-                  {pengurusList.map((user) => (
+                  {paginatedPengurus.map((user) => (
                     <tr key={user.id} className="hover:bg-primary/5 transition-colors duration-150">
                       <td className="px-6 py-4">
                         <p className="text-xs font-bold text-on-surface">{user.name}</p>
@@ -803,6 +814,16 @@ export default function PenggunaPage() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+              currentPage={userPage}
+              totalPages={totalUserPages}
+              onPageChange={(p) => setUserPage(p)}
+              pageSize={userPageSize}
+              onPageSizeChange={(s) => {
+                setUserPageSize(s);
+                setUserPage(1);
+              }}
+            />
           </div>
         </div>
 

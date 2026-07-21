@@ -23,6 +23,7 @@ export default function LaporanPage() {
   const [dataTransaksi, setDataTransaksi] = useState<Transaksi[]>([]);
   const [categoryFilterOptions, setCategoryFilterOptions] = useState<{ value: string; label: string }[]>([]);
   const [searchPlaceholder, setSearchPlaceholder] = useState('Cari transaksi, keterangan...');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Toast & Modals state
   const [showToast, setShowToast] = useState(false);
@@ -33,6 +34,9 @@ export default function LaporanPage() {
   const [isTutupBukuLoading, setIsTutupBukuLoading] = useState(false);
 
   useEffect(() => {
+    fetchTransactions();
+    fetchCategories();
+
     const saved = localStorage.getItem('ikwas_sidebar_menu');
     if (saved) {
       const menu = JSON.parse(saved);
@@ -44,6 +48,7 @@ export default function LaporanPage() {
   }, []);
 
   const fetchTransactions = () => {
+    setIsLoading(true);
     fetch('/api/transaksi')
       .then((res) => res.json())
       .then((data: any) => {
@@ -91,7 +96,8 @@ export default function LaporanPage() {
           { id: '2', tanggal: '2023-10-11', nama: 'Fatih Nur Rahman', keterangan: 'Sumbangan Pembangunan', kategori: 'Waqaf', nominal: 2000000, tipe: 'in' },
           { id: '3', tanggal: '2023-10-10', nama: 'Lembaga IKWAS', keterangan: 'Listrik & Air Asrama', kategori: 'Operasional', nominal: 1450000, tipe: 'out' },
         ]);
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const fetchCategories = () => {
@@ -289,6 +295,7 @@ export default function LaporanPage() {
           categories={categoryFilterOptions}
           categoryKey="kategori"
           tipeKey="tipe"
+          isLoading={isLoading}
         />
       </div>
     </div>
