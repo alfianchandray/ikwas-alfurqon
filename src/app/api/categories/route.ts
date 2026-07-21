@@ -50,9 +50,9 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Kategori tidak ditemukan." }, { status: 404 });
     }
 
-    const protectedNames = ['Iuran Wali', 'Tabungan', 'Operasional', 'Pendidikan', 'Logistik', 'Hibah'];
+    const protectedNames = ['Iuran Wali'];
     if (protectedNames.includes(cat.name)) {
-      return NextResponse.json({ error: `Kategori "${cat.name}" adalah kategori sistem bawaan dan tidak boleh dihapus.` }, { status: 400 });
+      return NextResponse.json({ error: `Kategori "${cat.name}" adalah kategori sistem wajib untuk tagihan iuran dan tidak boleh dihapus.` }, { status: 400 });
     }
 
     await db.prepare("DELETE FROM categories WHERE id = ?").bind(id).run();

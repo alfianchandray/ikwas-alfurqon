@@ -30,6 +30,8 @@ interface Pengurus {
     laporan_view: boolean;
     pengaturan_view: boolean;
     pengaturan_write: boolean;
+    pengguna_write: boolean;
+    role_manage: boolean;
   };
 }
 
@@ -50,8 +52,28 @@ interface CustomRole {
     laporan_view: boolean;
     pengaturan_view: boolean;
     pengaturan_write: boolean;
+    pengguna_write: boolean;
+    role_manage: boolean;
   };
 }
+
+const permissionLabels: Record<string, string> = {
+  pemasukan_view: "Lihat Pemasukan",
+  pemasukan_write: "Catat Pemasukan",
+  pengeluaran_view: "Lihat Pengeluaran",
+  pengeluaran_write: "Catat Pengeluaran",
+  santri_view: "Lihat Data Santri",
+  santri_write: "Kelola Data Santri",
+  tabungan_view: "Lihat Tabungan",
+  tabungan_write: "Setor/Tarik Tabungan",
+  tagihan_view: "Lihat Tagihan",
+  tagihan_write: "Kelola Tagihan",
+  laporan_view: "Lihat Laporan",
+  pengaturan_view: "Lihat Pengaturan",
+  pengaturan_write: "Kelola Branding/Warna",
+  pengguna_write: "Urus Pengurus & Reset Password",
+  role_manage: "Urus Peran & RBAC"
+};
 
 const formatLogDetail = (action: string, detailStr: string) => {
   if (!detailStr) return '-';
@@ -90,6 +112,12 @@ export default function PenggunaPage() {
 
   // Modals & Toast State
   const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [selectedUserForEdit, setSelectedUserForEdit] = useState<Pengurus | null>(null);
+  const [editUserName, setEditUserName] = useState('');
+  const [editUserRole, setEditUserRole] = useState('');
+  const [editUserUsername, setEditUserUsername] = useState('');
+  
   const [showAddRoleModal, setShowAddRoleModal] = useState(false);
   const [showEditRoleModal, setShowEditRoleModal] = useState(false);
   
@@ -112,6 +140,8 @@ export default function PenggunaPage() {
     laporan_view: true,
     pengaturan_view: false,
     pengaturan_write: false,
+    pengguna_write: false,
+    role_manage: false,
   });
 
   const [selectedRoleForEdit, setSelectedRoleForEdit] = useState<CustomRole | null>(null);
@@ -136,8 +166,13 @@ export default function PenggunaPage() {
   // Activity Log & Tab States
   const [activeTab, setActiveTab] = useState<'rbac' | 'logs'>('rbac');
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [currentUserRole, setCurrentUserRole] = useState('');
+  const [currentUserPermissions, setCurrentUserPermissions] = useState<any>(null);
   const [activityLogs, setActivityLogs] = useState<any[]>([]);
   const [logsPagination, setLogsPagination] = useState({ page: 1, limit: 50, totalPages: 1, total: 0 });
+
+  const canManageRole = isSuperAdmin || (currentUserPermissions && !!currentUserPermissions.role_manage);
+  const canManageUsers = isSuperAdmin || (currentUserPermissions && !!currentUserPermissions.pengguna_write);
 
 
   const fetchUsers = () => {
@@ -162,7 +197,8 @@ export default function PenggunaPage() {
               tabungan_view: true, tabungan_write: true,
               tagihan_view: true, tagihan_write: true,
               laporan_view: true,
-              pengaturan_view: true, pengaturan_write: true
+              pengaturan_view: true, pengaturan_write: true,
+              pengguna_write: true, role_manage: true
             },
           },
           {
@@ -176,7 +212,8 @@ export default function PenggunaPage() {
               tabungan_view: true, tabungan_write: false,
               tagihan_view: false, tagihan_write: false,
               laporan_view: true,
-              pengaturan_view: false, pengaturan_write: false
+              pengaturan_view: false, pengaturan_write: false,
+              pengguna_write: false, role_manage: false
             },
           },
         ]);
@@ -204,7 +241,8 @@ export default function PenggunaPage() {
               tabungan_view: true, tabungan_write: true,
               tagihan_view: true, tagihan_write: true,
               laporan_view: true,
-              pengaturan_view: true, pengaturan_write: true
+              pengaturan_view: true, pengaturan_write: true,
+              pengguna_write: true, role_manage: true
             },
           },
           {
@@ -217,7 +255,8 @@ export default function PenggunaPage() {
               tabungan_view: true, tabungan_write: true,
               tagihan_view: true, tagihan_write: true,
               laporan_view: true,
-              pengaturan_view: false, pengaturan_write: false
+              pengaturan_view: false, pengaturan_write: false,
+              pengguna_write: false, role_manage: false
             },
           },
           {
@@ -230,7 +269,8 @@ export default function PenggunaPage() {
               tabungan_view: true, tabungan_write: false,
               tagihan_view: true, tagihan_write: true,
               laporan_view: true,
-              pengaturan_view: false, pengaturan_write: false
+              pengaturan_view: false, pengaturan_write: false,
+              pengguna_write: false, role_manage: false
             },
           },
           {
@@ -243,7 +283,8 @@ export default function PenggunaPage() {
               tabungan_view: true, tabungan_write: false,
               tagihan_view: true, tagihan_write: false,
               laporan_view: true,
-              pengaturan_view: true, pengaturan_write: false
+              pengaturan_view: true, pengaturan_write: false,
+              pengguna_write: true, role_manage: false
             },
           },
           {
@@ -256,7 +297,8 @@ export default function PenggunaPage() {
               tabungan_view: true, tabungan_write: false,
               tagihan_view: true, tagihan_write: false,
               laporan_view: true,
-              pengaturan_view: false, pengaturan_write: false
+              pengaturan_view: false, pengaturan_write: false,
+              pengguna_write: false, role_manage: false
             },
           },
         ]);
@@ -272,6 +314,8 @@ export default function PenggunaPage() {
     if (stored) {
       try {
         const user = JSON.parse(stored);
+        setCurrentUserRole(user.role || '');
+        setCurrentUserPermissions(user.permissions || null);
         if (user.role === 'Super Admin') {
           setIsSuperAdmin(true);
           fetchLogs(1);
@@ -315,7 +359,8 @@ export default function PenggunaPage() {
           tabungan_view: true, tabungan_write: false,
           tagihan_view: true, tagihan_write: false,
           laporan_view: true,
-          pengaturan_view: false, pengaturan_write: false
+          pengaturan_view: false, pengaturan_write: false,
+          pengguna_write: false, role_manage: false
         };
 
     fetch('/api/pengurus', {
@@ -388,6 +433,57 @@ export default function PenggunaPage() {
       });
   };
 
+  const triggerEditUser = (user: Pengurus) => {
+    setSelectedUserForEdit(user);
+    setEditUserName(user.name);
+    setEditUserRole(user.role);
+    setEditUserUsername(user.username || '');
+    setShowEditUserModal(true);
+  };
+
+  const handleEditUserSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedUserForEdit || !editUserName || !editUserRole || !editUserUsername) {
+      setToastMessage('Nama Pengguna, Peran, dan Username wajib diisi!');
+      setToastType('error');
+      setShowToast(true);
+      return;
+    }
+
+    setIsLoading(true);
+    fetch('/api/pengurus', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: selectedUserForEdit.id,
+        action: 'edit_profile',
+        name: editUserName,
+        role: editUserRole,
+        username: editUserUsername,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        setIsLoading(false);
+        if (data.success) {
+          setToastMessage(data.message || 'Profil pengurus berhasil diperbarui.');
+          setToastType('success');
+          setShowToast(true);
+          setShowEditUserModal(false);
+          setSelectedUserForEdit(null);
+          fetchUsers();
+        } else {
+          throw new Error(data.error);
+        }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setToastMessage(err.message || 'Gagal memperbarui profil.');
+        setToastType('error');
+        setShowToast(true);
+      });
+  };
+
   // Add Role
   const handleAddRole = (e: React.FormEvent) => {
     e.preventDefault();
@@ -420,7 +516,8 @@ export default function PenggunaPage() {
           tabungan_view: true, tabungan_write: false,
           tagihan_view: true, tagihan_write: false,
           laporan_view: true,
-          pengaturan_view: false, pengaturan_write: false
+          pengaturan_view: false, pengaturan_write: false,
+          pengguna_write: false, role_manage: false
         });
         setShowAddRoleModal(false);
         setToastMessage('Peran (Role) baru berhasil dibuat.');
@@ -642,31 +739,35 @@ export default function PenggunaPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button
-            onClick={() => setShowAddRoleModal(true)}
-            variant="secondary"
-            leftIcon="shield"
-            className="px-4 py-3"
-          >
-            Buat Peran (Role)
-          </Button>
-          <Button
-            onClick={() => {
-              if (rolesList.length === 0) {
-                setToastMessage('Silakan buat peran (Role) terlebih dahulu!');
-                setToastType('error');
-                setShowToast(true);
-                return;
-              }
-              setNewUserRole(rolesList[0].name);
-              setShowAddUserModal(true);
-            }}
-            variant="primary"
-            leftIcon="person_add"
-            className="px-4 py-3"
-          >
-            Tambah Pengguna
-          </Button>
+          {canManageRole && (
+            <Button
+              onClick={() => setShowAddRoleModal(true)}
+              variant="secondary"
+              leftIcon="shield"
+              className="px-4 py-3"
+            >
+              Buat Peran (Role)
+            </Button>
+          )}
+          {canManageUsers && (
+            <Button
+              onClick={() => {
+                if (rolesList.length === 0) {
+                  setToastMessage('Silakan buat peran (Role) terlebih dahulu!');
+                  setToastType('error');
+                  setShowToast(true);
+                  return;
+                }
+                setNewUserRole(rolesList[0].name);
+                setShowAddUserModal(true);
+              }}
+              variant="primary"
+              leftIcon="person_add"
+              className="px-4 py-3"
+            >
+              Tambah Pengguna
+            </Button>
+          )}
         </div>
       </div>
 
@@ -730,7 +831,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.pemasukan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'pemasukan_view')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Lihat</span>
                           </label>
@@ -738,7 +839,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.pemasukan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'pemasukan_write')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Catat</span>
                           </label>
@@ -752,7 +853,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.pengeluaran_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengeluaran_view')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Lihat</span>
                           </label>
@@ -760,7 +861,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.pengeluaran_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengeluaran_write')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Catat</span>
                           </label>
@@ -774,7 +875,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.santri_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'santri_view')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Lihat</span>
                           </label>
@@ -782,7 +883,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.santri_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'santri_write')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Kelola</span>
                           </label>
@@ -796,7 +897,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.tabungan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'tabungan_view')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Lihat</span>
                           </label>
@@ -804,7 +905,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.tabungan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'tabungan_write')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Setor/Tarik</span>
                           </label>
@@ -818,7 +919,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.tagihan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'tagihan_view')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Lihat</span>
                           </label>
@@ -826,7 +927,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.tagihan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'tagihan_write')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Kelola</span>
                           </label>
@@ -840,7 +941,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.laporan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'laporan_view')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Lihat</span>
                           </label>
@@ -854,7 +955,7 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.pengaturan_view}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengaturan_view')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
                             <span>Lihat</span>
                           </label>
@@ -862,9 +963,25 @@ export default function PenggunaPage() {
                             <Checkbox
                               checked={user.role === 'Super Admin' || !!user.permissions.pengaturan_write}
                               onChange={() => handleUserPermissionToggle(user.id, 'pengaturan_write')}
-                              disabled={user.role === 'Super Admin'}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
                             />
-                            <span>Kelola</span>
+                            <span>Branding</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.role === 'Super Admin' || !!user.permissions.pengguna_write}
+                              onChange={() => handleUserPermissionToggle(user.id, 'pengguna_write')}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
+                            />
+                            <span>Pengurus</span>
+                          </label>
+                          <label className="flex items-center gap-1.5 cursor-pointer font-bold text-outline hover:text-primary">
+                            <Checkbox
+                              checked={user.role === 'Super Admin' || !!user.permissions.role_manage}
+                              onChange={() => handleUserPermissionToggle(user.id, 'role_manage')}
+                              disabled={!canManageRole || user.role === 'Super Admin'}
+                            />
+                            <span>Peran/RBAC</span>
                           </label>
                         </div>
                       </td>
@@ -872,18 +989,26 @@ export default function PenggunaPage() {
                       <td className="px-6 py-4 text-center">
                         <div className="flex gap-2 justify-center items-center">
                           <button
+                            onClick={() => triggerEditUser(user)}
+                            disabled={!canManageUsers || user.name === 'Alfian Chandra'}
+                            className="text-tertiary hover:bg-tertiary/10 p-1.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            title={!canManageUsers ? "Anda tidak memiliki izin mengelola pengguna" : user.name === 'Alfian Chandra' ? "Akun utama tidak boleh diubah" : "Sunting Profil Pengguna"}
+                          >
+                            <Icon name="edit" className="text-base" />
+                          </button>
+                          <button
                             onClick={() => handleResetPassword(user.id)}
-                            disabled={user.name === 'Alfian Chandra'}
+                            disabled={!canManageUsers || user.name === 'Alfian Chandra'}
                             className="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                            title="Reset Kata Sandi ke 'ikwas2026'"
+                            title={!canManageUsers ? "Anda tidak memiliki izin mengelola pengguna" : user.name === 'Alfian Chandra' ? "Akun utama tidak boleh di-reset" : "Reset Kata Sandi ke 'ikwas2026'"}
                           >
                             <Icon name="vpn_key" className="text-base" />
                           </button>
                           <button
                             onClick={() => triggerDeleteUser(user)}
-                            disabled={user.name === 'Alfian Chandra'}
+                            disabled={!canManageUsers || user.name === 'Alfian Chandra'}
                             className="text-error hover:bg-error/10 p-1.5 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                            title={user.name === 'Alfian Chandra' ? "Akun utama tidak boleh dihapus" : "Hapus Pengguna"}
+                            title={!canManageUsers ? "Anda tidak memiliki izin mengelola pengguna" : user.name === 'Alfian Chandra' ? "Akun utama tidak boleh dihapus" : "Hapus Pengguna"}
                           >
                             <Icon name="delete" className="text-base" />
                           </button>
@@ -1077,6 +1202,85 @@ export default function PenggunaPage() {
           </div>
         </div>
       )}
+      {/* Edit User Modal */}
+      {showEditUserModal && selectedUserForEdit && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+          <div className="bg-white rounded-t-3xl rounded-b-3xl shadow-2xl w-full max-w-[448px] overflow-visible animate-fade-in-up border border-primary/10 text-left flex-shrink-0 min-w-[320px] md:min-w-[448px]">
+            <div className="p-6 primary-gradient text-white flex justify-between items-center rounded-t-3xl">
+              <h3 className="font-bold text-sm">Sunting Profil Pengguna</h3>
+              <button
+                onClick={() => {
+                  setShowEditUserModal(false);
+                  setSelectedUserForEdit(null);
+                }}
+                className="text-white/80 hover:text-white flex items-center justify-center p-1 rounded-full hover:bg-white/10 cursor-pointer"
+              >
+                <Icon name="close" className="text-base" />
+              </button>
+            </div>
+            <form onSubmit={handleEditUserSubmit} className="p-6 space-y-4">
+              <FormField label="Nama Pengurus / Pengguna">
+                <Input
+                  type="text"
+                  required
+                  placeholder="Nama pengurus..."
+                  value={editUserName}
+                  onChange={(e) => setEditUserName(e.target.value)}
+                />
+              </FormField>
+              <FormField label="Username Login">
+                <Input
+                  type="text"
+                  required
+                  placeholder="Contoh: bendahara_baru (huruf kecil & angka)"
+                  value={editUserUsername}
+                  onChange={(e) => setEditUserUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                />
+              </FormField>
+              <FormField label="Pilih Peran (Role)">
+                <Select
+                  options={roleDropdownOptions}
+                  value={editUserRole}
+                  onChange={setEditUserRole}
+                />
+              </FormField>
+
+              {!selectedUserForEdit.username && (
+                <div className="p-3.5 bg-tertiary/5 border border-tertiary/10 rounded-2xl">
+                  <p className="text-[10px] text-tertiary font-bold leading-relaxed flex items-start gap-1.5">
+                    <Icon name="info" className="text-xs mt-0.5" />
+                    <span>
+                      Pengguna lama ini belum memiliki akun login. Setelah Anda menyimpan profil ini, akun login otomatis aktif dengan kata sandi bawaan <strong>ikwas2026</strong>.
+                    </span>
+                  </p>
+                </div>
+              )}
+
+              <div className="flex gap-4 pt-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => {
+                    setShowEditUserModal(false);
+                    setSelectedUserForEdit(null);
+                  }}
+                  className="flex-1 py-3"
+                >
+                  Batal
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  className="flex-1 py-3"
+                  rightIcon="save"
+                >
+                  Simpan Perubahan
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Add Role Modal */}
       {showAddRoleModal && (
@@ -1108,8 +1312,8 @@ export default function PenggunaPage() {
                 </label>
                 <div className="space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 max-h-52 overflow-y-auto no-scrollbar">
                   {Object.keys(newRolePerms).map((mod) => (
-                    <div key={mod} className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-on-surface select-none capitalize">{mod}</span>
+                    <div key={mod} className="flex justify-between items-center py-0.5 border-b border-primary/5 last:border-0">
+                      <span className="text-[11px] font-bold text-on-surface select-none">{permissionLabels[mod] || mod}</span>
                       <Checkbox
                         checked={newRolePerms[mod as keyof typeof newRolePerms]}
                         onChange={() =>
@@ -1186,8 +1390,8 @@ export default function PenggunaPage() {
                 </label>
                 <div className="space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/10 max-h-52 overflow-y-auto no-scrollbar">
                   {Object.keys(selectedRoleForEdit.defaultPermissions).map((mod) => (
-                    <div key={mod} className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-on-surface select-none capitalize">{mod}</span>
+                    <div key={mod} className="flex justify-between items-center py-0.5 border-b border-primary/5 last:border-0">
+                      <span className="text-[11px] font-bold text-on-surface select-none">{permissionLabels[mod] || mod}</span>
                       <Checkbox
                         checked={selectedRoleForEdit.defaultPermissions[mod as keyof typeof selectedRoleForEdit.defaultPermissions]}
                         disabled={selectedRoleForEdit.name === 'Super Admin'}
