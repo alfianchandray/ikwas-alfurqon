@@ -133,6 +133,11 @@ export default function PengaturanPage() {
   const [showTutupBukuModal, setShowTutupBukuModal] = useState(false);
   const [isProcessingTutupBuku, setIsProcessingTutupBuku] = useState(false);
 
+  // Restore states
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
+  const [restoreSqlContent, setRestoreSqlContent] = useState('');
+  const [isRestoring, setIsRestoring] = useState(false);
+
   const fetchConfig = () => {
     fetch('/api/site-config')
       .then((res) => res.json())
@@ -484,6 +489,60 @@ export default function PengaturanPage() {
     }, 2500);
   };
 
+  const handleRestoreFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.endsWith('.sql')) {
+      setToastMessage('Format berkas salinan data harus berupa .sql!');
+      setToastType('error');
+      setShowToast(true);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      if (text) {
+        setRestoreSqlContent(text);
+        setShowRestoreModal(true);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  const handleExecuteRestore = () => {
+    setIsRestoring(true);
+    fetch('/api/pengaturan/backup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sql: restoreSqlContent }),
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        if (data.success) {
+          setToastMessage('Data IKWAS berhasil dipulihkan dari salinan!');
+          setToastType('success');
+          setShowToast(true);
+          setShowRestoreModal(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 1200);
+        } else {
+          throw new Error(data.error);
+        }
+      })
+      .catch((err) => {
+        setToastMessage(err.message || 'Gagal memulihkan data.');
+        setToastType('error');
+        setShowToast(true);
+      })
+      .finally(() => {
+        setIsRestoring(false);
+      });
+  };
+
   const logoOptions = [
     { value: 'medallion', label: 'Mandala Medallion (Tradisional)' },
     { value: 'dome', label: 'Dome (Kubah Masjid)' },
@@ -548,6 +607,18 @@ export default function PengaturanPage() {
         confirmText="Hapus Kategori"
         cancelText="Batalkan"
         variant="error"
+      />
+
+      <ConfirmationModal
+        isOpen={showRestoreModal}
+        title="⚠️ Pulihkan Data Portal IKWAS"
+        message="Apakah Anda yakin ingin memulihkan seluruh data portal IKWAS dari berkas salinan (.sql) ini? Tindakan ini akan menimpa seluruh catatan transaksi, data santri, tabungan, dan hak akses pengurus saat ini secara permanen. Pastikan salinan data Anda valid!"
+        onConfirm={handleExecuteRestore}
+        onCancel={() => setShowRestoreModal(false)}
+        confirmText="Ya, Pulihkan Sekarang"
+        cancelText="Batalkan"
+        variant="error"
+        isLoading={isRestoring}
       />
 
       {/* Tutup Buku Modal */}
@@ -1066,6 +1137,37 @@ export default function PengaturanPage() {
                   Tambah Kelas
                 </Button>
               </form>
+            </div>
+
+            {/* Pencadangan & Pemulihan Data IKWAS */}
+            <div className="glass-card rounded-3xl p-6 shadow-sm border border-white/20 space-y-4">
+              <h3 className="font-bold text-sm text-on-surface">Pencadangan &amp; Pemulihan Data IKWAS</h3>
+              <p className="text-[10px] text-on-surface-variant font-semibold leading-relaxed">
+                Unduh salinan seluruh data transaksi, data santri, tabungan wadiah, dan hak akses pengurus secara aman. Anda dapat memulihkannya kembali sewaktu-waktu jika terjadi kendala.
+              </p>
+              
+              <div className="space-y-3 pt-2">
+                {/* Download Backup */}
+                <a
+                  href="/api/pengaturan/backup"
+                  className="w-full py-3 bg-primary text-white font-extrabold text-xs rounded-2xl hover:brightness-105 active:scale-95 transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2 select-none"
+                >
+                  <Icon name="download" className="text-base" />
+                  Unduh Salinan Data IKWAS (.sql)
+                </a>
+
+                {/* Upload Restore */}
+                <label className="w-full py-3 bg-white text-primary border border-primary/25 font-extrabold text-xs rounded-2xl hover:bg-primary/5 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer select-none">
+                  <Icon name="upload" className="text-base" />
+                  <span>Pulihkan Data dari Salinan (.sql)</span>
+                  <input
+                    type="file"
+                    accept=".sql"
+                    onChange={handleRestoreFileChange}
+                    className="hidden"
+                  />
+                </label>
+              </div>
             </div>
           </div>
         </div>

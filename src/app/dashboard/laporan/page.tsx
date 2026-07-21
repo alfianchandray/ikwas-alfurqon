@@ -139,6 +139,45 @@ export default function LaporanPage() {
     }, 1200);
   };
 
+  const exportToCSV = () => {
+    if (dataTransaksi.length === 0) {
+      setToastMessage('Tidak ada data transaksi untuk diekspor!');
+      setToastType('info');
+      setShowToast(true);
+      return;
+    }
+
+    const headers = ['Tanggal', 'Nama / Pihak', 'Keterangan', 'Kategori', 'Tipe Kas', 'Nominal (Rp)'];
+    const rows = dataTransaksi.map((t) => [
+      t.tanggal,
+      `"${t.nama.replace(/"/g, '""')}"`,
+      `"${t.keterangan.replace(/"/g, '""')}"`,
+      t.kategori,
+      t.tipe === 'in' ? 'Pemasukan' : 'Pengeluaran',
+      t.nominal,
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.join(',')),
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Laporan_Keuangan_IKWAS_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    setToastMessage('Laporan berhasil diekspor ke Excel/CSV!');
+    setToastType('success');
+    setShowToast(true);
+  };
+
   const copyShareLink = () => {
     navigator.clipboard.writeText(window.location.origin);
     setToastMessage('Tautan laporan berhasil disalin ke papan klip!');
@@ -234,6 +273,15 @@ export default function LaporanPage() {
             className="px-5 py-3 cursor-pointer"
           >
             Cetak PDF
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={exportToCSV}
+            leftIcon="download"
+            className="px-5 py-3 cursor-pointer"
+          >
+            Ekspor Excel/CSV
           </Button>
           <Button
             type="button"
